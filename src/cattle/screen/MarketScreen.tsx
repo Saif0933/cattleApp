@@ -1,14 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  StatusBar,
+    Dimensions,
+    Image,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -278,15 +278,24 @@ const styles = StyleSheet.create({
   filterContainer: { marginBottom: 5 },
   filterScroll: { paddingLeft: 24 },
   filterPill: { 
-    paddingHorizontal: 20, paddingVertical: 12, borderRadius: 16, 
-    backgroundColor: 'white', marginRight: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.03)',
-    elevation: 2 
+    paddingHorizontal: 22, 
+    paddingVertical: 10, 
+    borderRadius: 14, 
+    backgroundColor: 'white', 
+    marginRight: 10, 
+    borderWidth: 1, 
+    borderColor: 'rgba(0,0,0,0.05)',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 5
   },
   activeFilterPill: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   filterText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary },
   activeFilterText: { color: 'white' },
   mainScroll: { flex: 1 },
-  featuredSection: { marginTop: 20, marginBottom: 30 },
+  featuredSection: { marginTop: 15, marginBottom: 5 }, // Applied marginBottom 5 as requested
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, marginBottom: 15 },
   sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary },
   seeAll: { fontSize: 12, color: COLORS.accent, fontWeight: '900', letterSpacing: 1 },
