@@ -1,37 +1,33 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import {
-    Dimensions,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-// Theme Colors from HTML Config
 const COLORS = {
-  primary: '#0e2819',
-  primaryContainer: '#243e2e',
-  background: '#fbf9f6',
-  surface: '#ffffff',
-  surfaceContainerLow: '#f5f3f0',
-  outlineVariant: '#c2c8c1',
-  secondary: '#635d5a',
-  tertiary: '#431400',
-  tertiaryContainer: '#652403',
-  onSurfaceVariant: '#424843',
-  white: '#ffffff',
+  primary: '#0F291E',
+  secondary: '#3D5447',
+  accent: '#FFB800',
+  background: '#F8FAFA',
+  surface: '#FFFFFF',
+  glass: 'rgba(255, 255, 255, 0.95)',
+  emerald: '#10B981',
+  crimson: '#EF4444',
+  sky: '#0EA5E9',
 };
 
 interface ListingCardProps {
-  title?: string;
+  title: string;
   breed: string;
   price: string;
   age: string;
@@ -41,256 +37,288 @@ interface ListingCardProps {
   image: string;
   badge?: string;
   badgeColor?: string;
+  horizontal?: boolean;
 }
 
 const MarketplaceScreen = () => {
-  const filters = ['Bulls', 'Cows', 'Semen', 'Embryos', 'Dairy'];
+  const [activeFilter, setActiveFilter] = useState('All');
+  const filters = ['All', 'Bulls', 'Cows', 'Semen', 'Birds', 'Dairy'];
 
-  const ListingCard = ({ title, breed, price, age, weight, grade, location, image, badge, badgeColor }: ListingCardProps) => (
-    <View style={styles.card}>
-      {/* Image Section */}
-      <View style={styles.imageWrapper}>
-        <Image source={{ uri: image }} style={styles.cardImage} />
-        <View style={styles.badgeRow}>
-          {badge && (
-            <View style={[styles.statusBadge, { backgroundColor: badgeColor || COLORS.primary }]}>
-              <Text style={styles.statusBadgeText}>{badge}</Text>
-            </View>
-          )}
-        </View>
-        <TouchableOpacity style={styles.bookmarkBtn}>
-          <Icon name="bookmark-border" size={22} color={COLORS.tertiary} />
-        </TouchableOpacity>
-      </View>
+  const allListings = [
+    {
+      title: "Majestic Brahman",
+      breed: "Grey Brahman",
+      category: "Bulls",
+      price: "12,500",
+      age: "2.5 Years",
+      weight: "850kg",
+      grade: "A++",
+      location: "Texas, US",
+      image: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=600",
+      badge: "ELITE BREED",
+      badgeColor: COLORS.emerald,
+      featured: true
+    },
+    {
+      title: "Royal Angus",
+      breed: "Black Angus",
+      category: "Bulls",
+      price: "9,800",
+      age: "2 Years",
+      weight: "720kg",
+      grade: "A+",
+      location: "Montana, US",
+      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBDdNasNgugMt9GW99saf9kJLyEjuvlGJ-Ti7ptGLBiUeFObAF6Ma6ZyY1jew9pbTeSKPqDdhpRyYxOLVcqkdfa_VXyWyV2qwAXw7i5Uy-6tSo0fDfkZugDj74wiXhpmJWG__Y-tuoMn40fP0i-ePHCXZNR3ryiovs95anrLxl0XH_3_68X5p5SRtofvwvvhxqQj2o7y97xDwadmc1BGMF4E86CumFBytPLS1WU2RlzwbdJdCbEprXbnSpnHh-f9cdxzVN43MBx",
+      badge: "BEST SELLER",
+      badgeColor: COLORS.accent,
+      featured: true
+    },
+    {
+      title: "Scarlet Macaw",
+      breed: "Ara Macao",
+      category: "Birds",
+      price: "2,800",
+      age: "1 Year",
+      weight: "1.2kg",
+      grade: "Exotic",
+      location: "Florida, US",
+      image: "https://images.unsplash.com/photo-1484557918186-7b4e561c9948?auto=format&fit=crop&q=80&w=600",
+      badge: "HIGH TALKER",
+      badgeColor: COLORS.crimson,
+      featured: true
+    },
+    {
+      title: "African Grey",
+      breed: "Psittacus erithacus",
+      category: "Birds",
+      price: "3,500",
+      age: "1.5 Years",
+      weight: "0.5kg",
+      grade: "Genius",
+      location: "London, UK",
+      image: "https://images.unsplash.com/photo-1552728089-57bdde30ebe3?auto=format&fit=crop&q=80&w=600",
+      badge: "INTELLIGENT",
+      badgeColor: COLORS.sky,
+      featured: false
+    },
+    {
+      title: "Golden Canary",
+      breed: "Serinus canaria",
+      category: "Birds",
+      price: "150",
+      age: "6 Months",
+      weight: "20g",
+      grade: "Singer",
+      location: "Madrid, ES",
+      image: "https://images.unsplash.com/photo-1522858547137-f1dcec554f55?auto=format&fit=crop&q=80&w=600",
+      featured: false
+    },
+    {
+      title: "Dairy Queen",
+      breed: "Holstein",
+      category: "Dairy",
+      price: "4,200",
+      age: "3 Years",
+      weight: "600kg",
+      grade: "A",
+      location: "Wisconsin, US",
+      image: "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&q=80&w=600",
+      featured: false
+    }
+  ];
 
-      {/* Pricing Header */}
-      <View style={styles.cardPriceRow}>
-        <View>
-          <Text style={styles.labelSm}>BREED</Text>
-          <Text style={styles.headlineMd}>{breed}</Text>
-        </View>
-        <View style={styles.alignEnd}>
-          <Text style={styles.labelSm}>CURRENT BID</Text>
-          <Text style={[styles.headlineMd, { color: COLORS.tertiaryContainer }]}>${price}</Text>
-        </View>
-      </View>
+  const filteredListings = useMemo(() => {
+    if (activeFilter === 'All') return allListings;
+    return allListings.filter(item => item.category === activeFilter);
+  }, [activeFilter]);
 
-      {/* Details Section */}
-      <View style={styles.detailsPadding}>
-        <View style={styles.statsGrid}>
-          <View style={styles.statCol}>
-            <Text style={styles.labelSm}>AGE</Text>
+  const featuredListings = useMemo(() => {
+    return allListings.filter(item => item.featured);
+  }, []);
+
+  const ListingCard = ({ title, breed, price, age, weight, grade, location, image, badge, badgeColor, horizontal }: ListingCardProps) => (
+    <TouchableOpacity style={[styles.modernCard, horizontal && styles.horizontalCard]}>
+      <Image source={{ uri: image }} style={styles.cardImg} />
+      {badge && (
+        <View style={[styles.cardBadge, { backgroundColor: badgeColor }]}>
+          <Text style={styles.badgeText}>{badge}</Text>
+        </View>
+      )}
+      <View style={styles.glassContent}>
+        <View style={styles.cardHeader}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.cardBreed}>{breed.toUpperCase()}</Text>
+            <Text style={styles.cardTitle} numberOfLines={1}>{title}</Text>
+          </View>
+          <View style={styles.pricePill}>
+            <Text style={styles.priceValue}>${price}</Text>
+          </View>
+        </View>
+        <View style={styles.statsRow}>
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>AGE</Text>
             <Text style={styles.statValue}>{age}</Text>
           </View>
-          <View style={styles.statCol}>
-            <Text style={styles.labelSm}>WEIGHT</Text>
+          <View style={styles.divider} />
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>{weight.includes('g') ? 'SIZE' : 'WEIGHT'}</Text>
             <Text style={styles.statValue}>{weight}</Text>
           </View>
-          <View style={styles.statCol}>
-            <Text style={styles.labelSm}>GRADE</Text>
+          <View style={styles.divider} />
+          <View style={styles.statBox}>
+            <Text style={styles.statLabel}>CLASS</Text>
             <Text style={styles.statValue}>{grade}</Text>
           </View>
         </View>
-
-        <View style={styles.locationRow}>
-          <Icon name="location-on" size={18} color={COLORS.onSurfaceVariant} />
-          <Text style={styles.locationText}>{location}</Text>
+        <View style={styles.cardFooter}>
+          <View style={styles.locationBox}>
+            <Icon name="location-on" size={14} color={COLORS.secondary} />
+            <Text style={styles.locationText} numberOfLines={1}>{location}</Text>
+          </View>
         </View>
-
-        <TouchableOpacity style={styles.bidButton}>
-          <Text style={styles.bidButtonText}>Place Bid</Text>
-        </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
-      {/* Top App Bar */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Icon name="menu" size={24} color={COLORS.primary} />
+      <View style={styles.topFixedSection}>
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.headerSubtitle}>Explore the</Text>
+            <Text style={styles.headerTitle}>LIVESTOCK<Text style={{color: COLORS.accent}}> MARKET</Text></Text>
+          </View>
+          <TouchableOpacity style={styles.searchBtn}>
+            <Icon name="tune" size={24} color={COLORS.primary} />
           </TouchableOpacity>
-          <Text style={styles.logoText}>HERD</Text>
         </View>
-        <TouchableOpacity style={styles.iconButton}>
-          <Icon name="search" size={24} color={COLORS.primary} />
-        </TouchableOpacity>
+
+        <View style={styles.filterContainer}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll} contentContainerStyle={{ paddingRight: 40 }}>
+            {filters.map((filter, idx) => (
+              <TouchableOpacity 
+                key={idx} 
+                onPress={() => setActiveFilter(filter)}
+                style={[
+                  styles.filterPill,
+                  activeFilter === filter && styles.activeFilterPill
+                ]}
+              >
+                <Text style={[
+                  styles.filterText,
+                  activeFilter === filter && styles.activeFilterText
+                ]}>
+                  {filter}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollPadding} showsVerticalScrollIndicator={false}>
-        {/* Search & Filter Bar */}
-        <View style={styles.searchSection}>
-          <View style={styles.searchContainer}>
-            <Icon name="search" size={20} color={COLORS.secondary} style={styles.searchIcon} />
-            <TextInput 
-              placeholder="Search breeds, genetics..." 
-              style={styles.searchInput}
-              placeholderTextColor={COLORS.secondary}
-            />
-          </View>
-          
-          <View style={styles.filterWrapper}>
-            <Text style={styles.filterLabel}>QUICK FILTERS:</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterScroll}>
-              {filters.map((item, idx) => (
-                <TouchableOpacity 
-                  key={idx} 
-                  style={[styles.filterChip, idx === 0 && styles.activeChip]}
-                >
-                  <Text style={[styles.filterChipText, idx === 0 && styles.activeChipText]}>
-                    {item.toUpperCase()}
-                  </Text>
-                </TouchableOpacity>
+      <ScrollView 
+        style={styles.mainScroll} 
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 120 }}
+      >
+        {activeFilter === 'All' && (
+          <View style={styles.featuredSection}>
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Elite Collection</Text>
+              <Text style={styles.seeAll}>Featured</Text>
+            </View>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingLeft: 24, paddingRight: 40 }}>
+              {featuredListings.map((item, index) => (
+                <ListingCard key={index} {...item} horizontal />
               ))}
             </ScrollView>
           </View>
+        )}
+
+        <View style={styles.verticalSection}>
+          <View style={styles.marketInfo}>
+            <Text style={styles.resultCount}>{filteredListings.length} {activeFilter} Listings</Text>
+            <TouchableOpacity style={styles.sortBtn}>
+              <Text style={styles.sortText}>Recent First</Text>
+              <Icon name="expand-more" size={18} color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.listingGrid}>
+            {filteredListings.map((item, index) => (
+              <ListingCard key={index} {...item} />
+            ))}
+          </View>
         </View>
-
-        {/* Listings */}
-        <ListingCard 
-          breed="Red Brahman Bull" price="15,200" age="36 Mo." weight="2,100 lbs" 
-          grade="S-Tier" location="Houston, Texas" badge="TOP RATED" 
-          image="https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400"
-        />
-
-        <ListingCard 
-          breed="Black Angus" price="12,400" age="24 Mo." weight="1,850 lbs" 
-          grade="AAA+" location="Bozeman, Montana" badge="VERIFIED" 
-          image="https://lh3.googleusercontent.com/aida-public/AB6AXuBDdNasNgugMt9GW99saf9kJLyEjuvlGJ-Ti7ptGLBiUeFObAF6Ma6ZyY1jew9pbTeSKPqDdhpRyYxOLVcqkdfa_VXyWyV2qwAXw7i5Uy-6tSo0fDfkZugDj74wiXhpmJWG__Y-tuoMn40fP0i-ePHCXZNR3ryiovs95anrLxl0XH_3_68X5p5SRtofvwvvhxqQj2o7y97xDwadmc1BGMF4E86CumFBytPLS1WU2RlzwbdJdCbEprXbnSpnHh-f9cdxzVN43MBx"
-        />
-
-        <ListingCard 
-          breed="Holstein Dairy Cow" price="6,500" age="42 Mo." weight="1,500 lbs" 
-          grade="A1" location="Madison, Wisconsin" badge="EXCELLENT YIELD" 
-          image="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=400"
-        />
-
-        <ListingCard 
-          breed="Hereford" price="8,200" age="36 Mo." weight="1,400 lbs" 
-          grade="AA" location="Abilene, Texas" badge="URGENT" badgeColor={COLORS.tertiary}
-          image="https://lh3.googleusercontent.com/aida-public/AB6AXuC0ELzXuzE77AongRZRFVNnUBJVffbo36QhvuhyPtcINeORg2kSf0_Wir-y_0u4yjFwSd4Yb5dJHjIHI_bwIBceA9Ba8AbUF-b76m9FRMhmY-S4OZZIwYCcoN9lQROB2HazXJFhxOiFqSM_bS00dhOmV4-Guz3d-bYG90M9aY4Mz9ccQ0cYb_EOM5WKwCfEZKz2gdd3zEuLxaqrTRfE-a5HY0v6Qc5z98U3VfbgSetRmQbdLA_yvZ0CeFiJ_L1H4LAkC1RaOgnD"
-        />
-        
-        <ListingCard 
-          breed="Jersey Heifer" price="3,800" age="12 Mo." weight="800 lbs" 
-          grade="A" location="Burlington, Vermont" badge="NEW LISTING" badgeColor={COLORS.onSurfaceVariant}
-          image="https://images.unsplash.com/photo-1527153371421-421710926671?auto=format&fit=crop&q=80&w=400"
-        />
       </ScrollView>
+
+      <TouchableOpacity style={styles.sellFab}>
+        <Icon name="add" size={32} color="white" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  header: {
-    height: 64,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    backgroundColor: COLORS.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.outlineVariant,
+  topFixedSection: { backgroundColor: COLORS.background, zIndex: 10, paddingBottom: 10 },
+  header: { 
+    paddingHorizontal: 24, paddingTop: 20, paddingBottom: 15, 
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' 
   },
-  headerLeft: { flexDirection: 'row', alignItems: 'center' },
-  logoText: { fontSize: 24, fontWeight: '700', color: COLORS.primary, marginLeft: 12, letterSpacing: -1 },
-  iconButton: { padding: 8 },
-  scrollPadding: { padding: 16, paddingBottom: 40 },
-  searchSection: { marginBottom: 24 },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.outlineVariant,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
+  headerSubtitle: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1 },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
+  searchBtn: { 
+    width: 50, height: 50, borderRadius: 16, backgroundColor: 'white', 
+    justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4
   },
-  searchIcon: { marginRight: 8 },
-  searchInput: { flex: 1, height: 48, fontSize: 16, color: '#000' },
-  filterWrapper: { flexDirection: 'row', alignItems: 'center' },
-  filterLabel: { fontSize: 10, fontWeight: '700', color: COLORS.secondary, marginRight: 8 },
-  filterScroll: { flex: 1 },
-  filterChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: COLORS.outlineVariant,
-    marginRight: 8,
-    backgroundColor: COLORS.white,
+  filterContainer: { marginBottom: 5 },
+  filterScroll: { paddingLeft: 24 },
+  filterPill: { 
+    paddingHorizontal: 20, paddingVertical: 12, borderRadius: 16, 
+    backgroundColor: 'white', marginRight: 10, borderWidth: 1, borderColor: 'rgba(0,0,0,0.03)',
+    elevation: 2 
   },
-  activeChip: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  filterChipText: { fontSize: 10, fontWeight: '700', color: COLORS.onSurfaceVariant },
-  activeChipText: { color: COLORS.white },
-  card: {
-    backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.outlineVariant,
-    marginBottom: 24,
-    overflow: 'hidden',
+  activeFilterPill: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
+  filterText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary },
+  activeFilterText: { color: 'white' },
+  mainScroll: { flex: 1 },
+  featuredSection: { marginTop: 20, marginBottom: 30 },
+  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, marginBottom: 15 },
+  sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary },
+  seeAll: { fontSize: 12, color: COLORS.accent, fontWeight: '900', letterSpacing: 1 },
+  verticalSection: { paddingHorizontal: 24 },
+  marketInfo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  resultCount: { fontSize: 14, fontWeight: '700', color: COLORS.secondary },
+  sortBtn: { flexDirection: 'row', alignItems: 'center' },
+  sortText: { fontSize: 14, fontWeight: '700', color: COLORS.primary, marginRight: 4 },
+  listingGrid: { gap: 24 },
+  modernCard: { 
+    height: 380, borderRadius: 40, backgroundColor: 'white', overflow: 'hidden',
+    elevation: 15, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 15
   },
-  imageWrapper: { height: 200, width: '100%', position: 'relative' },
-  cardImage: { width: '100%', height: '100%', objectFit: 'cover' },
-  badgeRow: {
-    position: 'absolute',
-    top: 12,
-    left: 12,
-    flexDirection: 'row',
-  },
-  statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  statusBadgeText: { color: COLORS.white, fontSize: 10, fontWeight: '700' },
-  bookmarkBtn: {
-    position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: 'rgba(255,255,255,0.9)',
-    padding: 8,
-    borderRadius: 20,
-  },
-  cardPriceRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 16,
-    backgroundColor: COLORS.surfaceContainerLow,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.outlineVariant,
-  },
-  detailsPadding: { padding: 16 },
-  headlineMd: { fontSize: 20, fontWeight: '600', color: COLORS.primary },
-  labelSm: { fontSize: 10, fontWeight: '600', color: COLORS.secondary, marginBottom: 2 },
-  alignEnd: { alignItems: 'flex-end' },
-  statsGrid: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    paddingBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
-    marginBottom: 16
-  },
-  statCol: { flex: 1 },
-  statValue: { fontSize: 16, fontWeight: '600', color: '#1b1c1a' },
-  locationRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
-  locationText: { marginLeft: 4, color: COLORS.onSurfaceVariant, fontSize: 14 },
-  bidButton: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: 14,
-    borderRadius: 8,
-    alignItems: 'center',
-    borderBottomWidth: 2,
-    borderBottomColor: COLORS.primaryContainer,
-  },
-  bidButtonText: { color: COLORS.white, fontWeight: '700', fontSize: 16 },
+  horizontalCard: { width: width * 0.8, marginRight: 20 },
+  cardImg: { width: '100%', height: '100%', position: 'absolute' },
+  cardBadge: { position: 'absolute', top: 20, right: 20, paddingHorizontal: 14, paddingVertical: 6, borderRadius: 12, zIndex: 5 },
+  badgeText: { color: 'white', fontSize: 10, fontWeight: '900' },
+  glassContent: { position: 'absolute', bottom: 12, left: 12, right: 12, backgroundColor: COLORS.glass, borderRadius: 28, padding: 20 },
+  cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 15 },
+  cardBreed: { fontSize: 9, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1 },
+  cardTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, marginTop: 2 },
+  pricePill: { backgroundColor: COLORS.primary, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12 },
+  priceValue: { color: 'white', fontWeight: '900', fontSize: 16 },
+  statsRow: { flexDirection: 'row', backgroundColor: COLORS.background, borderRadius: 16, paddingVertical: 12, paddingHorizontal: 10, justifyContent: 'space-around', marginBottom: 15 },
+  statBox: { alignItems: 'center' },
+  statLabel: { fontSize: 8, fontWeight: '900', color: COLORS.secondary, marginBottom: 2 },
+  statValue: { fontSize: 12, fontWeight: '800', color: COLORS.primary },
+  divider: { width: 1, height: '50%', backgroundColor: 'rgba(0,0,0,0.1)', alignSelf: 'center' },
+  cardFooter: { flexDirection: 'row', alignItems: 'center' },
+  locationBox: { flexDirection: 'row', alignItems: 'center' },
+  locationText: { marginLeft: 6, fontSize: 12, color: COLORS.secondary, fontWeight: '700' },
+  sellFab: { position: 'absolute', bottom: 30, right: 24, width: 72, height: 72, borderRadius: 36, backgroundColor: COLORS.emerald, justifyContent: 'center', alignItems: 'center', elevation: 15, shadowColor: COLORS.emerald, shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.4, shadowRadius: 15 }
 });
 
 export default MarketplaceScreen;
