@@ -1,15 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Image,
   Dimensions,
+  Image,
   SafeAreaView,
+  ScrollView,
   StatusBar,
+  StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -113,7 +113,7 @@ const DoctorMarket = () => {
       <View style={styles.topSection}>
         <View style={styles.header}>
           <View>
-            <Text style={styles.headerSub}>Vet Care</Text>
+            {/* <Text style={styles.headerSub}>Vet Care</Text> */}
             <Text style={styles.headerTitle}>MEDICAL <Text style={{color: COLORS.medical}}>PHARMACY</Text></Text>
           </View>
           <TouchableOpacity style={styles.cartBtn}>
@@ -164,9 +164,9 @@ const styles = StyleSheet.create({
   topSection: { backgroundColor: 'white', paddingBottom: 15, borderBottomLeftRadius: 30, borderBottomRightRadius: 30, elevation: 10 },
   header: { paddingHorizontal: 24, paddingTop: 20, paddingBottom: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   headerSub: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1 },
-  headerTitle: { fontSize: 26, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
-  cartBtn: { width: 50, height: 50, borderRadius: 16, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
-  cartCount: { position: 'absolute', top: -5, right: -5, backgroundColor: COLORS.medical, width: 20, height: 20, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  headerTitle: { fontSize: 26, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, marginTop: 15 },
+  cartBtn: { width: 30, height: 30, borderRadius: 16, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', marginTop: 15 },
+  cartCount: { position: 'absolute', top: -5, right: -5, backgroundColor: COLORS.medical, width: 15, height: 15, borderRadius: 15, justifyContent: 'center', alignItems: 'center' },
   cartCountText: { color: 'white', fontSize: 10, fontWeight: '900' },
   searchContainer: { paddingHorizontal: 24, marginBottom: 15 },
   searchBox: { height: 50, backgroundColor: COLORS.background, borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15 },

@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
   Alert,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -96,7 +96,7 @@ const OTPScreen = ({ navigation, route }: any) => {
           {/* Boutique OTP Hub */}
           <View style={styles.otpWrapper}>
             <TextInput 
-              placeholder="0 0 0 0 0 0"
+              placeholder="000000"
               placeholderTextColor="rgba(15, 41, 30, 0.1)"
               keyboardType="number-pad"
               style={styles.otpInput}
@@ -178,20 +178,25 @@ const styles = StyleSheet.create({
   phoneHighlight: { fontWeight: '900', color: COLORS.primary, opacity: 1 },
 
   otpWrapper: { 
-    height: 85, backgroundColor: 'white', borderRadius: 24, 
+    height: 65, backgroundColor: 'white', borderRadius: 20, 
     justifyContent: 'center', alignItems: 'center',
     borderWidth: 1, borderColor: COLORS.border,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 20, elevation: 5 
+    shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.05, shadowRadius: 15, elevation: 5 
   },
   otpInput: { 
-    fontSize: 32, fontWeight: '900', color: COLORS.primary, 
-    textAlign: 'center', width: '100%', letterSpacing: 18 
+    fontSize: 20, 
+    fontWeight: '900', 
+    color: COLORS.primary, 
+    textAlign: 'center', 
+    width: '100%', 
+    letterSpacing: 20, 
+    paddingLeft: 20, // Balances the trailing letterSpacing for perfect centering
   },
 
   verifyBtn: { 
-    marginTop: 35, height: 70, borderRadius: 24, 
+    marginTop: 30, height: 58, borderRadius: 20, 
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
-    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 15 }, shadowRadius: 25 
+    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 10 }, shadowRadius: 20 
   },
   verifyBtnText: { fontSize: 13, fontWeight: '900', marginRight: 12, letterSpacing: 1.2 },
   

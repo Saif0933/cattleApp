@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
   Dimensions,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -116,7 +116,6 @@ const DoctorHome = () => {
       {/* Header Section */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.headerSub}>Find your expert</Text>
           <Text style={styles.headerTitle}>VET <Text style={{color: COLORS.medical}}>CARE</Text></Text>
         </View>
         <TouchableOpacity style={styles.profileBtn}>
@@ -227,10 +226,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' 
   },
   headerSub: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1 },
-  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, marginTop: 15 },
   profileBtn: { 
-    width: 48, height: 48, borderRadius: 16, backgroundColor: 'white', 
-    justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000',
+    width: 40, height: 40, borderRadius: 16, backgroundColor: 'white', 
+    justifyContent: 'center', alignItems: 'center', elevation: 4, marginTop: 10, shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4
   },
   searchContainer: { 

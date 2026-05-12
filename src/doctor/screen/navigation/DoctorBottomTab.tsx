@@ -1,13 +1,14 @@
-import React from 'react';
-import { TouchableOpacity, Alert, View, StyleSheet, PermissionsAndroid } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React from 'react';
+import { Alert, PermissionsAndroid, StyleSheet, TouchableOpacity, View } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // Import Doctor screens
 import DoctorHome from '../DoctorHome';
-import DoctorMarket from '../DoctorMarket';
 import DoctorProfile from '../DoctorProfile';
+import DoctorMarket from '../PharmacyScreen';
+import RecordeScreen from '../RecordeScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -103,7 +104,7 @@ const DoctorBottomTab = () => {
         }}
       />
 
-      <Tab.Screen name="Records" component={DoctorHome} /> 
+      <Tab.Screen name="Records" component={RecordeScreen} /> 
       <Tab.Screen name="Profile" component={DoctorProfile} />
     </Tab.Navigator>
   );

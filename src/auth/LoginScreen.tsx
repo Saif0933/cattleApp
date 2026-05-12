@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-  Dimensions,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
+    Dimensions,
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -69,7 +69,7 @@ const LoginScreen = ({ navigation, route }: any) => {
               <View style={styles.inputDivider} />
             </View>
             <TextInput 
-              placeholder="000 000 0000"
+              placeholder="9334804356"
               placeholderTextColor="rgba(15, 41, 30, 0.2)"
               keyboardType="phone-pad"
               style={styles.input}
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   flag: { fontSize: 22 },
   code: { fontSize: 18, fontWeight: '800', color: COLORS.primary, marginLeft: 10 },
   inputDivider: { width: 1, height: 30, backgroundColor: COLORS.background, marginHorizontal: 20 },
-  input: { flex: 1, fontSize: 20, fontWeight: '900', color: COLORS.primary, letterSpacing: 3 },
+  input: { flex: 1, fontSize: 16, fontWeight: '900', color: COLORS.primary, letterSpacing: 3 },
 
   loginBtn: { 
     marginTop: 35, height: 70, borderRadius: 24, 
