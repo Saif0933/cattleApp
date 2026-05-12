@@ -22,13 +22,13 @@ const COLORS = {
   accent: '#FFB800',
   background: '#F8FAFA',
   surface: '#FFFFFF',
-  glass: 'rgba(255, 255, 255, 0.9)',
+  medical: '#0EA5E9',
   emerald: '#10B981',
   crimson: '#EF4444',
   gold: '#D4AF37',
 };
 
-const ProfileScreen = () => {
+const DoctorProfile = () => {
   const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true }: any) => (
     <TouchableOpacity style={styles.menuItem}>
       <View style={[styles.menuIconBox, { backgroundColor: color + '15' }]}>
@@ -52,8 +52,9 @@ const ProfileScreen = () => {
       
       <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
         
+        {/* Cinematic Clinical Hero */}
         <ImageBackground 
-          source={{ uri: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200' }}
+          source={{ uri: 'https://images.unsplash.com/photo-1559839734-2b71f153ec7a?auto=format&fit=crop&q=80&w=1200' }}
           style={styles.heroHeader}
         >
           <View style={styles.heroOverlay}>
@@ -65,32 +66,34 @@ const ProfileScreen = () => {
           </View>
         </ImageBackground>
 
+        {/* Floating Executive Doctor Card */}
         <View style={styles.mainContent}>
           <View style={styles.profileFloatingCard}>
             <View style={styles.avatarContainer}>
               <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200' }} 
+                source={{ uri: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200' }} 
                 style={styles.avatar}
               />
               <View style={styles.statusDot} />
             </View>
             <View style={styles.infoBox}>
-              <Text style={styles.userName}>Rashi Cattle</Text>
+              <Text style={styles.userName}>Dr. James Wilson</Text>
               <View style={styles.premiumBadge}>
-                <Icon name="stars" size={16} color={COLORS.accent} />
-                <Text style={styles.premiumText}>PLATINUM MEMBER</Text>
+                <Icon name="verified" size={16} color={COLORS.medical} />
+                <Text style={styles.premiumText}>CHIEF MEDICAL OFFICER</Text>
               </View>
             </View>
           </View>
 
+          {/* Executive Stats Grid */}
           <View style={styles.statsGrid}>
             <View style={styles.statPill}>
-              <Text style={styles.statVal}>24</Text>
-              <Text style={styles.statLab}>LISTINGS</Text>
+              <Text style={styles.statVal}>1.2k</Text>
+              <Text style={styles.statLab}>PATIENTS</Text>
             </View>
             <View style={styles.statPill}>
-              <Text style={styles.statVal}>182</Text>
-              <Text style={styles.statLab}>TRADES</Text>
+              <Text style={styles.statVal}>8yr</Text>
+              <Text style={styles.statLab}>EXP</Text>
             </View>
             <View style={styles.statPill}>
               <View style={styles.row}>
@@ -101,37 +104,36 @@ const ProfileScreen = () => {
             </View>
           </View>
 
+          {/* Premium Practice Sections */}
           <View style={styles.section}>
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeader}>Business Profile</Text>
-              <TouchableOpacity><Text style={styles.editLink}>Edit</Text></TouchableOpacity>
+              <Text style={styles.sectionHeader}>Practice Management</Text>
+              <TouchableOpacity><Text style={styles.editLink}>Update Availability</Text></TouchableOpacity>
             </View>
             <View style={styles.premiumMenuCard}>
-              <MenuOption icon="account-balance-wallet" title="Wallet & Earnings" subtitle="View your marketplace revenue" color={COLORS.emerald} />
+              <MenuOption icon="event-note" title="Appointment Schedule" subtitle="Manage your daily visits" color={COLORS.medical} />
               <View style={styles.menuDivider} />
-              <MenuOption icon="inventory-2" title="My Herd Inventory" subtitle="Manage livestock & birds" color={COLORS.primary} />
+              <MenuOption icon="assignment" title="Medical Records" subtitle="Patient history & prescriptions" color={COLORS.emerald} />
               <View style={styles.menuDivider} />
-              <MenuOption icon="insights" title="Market Insights" subtitle="Track local price trends" color={COLORS.accent} />
+              <MenuOption icon="groups" title="Patient Owner List" subtitle="Manage your client base" color={COLORS.primary} />
             </View>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.sectionHeader}>Account & Settings</Text>
+            <Text style={styles.sectionHeader}>Financials & Analytics</Text>
             <View style={styles.premiumMenuCard}>
-              <MenuOption icon="verified-user" title="Security & Privacy" subtitle="Two-factor authentication active" color={COLORS.secondary} />
+              <MenuOption icon="account-balance-wallet" title="Earnings Dashboard" subtitle="Track your monthly revenue" color={COLORS.accent} />
               <View style={styles.menuDivider} />
-              <MenuOption icon="notifications-active" title="Notifications" subtitle="Alerts for new listings & sales" color={COLORS.primary} />
-              <View style={styles.menuDivider} />
-              <MenuOption icon="help-center" title="Support Center" subtitle="24/7 dedicated elite support" color={COLORS.secondary} />
+              <MenuOption icon="receipt" title="Invoices & Billing" subtitle="Manage payment status" color={COLORS.secondary} />
             </View>
           </View>
 
           <TouchableOpacity style={styles.luxuryLogout}>
-            <Icon name="power-settings-new" size={20} color={COLORS.crimson} />
-            <Text style={styles.logoutLabel}>Secure Sign Out</Text>
+            <Icon name="swap-horiz" size={20} color={COLORS.medical} />
+            <Text style={styles.logoutLabel}>Switch to Owner Mode</Text>
           </TouchableOpacity>
           
-          <Text style={styles.versionLabel}>Cattle Alpha v2.4.0 • Built for Elite Traders</Text>
+          <Text style={styles.versionLabel}>Vet Core Alpha v2.4.0 • Executive Suite</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -143,8 +145,8 @@ const styles = StyleSheet.create({
   heroHeader: { height: 320, width: '100%' },
   heroOverlay: { 
     flex: 1, 
-    backgroundColor: 'rgba(15, 41, 30, 0.4)', 
-    paddingTop: (StatusBar.currentHeight ?? 0) + 20,
+    backgroundColor: 'rgba(15, 41, 30, 0.45)', 
+    paddingTop: (StatusBar.currentHeight || 0) + 20,
   },
   topActions: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 24 },
   glassBtn: { 
@@ -153,40 +155,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center', alignItems: 'center',
     borderWidth: 1, borderColor: 'rgba(255,255,255,0.3)'
   },
-  mainContent: { 
-    paddingHorizontal: 24, 
-    marginTop: -80, 
-    paddingBottom: 80 
-  },
+  mainContent: { paddingHorizontal: 24, marginTop: -80, paddingBottom: 80 },
   profileFloatingCard: { 
-    backgroundColor: 'white', 
-    borderRadius: 35, 
-    padding: 25, 
-    flexDirection: 'row', 
-    alignItems: 'center',
-    elevation: 25, shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 15 }, 
-    shadowOpacity: 0.15, shadowRadius: 25 
+    backgroundColor: 'white', borderRadius: 35, padding: 25, 
+    flexDirection: 'row', alignItems: 'center',
+    elevation: 25, shadowColor: '#000', shadowOffset: { width: 0, height: 15 }, shadowOpacity: 0.15, shadowRadius: 25 
   },
   avatarContainer: { position: 'relative' },
   avatar: { width: 85, height: 85, borderRadius: 30, borderWidth: 3, borderColor: COLORS.background },
   statusDot: { 
-    position: 'absolute', bottom: -2, right: -2, 
-    width: 18, height: 18, borderRadius: 9, 
+    position: 'absolute', bottom: -2, right: -2, width: 18, height: 18, borderRadius: 9, 
     backgroundColor: COLORS.emerald, borderWidth: 3, borderColor: 'white' 
   },
   infoBox: { marginLeft: 20, flex: 1 },
   userName: { fontSize: 24, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
   premiumBadge: { 
-    flexDirection: 'row', alignItems: 'center', 
-    marginTop: 6, backgroundColor: COLORS.primary + '08', 
-    paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, alignSelf: 'flex-start'
+    flexDirection: 'row', alignItems: 'center', marginTop: 6, 
+    backgroundColor: COLORS.medical + '10', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, alignSelf: 'flex-start'
   },
-  premiumText: { color: COLORS.accent, fontSize: 9, fontWeight: '900', marginLeft: 6, letterSpacing: 1 },
+  premiumText: { color: COLORS.medical, fontSize: 9, fontWeight: '900', marginLeft: 6, letterSpacing: 1 },
   statsGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 },
   statPill: { 
-    backgroundColor: 'white', width: (width - 68) / 3, 
-    paddingVertical: 18, borderRadius: 25, alignItems: 'center',
+    backgroundColor: 'white', width: (width - 68) / 3, paddingVertical: 18, borderRadius: 25, alignItems: 'center',
     elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.05, shadowRadius: 10
   },
   statVal: { fontSize: 18, fontWeight: '900', color: COLORS.primary },
@@ -194,8 +184,8 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center' },
   section: { marginTop: 35 },
   sectionHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, paddingHorizontal: 5 },
-  sectionHeader: { fontSize: 18, fontWeight: '900', color: COLORS.primary },
-  editLink: { fontSize: 13, fontWeight: '700', color: COLORS.accent },
+  sectionHeader: { fontSize: 17, fontWeight: '900', color: COLORS.primary },
+  editLink: { fontSize: 12, fontWeight: '700', color: COLORS.medical },
   premiumMenuCard: { 
     backgroundColor: 'white', borderRadius: 30, padding: 10,
     elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 15
@@ -210,10 +200,10 @@ const styles = StyleSheet.create({
   luxuryLogout: { 
     marginTop: 45, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', 
     backgroundColor: 'white', paddingVertical: 20, borderRadius: 25,
-    borderWidth: 1, borderColor: COLORS.crimson + '15'
+    borderWidth: 1, borderColor: COLORS.medical + '15'
   },
-  logoutLabel: { color: COLORS.crimson, fontSize: 15, fontWeight: '900', marginLeft: 12, letterSpacing: 0.5 },
+  logoutLabel: { color: COLORS.medical, fontSize: 15, fontWeight: '900', marginLeft: 12, letterSpacing: 0.5 },
   versionLabel: { textAlign: 'center', marginTop: 30, color: COLORS.secondary, fontSize: 11, fontWeight: '700', opacity: 0.5 }
 });
 
-export default ProfileScreen;
+export default DoctorProfile;
