@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Alert, View, StyleSheet, PermissionsAndroid } from 'react-native';
+import { TouchableOpacity, Alert, View, StyleSheet, PermissionsAndroid, Platform } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import * as ImagePicker from 'react-native-image-picker';
@@ -18,6 +18,8 @@ const COLORS = {
   background: '#ffffff',
   accent: '#E98961',
 };
+
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 // Placeholder for Camera Screen (it won't actually navigate here because we use tabBarButton)
 const CameraPlaceholder = () => null;
@@ -88,6 +90,7 @@ const BottomTabNavigator = () => {
         tabBarLabelStyle: {
           fontSize: 10,
           fontWeight: '600',
+          fontFamily: FONT_SERIF,
         },
       })}
     >

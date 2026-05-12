@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Alert, PermissionsAndroid, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, PermissionsAndroid, StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -19,6 +19,8 @@ const COLORS = {
   background: '#ffffff',
   accent: '#FFB800',
 };
+
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const PrescribePlaceholder = () => null;
 
@@ -79,6 +81,7 @@ const DoctorBottomTab = () => {
         tabBarLabelStyle: {
           fontSize: 10,
           fontWeight: '600',
+          fontFamily: FONT_SERIF,
         },
       })}
     >

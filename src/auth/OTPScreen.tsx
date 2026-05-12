@@ -15,6 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 // Safety check for StatusBar height
 const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
@@ -170,12 +171,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary + '08', 
     paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10 
   },
-  securityText: { fontSize: 10, fontWeight: '900', color: COLORS.primary, letterSpacing: 1, marginLeft: 6 },
+  securityText: { fontSize: 10, fontWeight: '900', color: COLORS.primary, letterSpacing: 1, marginLeft: 6, fontFamily: FONT_SERIF },
 
   header: { marginTop: 45, marginBottom: 40 },
-  title: { fontSize: 48, fontWeight: '900', color: COLORS.primary, letterSpacing: -1.5 },
-  subtitle: { fontSize: 15, color: COLORS.secondary, marginTop: 15, lineHeight: 24, opacity: 0.6, fontWeight: '500' },
-  phoneHighlight: { fontWeight: '900', color: COLORS.primary, opacity: 1 },
+  title: { fontSize: 48, fontWeight: '900', color: COLORS.primary, letterSpacing: -1.5, fontFamily: FONT_SERIF },
+  subtitle: { fontSize: 15, color: COLORS.secondary, marginTop: 15, lineHeight: 24, opacity: 0.6, fontWeight: '500', fontFamily: FONT_SERIF },
+  phoneHighlight: { fontWeight: '900', color: COLORS.primary, opacity: 1, fontFamily: FONT_SERIF },
 
   otpWrapper: { 
     height: 65, backgroundColor: 'white', borderRadius: 20, 
@@ -191,6 +192,7 @@ const styles = StyleSheet.create({
     width: '100%', 
     letterSpacing: 20, 
     paddingLeft: 20, // Balances the trailing letterSpacing for perfect centering
+    fontFamily: FONT_SERIF,
   },
 
   verifyBtn: { 
@@ -198,16 +200,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
     shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 10 }, shadowRadius: 20 
   },
-  verifyBtnText: { fontSize: 13, fontWeight: '900', marginRight: 12, letterSpacing: 1.2 },
+  verifyBtnText: { fontSize: 13, fontWeight: '900', marginRight: 12, letterSpacing: 1.2, fontFamily: FONT_SERIF },
   
   resendContainer: { marginTop: 35, alignItems: 'center' },
   timerRow: { flexDirection: 'row', alignItems: 'center' },
-  timerLabel: { fontSize: 14, color: COLORS.secondary, fontWeight: '600', opacity: 0.5 },
-  timerValue: { fontSize: 14, color: COLORS.primary, fontWeight: '900' },
+  timerLabel: { fontSize: 14, color: COLORS.secondary, fontWeight: '600', opacity: 0.5, fontFamily: FONT_SERIF },
+  timerValue: { fontSize: 14, color: COLORS.primary, fontWeight: '900', fontFamily: FONT_SERIF },
   
   resendBtn: { flexDirection: 'row', alignItems: 'center' },
-  resendLabel: { fontSize: 14, color: COLORS.secondary, fontWeight: '600', opacity: 0.5 },
-  resendLink: { fontSize: 14, color: COLORS.primary, fontWeight: '900', textDecorationLine: 'underline' }
+  resendLabel: { fontSize: 14, color: COLORS.secondary, fontWeight: '600', opacity: 0.5, fontFamily: FONT_SERIF },
+  resendLink: { fontSize: 14, color: COLORS.primary, fontWeight: '900', textDecorationLine: 'underline', fontFamily: FONT_SERIF }
 });
 
 export default OTPScreen;

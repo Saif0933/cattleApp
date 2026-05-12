@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get('window');
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 // Safety check for StatusBar height
 const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight || 0) : 0;
@@ -129,12 +130,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary + '08', 
     paddingHorizontal: 12, paddingVertical: 6, borderRadius: 10 
   },
-  roleText: { fontSize: 10, fontWeight: '900', color: COLORS.primary, letterSpacing: 1 },
+  roleText: { fontSize: 10, fontWeight: '900', color: COLORS.primary, letterSpacing: 1, fontFamily: FONT_SERIF },
 
   header: { marginTop: 45, marginBottom: 40 },
-  welcomeText: { fontSize: 18, fontWeight: '600', color: COLORS.secondary, opacity: 0.8 },
-  title: { fontSize: 48, fontWeight: '900', color: COLORS.primary, letterSpacing: -1.5, marginTop: 4 },
-  subtitle: { fontSize: 14, color: COLORS.secondary, marginTop: 15, lineHeight: 22, opacity: 0.6, fontWeight: '500' },
+  welcomeText: { fontSize: 18, fontWeight: '600', color: COLORS.secondary, opacity: 0.8, fontFamily: FONT_SERIF },
+  title: { fontSize: 48, fontWeight: '900', color: COLORS.primary, letterSpacing: -1.5, marginTop: 4, fontFamily: FONT_SERIF },
+  subtitle: { fontSize: 14, color: COLORS.secondary, marginTop: 15, lineHeight: 22, opacity: 0.6, fontWeight: '500', fontFamily: FONT_SERIF },
 
   inputWrapper: { 
     height: 75, backgroundColor: 'white', borderRadius: 24, 
@@ -144,19 +145,19 @@ const styles = StyleSheet.create({
   },
   countryPill: { flexDirection: 'row', alignItems: 'center' },
   flag: { fontSize: 22 },
-  code: { fontSize: 18, fontWeight: '800', color: COLORS.primary, marginLeft: 10 },
+  code: { fontSize: 18, fontWeight: '800', color: COLORS.primary, marginLeft: 10, fontFamily: FONT_SERIF },
   inputDivider: { width: 1, height: 30, backgroundColor: COLORS.background, marginHorizontal: 20 },
-  input: { flex: 1, fontSize: 16, fontWeight: '900', color: COLORS.primary, letterSpacing: 3 },
+  input: { flex: 1, fontSize: 16, fontWeight: '900', color: COLORS.primary, letterSpacing: 3, fontFamily: FONT_SERIF },
 
   loginBtn: { 
     marginTop: 35, height: 70, borderRadius: 24, 
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
     shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 15 }, shadowRadius: 25 
   },
-  loginBtnText: { fontSize: 13, fontWeight: '900', marginRight: 12, letterSpacing: 1.2 },
+  loginBtnText: { fontSize: 13, fontWeight: '900', marginRight: 12, letterSpacing: 1.2, fontFamily: FONT_SERIF },
   
   footerInfo: { marginTop: 30, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
-  footerText: { fontSize: 11, color: COLORS.secondary, marginLeft: 8, fontWeight: '700', opacity: 0.4 }
+  footerText: { fontSize: 11, color: COLORS.secondary, marginLeft: 8, fontWeight: '700', opacity: 0.4, fontFamily: FONT_SERIF }
 });
 
 export default LoginScreen;
