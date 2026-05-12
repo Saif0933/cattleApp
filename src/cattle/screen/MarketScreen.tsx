@@ -9,10 +9,12 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width, height } = Dimensions.get('window');
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const COLORS = {
   primary: '#0F291E',
@@ -268,8 +270,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24, paddingTop: 20, paddingBottom: 15, 
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' 
   },
-  headerSubtitle: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1 },
-  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
+  headerSubtitle: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1, fontFamily: FONT_SERIF },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, fontFamily: FONT_SERIF },
   searchBtn: { 
     width: 50, height: 50, borderRadius: 16, backgroundColor: 'white', 
     justifyContent: 'center', alignItems: 'center', elevation: 4, shadowColor: '#000',
@@ -292,18 +294,18 @@ const styles = StyleSheet.create({
     shadowRadius: 5
   },
   activeFilterPill: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  filterText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary },
-  activeFilterText: { color: 'white' },
+  filterText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SERIF },
+  activeFilterText: { color: 'white', fontFamily: FONT_SERIF },
   mainScroll: { flex: 1 },
   featuredSection: { marginTop: 15, marginBottom: 5 }, // Applied marginBottom 5 as requested
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, marginBottom: 15 },
-  sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary },
-  seeAll: { fontSize: 12, color: COLORS.accent, fontWeight: '900', letterSpacing: 1 },
+  sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  seeAll: { fontSize: 12, color: COLORS.accent, fontWeight: '900', letterSpacing: 1, fontFamily: FONT_SERIF },
   verticalSection: { paddingHorizontal: 24 },
   marketInfo: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  resultCount: { fontSize: 14, fontWeight: '700', color: COLORS.secondary },
+  resultCount: { fontSize: 14, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SERIF },
   sortBtn: { flexDirection: 'row', alignItems: 'center' },
-  sortText: { fontSize: 14, fontWeight: '700', color: COLORS.primary, marginRight: 4 },
+  sortText: { fontSize: 14, fontWeight: '700', color: COLORS.primary, marginRight: 4, fontFamily: FONT_SERIF },
   listingGrid: { gap: 24 },
   modernCard: { 
     height: 380, borderRadius: 40, backgroundColor: 'white', overflow: 'hidden',
@@ -312,21 +314,21 @@ const styles = StyleSheet.create({
   horizontalCard: { width: width * 0.8, marginRight: 20 },
   cardImg: { width: '100%', height: '100%', position: 'absolute' },
   cardBadge: { position: 'absolute', top: 20, right: 20, paddingHorizontal: 14, paddingVertical: 6, borderRadius: 12, zIndex: 5 },
-  badgeText: { color: 'white', fontSize: 10, fontWeight: '900' },
+  badgeText: { color: 'white', fontSize: 10, fontWeight: '900', fontFamily: FONT_SERIF },
   glassContent: { position: 'absolute', bottom: 12, left: 12, right: 12, backgroundColor: COLORS.glass, borderRadius: 28, padding: 20 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 15 },
-  cardBreed: { fontSize: 9, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1 },
-  cardTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, marginTop: 2 },
+  cardBreed: { fontSize: 9, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1, fontFamily: FONT_SERIF },
+  cardTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, marginTop: 2, fontFamily: FONT_SERIF },
   pricePill: { backgroundColor: COLORS.primary, paddingHorizontal: 12, paddingVertical: 8, borderRadius: 12 },
-  priceValue: { color: 'white', fontWeight: '900', fontSize: 16 },
+  priceValue: { color: 'white', fontWeight: '900', fontSize: 16, fontFamily: FONT_SERIF },
   statsRow: { flexDirection: 'row', backgroundColor: COLORS.background, borderRadius: 16, paddingVertical: 12, paddingHorizontal: 10, justifyContent: 'space-around', marginBottom: 15 },
   statBox: { alignItems: 'center' },
-  statLabel: { fontSize: 8, fontWeight: '900', color: COLORS.secondary, marginBottom: 2 },
-  statValue: { fontSize: 12, fontWeight: '800', color: COLORS.primary },
+  statLabel: { fontSize: 8, fontWeight: '900', color: COLORS.secondary, marginBottom: 2, fontFamily: FONT_SERIF },
+  statValue: { fontSize: 12, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SERIF },
   divider: { width: 1, height: '50%', backgroundColor: 'rgba(0,0,0,0.1)', alignSelf: 'center' },
   cardFooter: { flexDirection: 'row', alignItems: 'center' },
   locationBox: { flexDirection: 'row', alignItems: 'center' },
-  locationText: { marginLeft: 6, fontSize: 12, color: COLORS.secondary, fontWeight: '700' },
+  locationText: { marginLeft: 6, fontSize: 12, color: COLORS.secondary, fontWeight: '700', fontFamily: FONT_SERIF },
   sellFab: { position: 'absolute', bottom: 30, right: 24, width: 72, height: 72, borderRadius: 36, backgroundColor: COLORS.emerald, justifyContent: 'center', alignItems: 'center', elevation: 15, shadowColor: COLORS.emerald, shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.4, shadowRadius: 15 }
 });
 

@@ -15,6 +15,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const COLORS = {
   primary: '#0F291E',
@@ -176,26 +177,26 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.emerald, borderWidth: 3, borderColor: 'white' 
   },
   infoBox: { marginLeft: 20, flex: 1 },
-  userName: { fontSize: 24, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
+  userName: { fontSize: 24, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, fontFamily: FONT_SERIF },
   premiumBadge: { 
     flexDirection: 'row', alignItems: 'center', 
     marginTop: 6, backgroundColor: COLORS.primary + '08', 
     paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, alignSelf: 'flex-start'
   },
-  premiumText: { color: COLORS.accent, fontSize: 9, fontWeight: '900', marginLeft: 6, letterSpacing: 1 },
+  premiumText: { color: COLORS.accent, fontSize: 9, fontWeight: '900', marginLeft: 6, letterSpacing: 1, fontFamily: FONT_SERIF },
   statsGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 },
   statPill: { 
     backgroundColor: 'white', width: (width - 68) / 3, 
     paddingVertical: 18, borderRadius: 25, alignItems: 'center',
     elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.05, shadowRadius: 10
   },
-  statVal: { fontSize: 18, fontWeight: '900', color: COLORS.primary },
-  statLab: { fontSize: 8, fontWeight: '800', color: COLORS.secondary, marginTop: 4, letterSpacing: 0.5 },
+  statVal: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  statLab: { fontSize: 8, fontWeight: '800', color: COLORS.secondary, marginTop: 4, letterSpacing: 0.5, fontFamily: FONT_SERIF },
   row: { flexDirection: 'row', alignItems: 'center' },
   section: { marginTop: 35 },
   sectionHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, paddingHorizontal: 5 },
-  sectionHeader: { fontSize: 18, fontWeight: '900', color: COLORS.primary },
-  editLink: { fontSize: 13, fontWeight: '700', color: COLORS.accent },
+  sectionHeader: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  editLink: { fontSize: 13, fontWeight: '700', color: COLORS.accent, fontFamily: FONT_SERIF },
   premiumMenuCard: { 
     backgroundColor: 'white', borderRadius: 30, padding: 10,
     elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 15
@@ -203,8 +204,8 @@ const styles = StyleSheet.create({
   menuItem: { flexDirection: 'row', alignItems: 'center', padding: 15 },
   menuIconBox: { width: 50, height: 50, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
   menuTextContent: { flex: 1, marginLeft: 15 },
-  menuTitle: { fontSize: 16, fontWeight: '800', color: COLORS.primary },
-  menuSubtitle: { fontSize: 11, fontWeight: '600', color: COLORS.secondary, marginTop: 2 },
+  menuTitle: { fontSize: 16, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SERIF },
+  menuSubtitle: { fontSize: 11, fontWeight: '600', color: COLORS.secondary, marginTop: 2, fontFamily: FONT_SERIF },
   arrowBox: { width: 32, height: 32, borderRadius: 10, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
   menuDivider: { height: 1, backgroundColor: COLORS.background, marginHorizontal: 20 },
   luxuryLogout: { 
@@ -212,8 +213,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', paddingVertical: 20, borderRadius: 25,
     borderWidth: 1, borderColor: COLORS.crimson + '15'
   },
-  logoutLabel: { color: COLORS.crimson, fontSize: 15, fontWeight: '900', marginLeft: 12, letterSpacing: 0.5 },
-  versionLabel: { textAlign: 'center', marginTop: 30, color: COLORS.secondary, fontSize: 11, fontWeight: '700', opacity: 0.5 }
+  logoutLabel: { color: COLORS.crimson, fontSize: 15, fontWeight: '900', marginLeft: 12, letterSpacing: 0.5, fontFamily: FONT_SERIF },
+  versionLabel: { textAlign: 'center', marginTop: 30, color: COLORS.secondary, fontSize: 11, fontWeight: '700', opacity: 0.5, fontFamily: FONT_SERIF }
 });
 
 export default ProfileScreen;

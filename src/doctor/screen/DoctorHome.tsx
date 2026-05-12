@@ -10,10 +10,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
+
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const COLORS = {
   primary: '#0F291E',
@@ -225,8 +228,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24, paddingVertical: 20, 
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' 
   },
-  headerSub: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1 },
-  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, marginTop: 15 },
+  headerSub: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1, fontFamily: FONT_SERIF },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, marginTop: 15, fontFamily: FONT_SERIF },
   profileBtn: { 
     width: 40, height: 40, borderRadius: 16, backgroundColor: 'white', 
     justifyContent: 'center', alignItems: 'center', elevation: 4, marginTop: 10, shadowColor: '#000',
@@ -240,7 +243,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16,
     elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5
   },
-  searchInput: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '600', color: COLORS.primary },
+  searchInput: { flex: 1, marginLeft: 12, fontSize: 15, fontWeight: '600', color: COLORS.primary, fontFamily: FONT_SERIF },
   filterBtn: { 
     width: 56, height: 56, borderRadius: 18, backgroundColor: COLORS.primary, 
     justifyContent: 'center', alignItems: 'center', elevation: 6
@@ -252,7 +255,7 @@ const styles = StyleSheet.create({
   iconCircle: { 
     width: 68, height: 68, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 8 
   },
-  actionLabel: { fontSize: 12, fontWeight: '800', color: COLORS.primary },
+  actionLabel: { fontSize: 12, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SERIF },
   catScroll: { marginBottom: 25 },
   catPill: { 
     paddingHorizontal: 22, paddingVertical: 12, borderRadius: 16, 
@@ -260,14 +263,14 @@ const styles = StyleSheet.create({
     elevation: 2 
   },
   activeCatPill: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  catText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary },
-  activeCatText: { color: 'white' },
+  catText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SERIF },
+  activeCatText: { color: 'white', fontFamily: FONT_SERIF },
   doctorSection: { paddingHorizontal: 24 },
   sectionHeader: { 
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 
   },
-  sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary },
-  seeAll: { fontSize: 14, fontWeight: '700', color: COLORS.medical },
+  sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  seeAll: { fontSize: 14, fontWeight: '700', color: COLORS.medical, fontFamily: FONT_SERIF },
   docCard: { 
     backgroundColor: 'white', borderRadius: 32, padding: 15, marginBottom: 20, 
     flexDirection: 'row', elevation: 15, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 15 
@@ -278,28 +281,28 @@ const styles = StyleSheet.create({
     position: 'absolute', bottom: -10, alignSelf: 'center', 
     paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, elevation: 5 
   },
-  statusText: { color: 'white', fontSize: 8, fontWeight: '900' },
+  statusText: { color: 'white', fontSize: 8, fontWeight: '900', fontFamily: FONT_SERIF },
   docInfo: { flex: 1, marginLeft: 18 },
   docHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
   proBadge: { borderWidth: 1, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 },
   proText: { fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
   ratingBox: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.background, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6 },
-  ratingText: { marginLeft: 4, fontSize: 10, fontWeight: '900', color: COLORS.primary },
-  docName: { fontSize: 18, fontWeight: '900', color: COLORS.primary },
-  docSpec: { fontSize: 12, fontWeight: '600', color: COLORS.secondary, marginTop: 2 },
+  ratingText: { marginLeft: 4, fontSize: 10, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  docName: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  docSpec: { fontSize: 12, fontWeight: '600', color: COLORS.secondary, marginTop: 2, fontFamily: FONT_SERIF },
   docFooter: { 
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', 
     marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: COLORS.background 
   },
   expBox: { flexDirection: 'row', alignItems: 'center' },
-  expText: { marginLeft: 4, fontSize: 11, fontWeight: '700', color: COLORS.secondary },
+  expText: { marginLeft: 4, fontSize: 11, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SERIF },
   priceTag: { flexDirection: 'row', alignItems: 'center' },
-  priceLabel: { fontSize: 11, color: COLORS.secondary, fontWeight: '600' },
-  priceVal: { fontSize: 16, fontWeight: '900', color: COLORS.primary, marginLeft: 4 },
+  priceLabel: { fontSize: 11, color: COLORS.secondary, fontWeight: '600', fontFamily: FONT_SERIF },
+  priceVal: { fontSize: 16, fontWeight: '900', color: COLORS.primary, marginLeft: 4, fontFamily: FONT_SERIF },
   bookBtn: { 
     marginTop: 15, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' 
   },
-  bookText: { color: 'white', fontSize: 11, fontWeight: '900', letterSpacing: 1 }
+  bookText: { color: 'white', fontSize: 11, fontWeight: '900', letterSpacing: 1, fontFamily: FONT_SERIF }
 });
 
 export default DoctorHome;

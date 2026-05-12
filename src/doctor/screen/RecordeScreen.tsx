@@ -10,10 +10,12 @@ import {
   StatusBar,
   Dimensions,
   TextInput,
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const COLORS = {
   primary: '#0F291E',
@@ -152,7 +154,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24, paddingTop: 30, paddingBottom: 20, 
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' 
   },
-  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5 },
+  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, fontFamily: FONT_SERIF },
   plusBtn: { 
     width: 44, height: 44, borderRadius: 14, backgroundColor: COLORS.primary, 
     justifyContent: 'center', alignItems: 'center', elevation: 4
@@ -163,9 +165,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16,
     elevation: 4, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5
   },
-  searchInput: { flex: 1, marginLeft: 12, fontSize: 14, fontWeight: '600', color: COLORS.primary },
+  searchInput: { flex: 1, marginLeft: 12, fontSize: 14, fontWeight: '600', color: COLORS.primary, fontFamily: FONT_SERIF },
   recordSection: { paddingHorizontal: 24 },
-  sectionTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, marginBottom: 20 },
+  sectionTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, marginBottom: 20, fontFamily: FONT_SERIF },
   recordCard: { 
     backgroundColor: 'white', borderRadius: 28, padding: 18, marginBottom: 18, 
     flexDirection: 'row', elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.05, shadowRadius: 10
@@ -173,15 +175,15 @@ const styles = StyleSheet.create({
   iconBox: { width: 60, height: 60, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
   recordInfo: { flex: 1, marginLeft: 15 },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  patientName: { fontSize: 17, fontWeight: '900', color: COLORS.primary },
-  dateText: { fontSize: 11, fontWeight: '700', color: COLORS.secondary, opacity: 0.6 },
-  ownerText: { fontSize: 12, fontWeight: '600', color: COLORS.secondary, marginTop: 2 },
-  diagnosisText: { fontSize: 13, fontWeight: '500', color: COLORS.primary, marginTop: 4, opacity: 0.8 },
+  patientName: { fontSize: 17, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  dateText: { fontSize: 11, fontWeight: '700', color: COLORS.secondary, opacity: 0.6, fontFamily: FONT_SERIF },
+  ownerText: { fontSize: 12, fontWeight: '600', color: COLORS.secondary, marginTop: 2, fontFamily: FONT_SERIF },
+  diagnosisText: { fontSize: 13, fontWeight: '500', color: COLORS.primary, marginTop: 4, opacity: 0.8, fontFamily: FONT_SERIF },
   footerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: COLORS.background },
   statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
-  statusText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.5 },
+  statusText: { fontSize: 9, fontWeight: '900', letterSpacing: 0.5, fontFamily: FONT_SERIF },
   viewBtn: { flexDirection: 'row', alignItems: 'center' },
-  viewBtnText: { fontSize: 11, fontWeight: '800', color: COLORS.medical, marginRight: 4 },
+  viewBtnText: { fontSize: 11, fontWeight: '800', color: COLORS.medical, marginRight: 4, fontFamily: FONT_SERIF },
   fab: { 
     position: 'absolute', bottom: 30, right: 24, width: 64, height: 64, borderRadius: 32, 
     backgroundColor: COLORS.medical, justifyContent: 'center', alignItems: 'center', elevation: 15

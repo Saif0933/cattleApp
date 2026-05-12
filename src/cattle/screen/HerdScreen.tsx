@@ -9,10 +9,12 @@ import {
   SafeAreaView,
   StatusBar,
   Dimensions,
+  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const COLORS = {
   primary: '#2D4B37',
@@ -166,8 +168,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  greeting: { fontSize: 16, color: COLORS.textSub, fontWeight: '500' },
-  headerTitle: { fontSize: 26, fontWeight: '800', color: COLORS.textMain, marginTop: 4 },
+  greeting: { fontSize: 16, color: COLORS.textSub, fontWeight: '500', fontFamily: FONT_SERIF },
+  headerTitle: { fontSize: 26, fontWeight: '800', color: COLORS.textMain, marginTop: 4, fontFamily: FONT_SERIF },
   profileBtn: {
     width: 45,
     height: 45,
@@ -206,8 +208,8 @@ const styles = StyleSheet.create({
     borderColor: '#F0F0F0',
   },
   activeChip: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
-  categoryText: { marginLeft: 8, fontWeight: '600', color: COLORS.secondary, fontSize: 14 },
-  activeTabText: { color: 'white' },
+  categoryText: { marginLeft: 8, fontWeight: '600', color: COLORS.secondary, fontSize: 14, fontFamily: FONT_SERIF },
+  activeTabText: { color: 'white', fontFamily: FONT_SERIF },
   searchContainer: {
     marginHorizontal: 20,
     backgroundColor: '#F1F3F5',
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 25,
   },
-  searchPlaceholder: { marginLeft: 10, color: COLORS.textSub, fontSize: 14 },
+  searchPlaceholder: { marginLeft: 10, color: COLORS.textSub, fontSize: 14, fontFamily: FONT_SERIF },
   grid: {
     paddingHorizontal: 20,
     flexDirection: 'row',
@@ -240,12 +242,12 @@ const styles = StyleSheet.create({
   animalImage: { width: '100%', height: 150, backgroundColor: '#EEE' },
   cardOverlay: { position: 'absolute', top: 10, left: 10 },
   statusTag: { paddingHorizontal: 8, paddingVertical: 4, borderRadius: 6 },
-  statusText: { color: 'white', fontSize: 8, fontWeight: '800' },
+  statusText: { color: 'white', fontSize: 8, fontWeight: '800', fontFamily: FONT_SERIF },
   cardInfo: { padding: 12 },
-  animalName: { fontSize: 16, fontWeight: '700', color: COLORS.textMain },
-  animalBreed: { fontSize: 12, color: COLORS.textSub, marginTop: 2 },
+  animalName: { fontSize: 16, fontWeight: '700', color: COLORS.textMain, fontFamily: FONT_SERIF },
+  animalBreed: { fontSize: 12, color: COLORS.textSub, marginTop: 2, fontFamily: FONT_SERIF },
   ageRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
-  animalAge: { marginLeft: 4, fontSize: 11, color: COLORS.textSub, fontWeight: '500' },
+  animalAge: { marginLeft: 4, fontSize: 11, color: COLORS.textSub, fontWeight: '500', fontFamily: FONT_SERIF },
   addSection: {
     marginHorizontal: 20,
     backgroundColor: COLORS.primary,
@@ -264,8 +266,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   addTextContent: { marginLeft: 15 },
-  addTitle: { color: 'white', fontSize: 18, fontWeight: '700' },
-  addSub: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2 },
+  addTitle: { color: 'white', fontSize: 18, fontWeight: '700', fontFamily: FONT_SERIF },
+  addSub: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2, fontFamily: FONT_SERIF },
 });
 
 export default HerdScreen;
