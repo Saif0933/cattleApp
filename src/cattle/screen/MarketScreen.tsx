@@ -1,15 +1,15 @@
 import React, { useMemo, useState } from 'react';
 import {
-    Dimensions,
-    Image,
-    SafeAreaView,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Platform
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -28,7 +28,7 @@ const COLORS = {
 
 const MarketplaceScreen = () => {
   const [activeFilter, setActiveFilter] = useState('All');
-  const filters = ['All', 'Food', 'Medicine', 'Livestock', 'Breeding', 'Birds'];
+  const filters = ['All', 'Food', 'Medicine', 'Livestock', 'Breeding', 'Birds', 'Equipment'];
 
   const allListings = [
     {
@@ -162,6 +162,42 @@ const MarketplaceScreen = () => {
       image: "https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&q=80&w=600",
       verified: false,
       commission: "Comm. Apply"
+    },
+    {
+      title: "Elite Dog Manor",
+      brand: "PetShelter Pro",
+      category: "Equipment",
+      price: "450",
+      info: "Weather-Proof Premium Wooden Dog House",
+      weight: "Large Size",
+      type: "EXCLUSIVE",
+      image: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=600",
+      verified: true,
+      commission: "10% Platform"
+    },
+    {
+      title: "Sky-High Bird Palace",
+      brand: "Aviary Elite",
+      category: "Equipment",
+      price: "180",
+      info: "Stainless Steel Designer Hanging Cage",
+      weight: "Exotic Grade",
+      type: "PREMIUM",
+      image: "https://images.unsplash.com/photo-1452570053594-1b985d6ea890?auto=format&fit=crop&q=80&w=600",
+      verified: true,
+      commission: "Ads Charge"
+    },
+    {
+      title: "Pro Cattle Feeder",
+      brand: "FarmTech",
+      category: "Equipment",
+      price: "850",
+      info: "Heavy-Duty Automatic Feeding System",
+      weight: "500kg Cap.",
+      type: "ELITE",
+      image: "https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&q=80&w=600",
+      verified: true,
+      commission: "Subscription"
     }
   ];
 
@@ -201,6 +237,16 @@ const MarketplaceScreen = () => {
     </TouchableOpacity>
   );
 
+  const categoryImages: { [key: string]: string } = {
+    'Food': 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=200',
+    'Medicine': 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&q=80&w=200',
+    'Livestock': 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=200',
+    'Breeding': 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=200',
+    'Birds': 'https://images.unsplash.com/photo-1484557918186-7b4e561c9948?auto=format&fit=crop&q=80&w=200',
+    'Equipment': 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&q=80&w=200',
+    'All': 'https://images.unsplash.com/photo-1516733958632-afb5fd88bb1a?auto=format&fit=crop&q=80&w=200'
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -211,15 +257,18 @@ const MarketplaceScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.filterSection}>
+      <View style={styles.categoryGallery}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 20 }}>
           {filters.map((f, i) => (
             <TouchableOpacity 
               key={i} 
               onPress={() => setActiveFilter(f)}
-              style={[styles.filterPill, activeFilter === f && styles.activePill]}
+              style={styles.categoryItem}
             >
-              <Text style={[styles.filterText, activeFilter === f && styles.activeFilterText]}>{f}</Text>
+              <View style={[styles.imageCircle, activeFilter === f && styles.activeCircle]}>
+                <Image source={{ uri: categoryImages[f] }} style={styles.catImg} />
+              </View>
+              <Text style={[styles.catName, activeFilter === f && styles.activeCatName]}>{f}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -244,12 +293,27 @@ const styles = StyleSheet.create({
   header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white' },
   headerTitle: { fontSize: 24, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   cartBtn: { width: 45, height: 45, borderRadius: 12, backgroundColor: '#F1F5F3', justifyContent: 'center', alignItems: 'center' },
-  filterSection: { paddingVertical: 15, backgroundColor: 'white' },
-  filterPill: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: 12, marginRight: 10, backgroundColor: '#F1F5F3' },
-  activePill: { backgroundColor: COLORS.primary },
-  filterText: { fontSize: 13, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SERIF },
-  activeFilterText: { color: 'white' },
-  promoBanner: { backgroundColor: COLORS.emerald, padding: 15, borderRadius: 15, flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
+  categoryGallery: { paddingVertical: 20, backgroundColor: 'white' },
+  categoryItem: { alignItems: 'center', marginRight: 20 },
+  imageCircle: { 
+    width: 70, 
+    height: 70, 
+    borderRadius: 35, 
+    backgroundColor: '#F1F5F3', 
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    elevation: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4
+  },
+  activeCircle: { borderColor: COLORS.accent },
+  catImg: { width: '100%', height: '100%' },
+  catName: { fontSize: 12, fontWeight: '700', color: COLORS.secondary, marginTop: 8, fontFamily: FONT_SERIF },
+  activeCatName: { color: COLORS.primary, fontWeight: '900' },
+  promoBanner: { backgroundColor: COLORS.emerald, padding: 15, borderRadius: 15, flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginBottom: 20 },
   promoText: { color: 'white', fontSize: 12, fontWeight: '700', marginLeft: 10, flex: 1, fontFamily: FONT_SERIF },
   grid: { gap: 20 },
   modernCard: { backgroundColor: 'white', borderRadius: 25, overflow: 'hidden', elevation: 4 },
