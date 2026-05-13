@@ -29,7 +29,7 @@ const COLORS = {
   gold: '#D4AF37',
 };
 
-const DoctorProfile = () => {
+const DoctorProfile = ({ navigation }: any) => {
   const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true }: any) => (
     <TouchableOpacity style={styles.menuItem}>
       <View style={[styles.menuIconBox, { backgroundColor: color + '15' }]}>
@@ -129,7 +129,7 @@ const DoctorProfile = () => {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.luxuryLogout}>
+          <TouchableOpacity style={styles.luxuryLogout} onPress={() => {navigation.navigate("SelectRole")}}>
             <Icon name="swap-horiz" size={20} color={COLORS.medical} />
             <Text style={styles.logoutLabel}>Switch to Owner Mode</Text>
           </TouchableOpacity>

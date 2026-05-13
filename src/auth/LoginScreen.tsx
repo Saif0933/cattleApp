@@ -30,7 +30,7 @@ const COLORS = {
 };
 
 const LoginScreen = ({ navigation, route }: any) => {
-  const { role } = route.params;
+  const role = route.params?.role || 'user';
   const [phone, setPhone] = useState('');
 
   return (

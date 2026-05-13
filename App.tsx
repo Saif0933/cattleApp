@@ -1,7 +1,7 @@
-import React from 'react';
-import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 // Navigation Components
@@ -9,9 +9,14 @@ import BottomTabNavigator from './src/cattle/screen/navigation/BottomTab';
 import DoctorBottomTab from './src/doctor/screen/navigation/DoctorBottomTab';
 
 // Auth Screens
-import SelectRoleScreen from './src/auth/SelectRoleScreen';
 import LoginScreen from './src/auth/LoginScreen';
 import OTPScreen from './src/auth/OTPScreen';
+import SelectRoleScreen from './src/auth/SelectRoleScreen';
+import AddCattle from './src/cattle/screen/AddCattle';
+import DoctorBookingScreen from './src/cattle/screen/DoctorBookingScreen';
+import BreedingScreen from './src/cattle/screen/BreedingScreen';
+import SubscriptionScreen from './src/cattle/screen/SubscriptionScreen';
+import PetCareScreen from './src/cattle/screen/PetCareScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +35,11 @@ function App() {
           {/* Main App Redirections */}
           <Stack.Screen name="MainApp" component={BottomTabNavigator} />
           <Stack.Screen name="DoctorApp" component={DoctorBottomTab} />
+          <Stack.Screen name="AddCattle" component={AddCattle} />
+          <Stack.Screen name="DoctorBooking" component={DoctorBookingScreen} />
+          <Stack.Screen name="Breeding" component={BreedingScreen} />
+          <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+          <Stack.Screen name="PetCare" component={PetCareScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>

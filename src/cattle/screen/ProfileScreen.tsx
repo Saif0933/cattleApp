@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
   Dimensions,
+  Image,
   ImageBackground,
   Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -29,7 +29,7 @@ const COLORS = {
   gold: '#D4AF37',
 };
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }: any) => {
   const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true }: any) => (
     <TouchableOpacity style={styles.menuItem}>
       <View style={[styles.menuIconBox, { backgroundColor: color + '15' }]}>
@@ -127,7 +127,7 @@ const ProfileScreen = () => {
             </View>
           </View>
 
-          <TouchableOpacity style={styles.luxuryLogout}>
+          <TouchableOpacity style={styles.luxuryLogout} onPress={() => {navigation.navigate("SelectRole")}}>
             <Icon name="power-settings-new" size={20} color={COLORS.crimson} />
             <Text style={styles.logoutLabel}>Secure Sign Out</Text>
           </TouchableOpacity>

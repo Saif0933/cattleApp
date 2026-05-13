@@ -31,7 +31,8 @@ const COLORS = {
 };
 
 const OTPScreen = ({ navigation, route }: any) => {
-  const { phone, role } = route.params;
+  const phone = route.params?.phone || '';
+  const role = route.params?.role || 'user';
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(30);
 

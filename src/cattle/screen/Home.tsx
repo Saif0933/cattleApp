@@ -3,8 +3,6 @@ import {
     Dimensions,
     Image,
     ImageBackground,
-    NativeScrollEvent,
-    NativeSyntheticEvent,
     ScrollView,
     StatusBar,
     StyleSheet,
@@ -22,97 +20,89 @@ const COLORS = {
   primary: '#0F291E',
   secondary: '#3D5447',
   accent: '#FFB800',
-  background: '#F0F4F2',
+  background: '#F9FBFA',
   surface: '#FFFFFF',
-  glass: 'rgba(255, 255, 255, 0.9)',
+  emerald: '#10B981',
 };
 
-interface AnimalCardProps {
-  name: string;
-  breed: string;
-  price: string;
-  info: string;
-  image: string;
-  type: string;
-}
-
-const HERD_APP = () => {
+const HERD_APP = ({ navigation, route }: any) => {
   const [activeSlide, setActiveSlide] = useState(0);
-  const [activeCategory, setActiveCategory] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
 
-  const categories = [
-    { name: 'All', icon: 'grid-view', color: '#1B2E22' },
-    { name: 'Cattle', icon: 'agriculture', color: '#496452' },
-    { name: 'Pets', icon: 'pets', color: '#D97706' },
-    { name: 'Birds', icon: 'flutter-dash', color: '#3B82F6' },
-    { name: 'Feed', icon: 'grass', color: '#10B981' }
+  const services = [
+    { name: 'Doctor', icon: 'medical-services', color: '#10B981', sub: '20% Comm.' },
+    { name: 'Vaccine', icon: 'vaccines', color: '#3B82F6', sub: 'Care Logs' },
+    { name: 'Breeding', icon: 'favorite', color: '#EC4899', sub: 'Elite Pairs' },
+    { name: 'Store', icon: 'shopping-bag', color: '#F59E0B', sub: 'Premium' }
   ];
 
-  const slides = [
+  const ads = [
     {
-      title: 'Premium Livestock',
-      sub: 'The world\'s most elite collection is now at your fingertips.',
-      image: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200',
-      badge: 'EXCLUSIVE ACCESS'
+      title: 'Premium Nutrition',
+      sub: 'Save 20% on Elite Pet Food Brands',
+      image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=1200',
+      badge: 'SPONSORED'
     },
     {
-      title: 'Exotic Pets',
-      sub: 'Discover rare breeds and beautiful companions from every corner.',
-      image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=1200',
-      badge: 'TRENDING PETS'
-    },
-    {
-      title: 'Rare Birds',
-      sub: 'Vibrant plumage and talkative friends waiting for a home.',
-      image: 'https://images.unsplash.com/photo-1484557918186-7b4e561c9948?auto=format&fit=crop&q=80&w=1200',
-      badge: 'NEW ARRIVALS'
+      title: 'Verified Doctors',
+      sub: 'Top-rated specialists at your service.',
+      image: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&q=80&w=1200',
+      badge: 'FEATURED'
     }
   ];
+
+  const [topListings, setTopListings] = useState([
+    { name: "Siberian Husky", breed: "Pure Breed", price: "2,500", info: "Verified Breeder", type: "PREMIUM", image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400", verified: true },
+    { name: "Persian Kit", breed: "Show Quality", price: "1,200", info: "Top Seller", type: "AD", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400", verified: false }
+  ]);
 
   useEffect(() => {
     const timer = setInterval(() => {
       let nextSlide = activeSlide + 1;
-      if (nextSlide >= slides.length) {
-        nextSlide = 0;
-      }
+      if (nextSlide >= ads.length) nextSlide = 0;
       scrollRef.current?.scrollTo({ x: nextSlide * width, animated: true });
       setActiveSlide(nextSlide);
-    }, 3500);
+    }, 4000);
     return () => clearInterval(timer);
   }, [activeSlide]);
 
-  const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const slide = Math.round(event.nativeEvent.contentOffset.x / event.nativeEvent.layoutMeasurement.width);
-    if (slide !== activeSlide) {
-      setActiveSlide(slide);
-    }
-  };
-
-  const AnimalCard = ({ name, breed, price, info, image, type }: AnimalCardProps) => (
-    <TouchableOpacity style={styles.modernCard}>
-      <Image source={{ uri: image }} style={styles.cardImg} />
-      <View style={styles.typeTag}>
-        <Text style={styles.typeTagText}>{type.toUpperCase()}</Text>
+  const ServiceCard = ({ name, icon, color, sub }: any) => (
+    <TouchableOpacity 
+      style={styles.serviceCard}
+      onPress={() => {
+        if (name === 'Doctor') navigation.navigate('DoctorBooking');
+        if (name === 'Breeding') navigation.navigate('Breeding');
+        if (name === 'Vaccine') navigation.navigate('PetCare');
+      }}
+    >
+      <View style={[styles.serviceIcon, { backgroundColor: color + '15' }]}>
+        <Icon name={icon} size={28} color={color} />
       </View>
-      <View style={styles.glassContent}>
-        <View style={styles.cardHeaderRow}>
-          <View>
-            <Text style={styles.cardBreed}>{breed}</Text>
-            <Text style={styles.cardName}>{name}</Text>
-          </View>
-          <View style={styles.pricePill}>
-            <Text style={styles.pricePillText}>${price}</Text>
-          </View>
+      <Text style={styles.serviceName}>{name}</Text>
+      <Text style={styles.serviceSub}>{sub}</Text>
+    </TouchableOpacity>
+  );
+
+  const PremiumCard = ({ name, breed, price, info, image, type, verified }: any) => (
+    <TouchableOpacity style={styles.premiumListing}>
+      <Image source={{ uri: image }} style={styles.premiumImg} />
+      {verified && (
+        <View style={styles.verifiedBadge}>
+          <Icon name="verified" size={16} color={COLORS.accent} />
+          <Text style={styles.verifiedText}>TRUSTED</Text>
         </View>
-        <View style={styles.cardFooter}>
-          <View style={styles.footerItem}>
-            <Icon name="history" size={14} color={COLORS.secondary} />
-            <Text style={styles.footerText}>{info}</Text>
+      )}
+      <View style={styles.premiumTag}>
+        <Text style={styles.premiumTagText}>{type}</Text>
+      </View>
+      <View style={styles.premiumInfo}>
+        <Text style={styles.premiumName}>{name}</Text>
+        <Text style={styles.premiumBreed}>{breed}</Text>
+        <View style={styles.premiumFooter}>
+          <Text style={styles.premiumPrice}>${price}</Text>
+          <View style={styles.premiumAction}>
+            <Icon name="arrow-forward" size={16} color="white" />
           </View>
-          <TouchableOpacity style={styles.cardActionBtn}>
-            <Icon name="chevron-right" size={20} color="white" />
-          </TouchableOpacity>
         </View>
       </View>
     </TouchableOpacity>
@@ -120,160 +110,147 @@ const HERD_APP = () => {
 
   return (
     <View style={styles.mainContainer}>
-      <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      <StatusBar translucent backgroundColor="transparent" barStyle="dark-content" />
       
-      <View style={styles.header}>
-        <View />
-        <View style={styles.headerActions}>
-          <TouchableOpacity style={styles.circleIconBtn}>
-            <Icon name="search" size={24} color="white" />
-          </TouchableOpacity>
+      {/* Floating Transparent Header */}
+      <View style={styles.floatingHeader}>
+        <View style={styles.searchBar}>
+          <Icon name="search" size={20} color={COLORS.secondary} />
+          <Text style={styles.searchPlaceholder}>Search Doctors, Food...</Text>
         </View>
+        <TouchableOpacity style={styles.subscribeBtn} onPress={() => navigation.navigate('Subscription')}>
+          <Icon name="star" size={18} color={COLORS.accent} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
-        <View style={styles.sliderContainer}>
-          <ScrollView ref={scrollRef} horizontal pagingEnabled showsHorizontalScrollIndicator={false} onScroll={onScroll} scrollEventThrottle={16}>
-            {slides.map((slide, idx) => (
-              <ImageBackground key={idx} source={{ uri: slide.image }} style={styles.heroBackground}>
-                <View style={styles.heroGradient}>
-                  <View style={styles.heroContent}>
-                    <View style={styles.heroBadge}><Text style={styles.heroBadgeText}>{slide.badge}</Text></View>
-                    <Text style={styles.heroTitle}>{slide.title}</Text>
-                    <Text style={styles.heroSub}>{slide.sub}</Text>
-                    <TouchableOpacity style={styles.heroBtn}><Text style={styles.heroBtnText}>Start Browsing</Text></TouchableOpacity>
-                  </View>
+        {/* Ads Carousel (Now at the very top) */}
+        <View style={styles.adsWrapper}>
+          <ScrollView ref={scrollRef} horizontal pagingEnabled showsHorizontalScrollIndicator={false}>
+            {ads.map((ad, idx) => (
+              <ImageBackground key={idx} source={{ uri: ad.image }} style={styles.adBanner}>
+                <View style={styles.adOverlay}>
+                  <View style={{ height: 100 }} /> 
+                  <View style={styles.adBadge}><Text style={styles.adBadgeText}>{ad.badge}</Text></View>
+                  <Text style={styles.adTitle}>{ad.title}</Text>
+                  <Text style={styles.adSubText}>{ad.sub}</Text>
+                  <TouchableOpacity style={styles.adBtn}><Text style={styles.adBtnText}>Check Out</Text></TouchableOpacity>
                 </View>
               </ImageBackground>
             ))}
           </ScrollView>
-          <View style={styles.pagination}>
-            {slides.map((_, idx) => (
-              <View key={idx} style={[styles.dot, activeSlide === idx ? styles.activeDot : styles.inactiveDot]} />
-            ))}
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Elite Services</Text>
+          <View style={styles.servicesGrid}>
+            {services.map((s, i) => <ServiceCard key={i} {...s} />)}
           </View>
         </View>
 
-        <View style={styles.contentSection}>
-          {/* Enhanced Categories Section */}
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Categories</Text>
-            <TouchableOpacity><Text style={styles.seeAll}>Discover More</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.subCallout} onPress={() => navigation.navigate('Subscription')}>
+          <View>
+            <Text style={styles.subTitle}>Professional Seller?</Text>
+            <Text style={styles.subSub}>Get 1st listing FREE, then subscribe.</Text>
           </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catList} contentContainerStyle={{ paddingRight: 40 }}>
-            {categories.map((cat, idx) => (
-              <TouchableOpacity 
-                key={idx} 
-                onPress={() => setActiveCategory(idx)}
-                style={[
-                  styles.catCard, 
-                  activeCategory === idx && { backgroundColor: cat.color, borderBottomWidth: 0 }
-                ]}
-              >
-                <View style={[
-                  styles.catIconBox, 
-                  activeCategory === idx ? { backgroundColor: 'rgba(255,255,255,0.15)' } : { backgroundColor: COLORS.background }
-                ]}>
-                  <Icon name={cat.icon} size={18} color={activeCategory === idx ? 'white' : COLORS.primary} />
-                </View>
-                <Text style={[
-                  styles.catLabel, 
-                  activeCategory === idx ? { color: 'white' } : { color: COLORS.secondary }
-                ]}>{cat.name.toUpperCase()}</Text>
-              </TouchableOpacity>
-            ))}
+          <Icon name="chevron-right" size={24} color="white" />
+        </TouchableOpacity>
+
+        <View style={styles.section}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.sectionTitle}>Top Promoted</Text>
+            <TouchableOpacity><Text style={styles.seeAll}>View All</Text></TouchableOpacity>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.premiumScroll}>
+            {topListings.map((listing, idx) => <PremiumCard key={idx} {...listing} />)}
           </ScrollView>
+        </View>
 
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Top Picks</Text>
-          </View>
-          <View style={styles.animalGrid}>
-            <AnimalCard name="Oliver" breed="Persian Cat" price="850" info="2 Years Old" type="Pet" image="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400" />
-            <AnimalCard name="Billy" breed="Boer Goat" price="1,200" info="1.5 Years Old" type="Livestock" image="https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400" />
-            <AnimalCard name="Titan" breed="Black Angus" price="12,500" info="3 Years Old" type="Premium" image="https://lh3.googleusercontent.com/aida-public/AB6AXuBDdNasNgugMt9GW99saf9kJLyEjuvlGJ-Ti7ptGLBiUeFObAF6Ma6ZyY1jew9pbTeSKPqDdhpRyYxOLVcqkdfa_VXyWyV2qwAXw7i5Uy-6tSo0fDfkZugDj74wiXhpmJWG__Y-tuoMn40fP0i-ePHCXZNR3ryiovs95anrLxl0XH_3_68X5p5SRtofvwvvhxqQj2o7y97xDwadmc1BGMF4E86CumFBytPLS1WU2RlzwbdJdCbEprXbnSpnHh-f9cdxzVN43MBx" />
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Featured Brands</Text>
+          <View style={styles.brandGrid}>
+            <TouchableOpacity style={styles.brandCard}>
+              <Image source={{ uri: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=400' }} style={styles.brandImg} />
+              <Text style={styles.brandName}>PetMedics</Text>
+              <Text style={styles.brandCommission}>Sponsored</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.brandCard}>
+              <Image source={{ uri: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=400' }} style={styles.brandImg} />
+              <Text style={styles.brandName}>Elite Feast</Text>
+              <Text style={styles.brandCommission}>Promoted</Text>
+            </TouchableOpacity>
           </View>
         </View>
+        <View style={{ height: 100 }} />
       </ScrollView>
 
-      <TouchableOpacity style={styles.fabContainer}>
-        <View style={styles.fabCircle}><Icon name="add" size={32} color={COLORS.primary} /></View>
+      <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('AddCattle')}>
+        <Icon name="add" size={32} color="white" />
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  mainContainer: { flex: 1, backgroundColor: COLORS.background },
-  sliderContainer: { height: height * 0.65 },
-  heroBackground: { width: width, height: height * 0.65 },
-  heroGradient: { 
-    position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, 
-    backgroundColor: 'rgba(15, 41, 30, 0.4)', justifyContent: 'flex-end', paddingBottom: 60
+  mainContainer: { flex: 1, backgroundColor: '#F9FBFA' },
+  floatingHeader: { 
+    position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100,
+    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, 
+    paddingTop: StatusBar.currentHeight || 40, paddingBottom: 15
   },
-  header: {
-    position: 'absolute', top: StatusBar.currentHeight || 40, left: 0, right: 0, zIndex: 100,
-    paddingHorizontal: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+  searchBar: { 
+    flex: 1, height: 45, backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: 12, 
+    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, elevation: 5 
   },
-  headerActions: { flexDirection: 'row' },
-  circleIconBtn: { 
-    width: 48, height: 48, borderRadius: 24, backgroundColor: 'rgba(255,255,255,0.2)', 
-    justifyContent: 'center', alignItems: 'center' 
+  searchPlaceholder: { marginLeft: 10, color: '#94A3B8', fontSize: 13, fontFamily: FONT_SERIF },
+  subscribeBtn: { width: 45, height: 45, backgroundColor: COLORS.primary, borderRadius: 12, marginLeft: 12, justifyContent: 'center', alignItems: 'center', elevation: 5 },
+  adsWrapper: { height: 280 },
+  adBanner: { width: width, height: 280 },
+  adOverlay: { flex: 1, backgroundColor: 'rgba(15, 41, 30, 0.4)', padding: 25, justifyContent: 'center' },
+  adBadge: { backgroundColor: COLORS.accent, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, alignSelf: 'flex-start', marginBottom: 10 },
+  adBadgeText: { color: COLORS.primary, fontSize: 10, fontWeight: '900', letterSpacing: 1 },
+  adTitle: { color: 'white', fontSize: 24, fontWeight: '900', fontFamily: FONT_SERIF },
+  adSubText: { color: 'rgba(255,255,255,0.8)', fontSize: 14, marginTop: 5, fontFamily: FONT_SERIF },
+  adBtn: { backgroundColor: 'white', paddingHorizontal: 15, paddingVertical: 8, borderRadius: 8, alignSelf: 'flex-start', marginTop: 15 },
+  adBtnText: { color: COLORS.primary, fontWeight: '800', fontSize: 12 },
+  section: { paddingHorizontal: 20, marginBottom: 30 },
+  sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, marginBottom: 15 },
+  rowHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
+  seeAll: { color: COLORS.secondary, fontSize: 12, fontWeight: '700' },
+  servicesGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  serviceCard: { width: (width - 55) / 2, backgroundColor: 'white', padding: 15, borderRadius: 20, marginBottom: 15, elevation: 2 },
+  serviceIcon: { width: 50, height: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
+  serviceName: { fontSize: 16, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  serviceSub: { fontSize: 11, color: COLORS.secondary, marginTop: 2, fontWeight: '600' },
+  subCallout: { 
+    marginHorizontal: 20, backgroundColor: COLORS.primary, borderRadius: 20, padding: 20, 
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 30 
   },
-  heroContent: { paddingHorizontal: 24, paddingBottom: 60 },
-  heroBadge: { 
-    backgroundColor: COLORS.accent, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, alignSelf: 'flex-start', marginBottom: 16
-  },
-  heroBadgeText: { color: COLORS.primary, fontSize: 10, fontWeight: '900', letterSpacing: 1, fontFamily: FONT_SERIF },
-  heroTitle: { color: 'white', fontSize: 40, fontWeight: '900', lineHeight: 46, fontFamily: FONT_SERIF },
-  heroSub: { color: 'rgba(255,255,255,0.85)', fontSize: 16, marginTop: 12, fontWeight: '500', width: '85%', fontFamily: FONT_SERIF },
-  heroBtn: { backgroundColor: 'white', paddingVertical: 16, paddingHorizontal: 32, borderRadius: 20, alignSelf: 'flex-start', marginTop: 24 },
-  heroBtnText: { color: COLORS.primary, fontWeight: '800', fontSize: 16, fontFamily: FONT_SERIF },
-  pagination: { position: 'absolute', top: (StatusBar.currentHeight || 40) + 70, right: 24, flexDirection: 'row' },
-  dot: { height: 8, borderRadius: 4, marginRight: 6 },
-  activeDot: { width: 24, backgroundColor: COLORS.accent },
-  inactiveDot: { width: 8, backgroundColor: 'rgba(255,255,255,0.5)' },
-  contentSection: { marginTop: -30, backgroundColor: COLORS.background, borderTopLeftRadius: 40, borderTopRightRadius: 40, paddingTop: 30, paddingBottom: 100 },
-  sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 24, marginBottom: 20 },
-  sectionTitle: { fontSize: 24, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  seeAll: { fontSize: 14, color: COLORS.secondary, fontWeight: '700', fontFamily: FONT_SERIF },
-  catList: { paddingLeft: 24, marginBottom: 30 },
-  catCard: { 
-    backgroundColor: 'white', 
-    paddingVertical: 12, 
-    paddingHorizontal: 8, 
-    borderRadius: 20, 
-    marginRight: 10, 
-    alignItems: 'center', 
-    width: 75,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.03)',
-  },
-  catIconBox: { 
-    width: 42, 
-    height: 42, 
-    borderRadius: 14, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    marginBottom: 8 
-  },
-  catLabel: { fontSize: 9, fontWeight: '800', letterSpacing: 0.5, fontFamily: FONT_SERIF },
-  animalGrid: { paddingHorizontal: 24 },
-  modernCard: { height: 320, borderRadius: 40, backgroundColor: 'white', marginBottom: 24, overflow: 'hidden', elevation: 15, shadowColor: '#000', shadowOffset: { width: 0, height: 15 }, shadowOpacity: 0.15, shadowRadius: 20 },
-  cardImg: { width: '100%', height: '100%', position: 'absolute' },
-  typeTag: { position: 'absolute', top: 24, right: 24, backgroundColor: 'rgba(0,0,0,0.5)', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 14 },
-  typeTagText: { color: 'white', fontSize: 10, fontWeight: '900', fontFamily: FONT_SERIF },
-  glassContent: { position: 'absolute', bottom: 16, left: 16, right: 16, backgroundColor: COLORS.glass, borderRadius: 32, padding: 20, elevation: 5 },
-  cardHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  cardBreed: { fontSize: 12, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1, fontFamily: FONT_SERIF },
-  cardName: { fontSize: 22, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  pricePill: { backgroundColor: COLORS.primary, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 14 },
-  pricePillText: { color: 'white', fontWeight: '900', fontSize: 16, fontFamily: FONT_SERIF },
-  cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 15 },
-  footerItem: { flexDirection: 'row', alignItems: 'center' },
-  footerText: { marginLeft: 8, fontSize: 13, color: COLORS.secondary, fontWeight: '700', fontFamily: FONT_SERIF },
-  cardActionBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.primary, justifyContent: 'center', alignItems: 'center' },
-  fabContainer: { position: 'absolute', bottom: 30, right: 24 },
-  fabCircle: { width: 72, height: 72, borderRadius: 36, backgroundColor: COLORS.accent, justifyContent: 'center', alignItems: 'center', elevation: 20, shadowColor: COLORS.accent, shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.5, shadowRadius: 15 }
+  subTitle: { color: 'white', fontSize: 18, fontWeight: '900', fontFamily: FONT_SERIF },
+  subSub: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2 },
+  premiumScroll: { marginLeft: -5 },
+  premiumListing: { width: 220, backgroundColor: 'white', borderRadius: 25, marginRight: 15, overflow: 'hidden', elevation: 4 },
+  premiumImg: { width: '100%', height: 140 },
+  premiumTag: { position: 'absolute', top: 12, left: 12, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
+  premiumTagText: { color: 'white', fontSize: 9, fontWeight: '900' },
+  verifiedBadge: { position: 'absolute', top: 12, right: 12, backgroundColor: 'white', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8 },
+  verifiedText: { color: COLORS.primary, fontSize: 9, fontWeight: '900', marginLeft: 4 },
+  premiumInfo: { padding: 15 },
+  premiumName: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  premiumBreed: { fontSize: 12, color: COLORS.secondary, marginTop: 2 },
+  premiumFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 },
+  premiumPrice: { fontSize: 16, fontWeight: '900', color: COLORS.primary },
+  premiumAction: { width: 32, height: 32, backgroundColor: COLORS.primary, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+  brandGrid: { flexDirection: 'row', justifyContent: 'space-between' },
+  brandCard: { width: (width - 55) / 2, backgroundColor: 'white', borderRadius: 20, padding: 12, elevation: 2 },
+  brandImg: { width: '100%', height: 100, borderRadius: 15, marginBottom: 10 },
+  brandName: { fontSize: 15, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  brandCommission: { fontSize: 10, color: COLORS.emerald, fontWeight: '700', marginTop: 2 },
+  fab: { 
+    position: 'absolute', bottom: 30, right: 20, width: 65, height: 65, 
+    backgroundColor: COLORS.primary, borderRadius: 20, justifyContent: 'center', 
+    alignItems: 'center', elevation: 10, shadowColor: COLORS.primary, shadowRadius: 10, shadowOpacity: 0.3 
+  }
 });
 
 export default HERD_APP;

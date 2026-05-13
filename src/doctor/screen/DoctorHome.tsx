@@ -31,7 +31,7 @@ const COLORS = {
   border: 'rgba(0,0,0,0.05)',
 };
 
-const DoctorHome = () => {
+const DoctorHome = ({ navigation }: any) => {
   const [activeTab, setActiveTab] = React.useState('All');
   const categories = ['All', 'Cattle', 'Pets', 'Birds', 'Surgery', 'Nutrition'];
 
