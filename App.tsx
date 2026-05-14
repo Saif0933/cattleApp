@@ -21,6 +21,7 @@ import OrderSummaryScreen from './src/cattle/screen/OrderSummaryScreen';
 import PaymentScreen from './src/cattle/screen/PaymentScreen';
 import OrderSuccessScreen from './src/cattle/screen/OrderSuccessScreen';
 import OrderTrackingScreen from './src/cattle/screen/OrderTrackingScreen';
+import UpdateAddressScreen from './src/cattle/screen/UpdateAddressScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,7 @@ function App() {
           <Stack.Screen name="Payment" component={PaymentScreen} />
           <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
           <Stack.Screen name="OrderTracking" component={OrderTrackingScreen} />
+          <Stack.Screen name="UpdateAddress" component={UpdateAddressScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>

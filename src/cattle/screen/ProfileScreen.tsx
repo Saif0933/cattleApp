@@ -30,8 +30,8 @@ const COLORS = {
 };
 
 const ProfileScreen = ({ navigation }: any) => {
-  const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true }: any) => (
-    <TouchableOpacity style={styles.menuItem}>
+  const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true, onPress }: any) => (
+    <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={[styles.menuIconBox, { backgroundColor: color + '15' }]}>
         <Icon name={icon} size={22} color={color} />
       </View>
@@ -122,6 +122,15 @@ const ProfileScreen = ({ navigation }: any) => {
               <MenuOption icon="verified-user" title="Security & Privacy" subtitle="Two-factor authentication active" color={COLORS.secondary} />
               <View style={styles.menuDivider} />
               <MenuOption icon="notifications-active" title="Notifications" subtitle="Alerts for new listings & sales" color={COLORS.primary} />
+              <View style={styles.menuDivider} />
+              <MenuOption 
+                icon="local-shipping" 
+                title="My Shipping Address" 
+                subtitle="Manage your delivery locations" 
+                color={COLORS.primary} 
+                showArrow={true} 
+                onPress={() => navigation.navigate('UpdateAddress')}
+              />
               <View style={styles.menuDivider} />
               <MenuOption icon="help-center" title="Support Center" subtitle="24/7 dedicated elite support" color={COLORS.secondary} />
             </View>
