@@ -9,8 +9,8 @@ import {
   SafeAreaView,
   StatusBar,
   Dimensions,
-  ImageBackground,
   Platform,
+  ImageBackground,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -18,32 +18,61 @@ const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  medical: '#0EA5E9',
+  primary: '#0F172A',
+  secondary: '#64748B',
+  accent: '#3B82F6',
   emerald: '#10B981',
-  crimson: '#EF4444',
-  gold: '#D4AF37',
+  gold: '#F59E0B',
+  rose: '#F43F5E',
+  violet: '#8B5CF6',
+  background: '#F8FAFC',
+  surface: '#FFFFFF',
+  glass: 'rgba(255, 255, 255, 0.8)',
+  textMain: '#1E293B',
+  textSub: '#64748B',
+};
+
+const GRADIENTS = {
+  header: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=1000',
+  btn: 'https://img.freepik.com/free-vector/abstract-gradient-blue-background-design_343694-2636.jpg',
 };
 
 const DoctorProfile = ({ navigation }: any) => {
-  const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true }: any) => (
-    <TouchableOpacity style={styles.menuItem}>
-      <View style={[styles.menuIconBox, { backgroundColor: color + '15' }]}>
-        <Icon name={icon} size={22} color={color} />
+
+  const InfoChip = ({ icon, label, color }: any) => (
+    <View style={[styles.chip, { backgroundColor: color + '15' }]}>
+      <Icon name={icon} size={12} color={color} />
+      <Text style={[styles.chipText, { color }]}>{label}</Text>
+    </View>
+  );
+
+  const StatTile = ({ label, value, icon, color }: any) => (
+    <View style={styles.statTile}>
+      <View style={[styles.statIconWrapper, { backgroundColor: color + '10' }]}>
+        <Icon name={icon} size={20} color={color} />
       </View>
-      <View style={styles.menuTextContent}>
-        <Text style={styles.menuTitle}>{title}</Text>
-        {subtitle && <Text style={styles.menuSubtitle}>{subtitle}</Text>}
+      <View style={styles.statTextGroup}>
+        <Text style={styles.statValue}>{value}</Text>
+        <Text style={styles.statLabel}>{label}</Text>
       </View>
-      {showArrow && (
-        <View style={styles.arrowBox}>
-          <Icon name="chevron-right" size={18} color={COLORS.secondary} />
+    </View>
+  );
+
+  const ActionPill = ({ title, subtitle, icon, color, count }: any) => (
+    <TouchableOpacity style={styles.actionPill}>
+      <View style={[styles.pillIconBox, { backgroundColor: color }]}>
+        <Icon name={icon} size={24} color="white" />
+      </View>
+      <View style={styles.pillContent}>
+        <Text style={styles.pillTitle}>{title}</Text>
+        <Text style={styles.pillSubtitle}>{subtitle}</Text>
+      </View>
+      {count && (
+        <View style={styles.pillBadge}>
+          <Text style={styles.pillBadgeText}>{count}</Text>
         </View>
       )}
+      <Icon name="navigate-next" size={24} color={COLORS.secondary} />
     </TouchableOpacity>
   );
 
@@ -51,91 +80,127 @@ const DoctorProfile = ({ navigation }: any) => {
     <SafeAreaView style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
       
-      <ScrollView showsVerticalScrollIndicator={false} bounces={false}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollBody}>
         
-        {/* Cinematic Clinical Hero */}
-        <ImageBackground 
-          source={{ uri: 'https://images.unsplash.com/photo-1559839734-2b71f153ec7a?auto=format&fit=crop&q=80&w=1200' }}
-          style={styles.heroHeader}
-        >
-          <View style={styles.heroOverlay}>
-            <View style={styles.topActions}>
+        {/* Dynamic Header */}
+        <ImageBackground source={{ uri: GRADIENTS.header }} style={styles.headerHero}>
+          <View style={styles.headerTint}>
+            <View style={styles.topBar}>
+              <TouchableOpacity style={styles.glassBtn} onPress={() => navigation.goBack()}>
+                <Icon name="arrow-back" size={24} color="white" />
+              </TouchableOpacity>
+              <Text style={styles.topTitle}>MASTER PROFILE</Text>
               <TouchableOpacity style={styles.glassBtn}>
-                <Icon name="settings" size={22} color="white" />
+                <Icon name="dashboard-customize" size={22} color="white" />
               </TouchableOpacity>
             </View>
           </View>
         </ImageBackground>
 
-        {/* Floating Executive Doctor Card */}
-        <View style={styles.mainContent}>
-          <View style={styles.profileFloatingCard}>
-            <View style={styles.avatarContainer}>
+        {/* Floating Profile Glass Card */}
+        <View style={styles.floatingCard}>
+          <View style={styles.profileHeader}>
+            <View style={styles.avatarOutline}>
               <Image 
                 source={{ uri: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200' }} 
-                style={styles.avatar}
+                style={styles.mainAvatar}
               />
-              <View style={styles.statusDot} />
+              <View style={styles.activeDot} />
             </View>
-            <View style={styles.infoBox}>
+            <View style={styles.mainInfo}>
               <Text style={styles.userName}>Dr. James Wilson</Text>
-              <View style={styles.premiumBadge}>
-                <Icon name="verified" size={16} color={COLORS.medical} />
-                <Text style={styles.premiumText}>CHIEF MEDICAL OFFICER</Text>
+              <Text style={styles.userRole}>Lead Veterinary Physician</Text>
+              <View style={styles.chipRow}>
+                <InfoChip icon="star" label="4.9" color={COLORS.gold} />
+                <InfoChip icon="verified" label="VETCORE PRO" color={COLORS.accent} />
               </View>
             </View>
           </View>
-
-          {/* Executive Stats Grid */}
-          <View style={styles.statsGrid}>
-            <View style={styles.statPill}>
-              <Text style={styles.statVal}>1.2k</Text>
-              <Text style={styles.statLab}>PATIENTS</Text>
-            </View>
-            <View style={styles.statPill}>
-              <Text style={styles.statVal}>8yr</Text>
-              <Text style={styles.statLab}>EXP</Text>
-            </View>
-            <View style={styles.statPill}>
-              <View style={styles.row}>
-                <Text style={styles.statVal}>4.9</Text>
-                <Icon name="star" size={12} color={COLORS.accent} style={{marginLeft: 2}} />
-              </View>
-              <Text style={styles.statLab}>RATING</Text>
-            </View>
-          </View>
-
-          {/* Premium Practice Sections */}
-          <View style={styles.section}>
-            <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeader}>Practice Management</Text>
-              <TouchableOpacity><Text style={styles.editLink}>Update Availability</Text></TouchableOpacity>
-            </View>
-            <View style={styles.premiumMenuCard}>
-              <MenuOption icon="event-note" title="Appointment Schedule" subtitle="Manage your daily visits" color={COLORS.medical} />
-              <View style={styles.menuDivider} />
-              <MenuOption icon="assignment" title="Medical Records" subtitle="Patient history & prescriptions" color={COLORS.emerald} />
-              <View style={styles.menuDivider} />
-              <MenuOption icon="groups" title="Patient Owner List" subtitle="Manage your client base" color={COLORS.primary} />
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionHeader}>Financials & Analytics</Text>
-            <View style={styles.premiumMenuCard}>
-              <MenuOption icon="account-balance-wallet" title="Earnings Dashboard" subtitle="Track your monthly revenue" color={COLORS.accent} />
-              <View style={styles.menuDivider} />
-              <MenuOption icon="receipt" title="Invoices & Billing" subtitle="Manage payment status" color={COLORS.secondary} />
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.luxuryLogout} onPress={() => {navigation.navigate("SelectRole")}}>
-            <Icon name="swap-horiz" size={20} color={COLORS.medical} />
-            <Text style={styles.logoutLabel}>Switch to Owner Mode</Text>
-          </TouchableOpacity>
-          
-          <Text style={styles.versionLabel}>Vet Core Alpha v2.4.0 • Executive Suite</Text>
         </View>
+
+        {/* Statistics Section */}
+        <View style={styles.statsSection}>
+          <StatTile label="Total Patients" value="2,480" icon="people-alt" color={COLORS.accent} />
+          <StatTile label="Consultations" value="1.2k+" icon="medical-services" color={COLORS.emerald} />
+          <StatTile label="Experience" value="12yrs" icon="workspace-premium" color={COLORS.violet} />
+        </View>
+
+        {/* Action Dashboard */}
+        <View style={styles.dashBody}>
+          <View style={styles.sectionHeading}>
+            <Text style={styles.sectionMainTitle}>Management Hub</Text>
+            <View style={styles.accentLine} />
+          </View>
+
+          <ActionPill 
+            title="Schedule & Appointments" 
+            subtitle="8 visits pending for today" 
+            icon="event-available" 
+            color={COLORS.accent}
+            count="8"
+          />
+          <ActionPill 
+            title="Patient Case Files" 
+            subtitle="Secure medical database" 
+            icon="folder-shared" 
+            color={COLORS.emerald}
+          />
+          <ActionPill 
+            title="Revenue & Analytics" 
+            subtitle="Track performance metrics" 
+            icon="insights" 
+            color={COLORS.violet}
+          />
+        </View>
+
+        {/* App Settings */}
+        <View style={styles.settingsSection}>
+          <Text style={styles.sectionMainTitle}>App Settings</Text>
+          <View style={styles.settingsCard}>
+            <TouchableOpacity style={styles.settingsRow}>
+              <View style={[styles.settingIcon, { backgroundColor: '#EFF6FF' }]}>
+                <Icon name="notifications-none" size={22} color={COLORS.accent} />
+              </View>
+              <Text style={styles.settingLabel}>Notification Center</Text>
+              <Icon name="chevron-right" size={20} color={COLORS.secondary} />
+            </TouchableOpacity>
+            <View style={styles.rowDivider} />
+            <TouchableOpacity style={styles.settingsRow}>
+              <View style={[styles.settingIcon, { backgroundColor: '#F0FDF4' }]}>
+                <Icon name="security" size={22} color={COLORS.emerald} />
+              </View>
+              <Text style={styles.settingLabel}>Privacy & Credentials</Text>
+              <Icon name="chevron-right" size={20} color={COLORS.secondary} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Solid-State Premium Role Switcher */}
+        <TouchableOpacity 
+          style={styles.solidSwitchCapsule} 
+          activeOpacity={0.8} 
+          onPress={() => navigation.navigate("SelectRole")}
+        >
+          <View style={styles.solidSwitchContent}>
+            <View style={styles.solidIconCircle}>
+              <Icon name="sync" size={24} color={COLORS.accent} />
+            </View>
+            <View style={styles.solidTextGroup}>
+              <Text style={styles.solidMainLabel}>SWITCH TO OWNER MODE</Text>
+              <Text style={styles.solidSubLabel}>Access your personal livestock dashboard</Text>
+            </View>
+            <View style={styles.solidArrowBox}>
+              <Icon name="chevron-right" size={20} color="white" />
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>VETCORE EXECUTIVE v4.0.0</Text>
+          <View style={styles.footerDot} />
+          <Text style={styles.footerText}>SECURE ACCESS</Text>
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -143,68 +208,161 @@ const DoctorProfile = ({ navigation }: any) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  heroHeader: { height: 320, width: '100%' },
-  heroOverlay: { 
+  scrollBody: { paddingBottom: 60 },
+  
+  headerHero: { height: 260, width: '100%' },
+  headerTint: { 
     flex: 1, 
-    backgroundColor: 'rgba(15, 41, 30, 0.45)', 
-    paddingTop: (StatusBar.currentHeight || 0) + 20,
+    backgroundColor: 'rgba(15, 23, 42, 0.4)', 
+    paddingTop: (StatusBar.currentHeight || 0) + 15,
+    paddingHorizontal: 24 
   },
-  topActions: { flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 24 },
+  topBar: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   glassBtn: { 
-    width: 48, height: 48, borderRadius: 16, 
+    width: 48, height: 48, borderRadius: 24, 
     backgroundColor: 'rgba(255,255,255,0.2)', 
     justifyContent: 'center', alignItems: 'center',
     borderWidth: 1, borderColor: 'rgba(255,255,255,0.3)'
   },
-  mainContent: { paddingHorizontal: 24, marginTop: -80, paddingBottom: 80 },
-  profileFloatingCard: { 
-    backgroundColor: 'white', borderRadius: 35, padding: 25, 
-    flexDirection: 'row', alignItems: 'center',
-    elevation: 25, shadowColor: '#000', shadowOffset: { width: 0, height: 15 }, shadowOpacity: 0.15, shadowRadius: 25 
+  topTitle: { fontSize: 13, fontWeight: '900', color: 'white', letterSpacing: 2, fontFamily: FONT_SERIF },
+
+  floatingCard: {
+    marginHorizontal: 20,
+    backgroundColor: 'white',
+    borderRadius: 35,
+    marginTop: -80,
+    padding: 24,
+    elevation: 20,
+    shadowColor: COLORS.primary,
+    shadowOffset: { width: 0, height: 15 },
+    shadowOpacity: 0.1,
+    shadowRadius: 25,
   },
-  avatarContainer: { position: 'relative' },
-  avatar: { width: 85, height: 85, borderRadius: 30, borderWidth: 3, borderColor: COLORS.background },
-  statusDot: { 
-    position: 'absolute', bottom: -2, right: -2, width: 18, height: 18, borderRadius: 9, 
-    backgroundColor: COLORS.emerald, borderWidth: 3, borderColor: 'white' 
+  profileHeader: { flexDirection: 'row', alignItems: 'center' },
+  avatarOutline: { 
+    padding: 3, borderRadius: 28, borderWidth: 2, borderColor: COLORS.accent + '30', position: 'relative'
   },
-  infoBox: { marginLeft: 20, flex: 1 },
-  userName: { fontSize: 24, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, fontFamily: FONT_SERIF },
-  premiumBadge: { 
-    flexDirection: 'row', alignItems: 'center', marginTop: 6, 
-    backgroundColor: COLORS.medical + '10', paddingHorizontal: 10, paddingVertical: 5, borderRadius: 10, alignSelf: 'flex-start'
+  mainAvatar: { width: 85, height: 85, borderRadius: 24 },
+  activeDot: { 
+    position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, borderRadius: 11, 
+    backgroundColor: COLORS.emerald, borderWidth: 4, borderColor: 'white' 
   },
-  premiumText: { color: COLORS.medical, fontSize: 9, fontWeight: '900', marginLeft: 6, letterSpacing: 1, fontFamily: FONT_SERIF },
-  statsGrid: { flexDirection: 'row', justifyContent: 'space-between', marginTop: 25 },
-  statPill: { 
-    backgroundColor: 'white', width: (width - 68) / 3, paddingVertical: 18, borderRadius: 25, alignItems: 'center',
-    elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.05, shadowRadius: 10
+  mainInfo: { marginLeft: 20, flex: 1 },
+  userName: { fontSize: 24, fontWeight: '900', color: COLORS.textMain, fontFamily: FONT_SERIF, letterSpacing: -0.5 },
+  userRole: { fontSize: 13, fontWeight: '600', color: COLORS.textSub, marginTop: 4 },
+  chipRow: { flexDirection: 'row', marginTop: 12 },
+  chip: { 
+    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5, 
+    borderRadius: 10, marginRight: 8 
   },
-  statVal: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  statLab: { fontSize: 8, fontWeight: '800', color: COLORS.secondary, marginTop: 4, letterSpacing: 0.5, fontFamily: FONT_SERIF },
-  row: { flexDirection: 'row', alignItems: 'center' },
-  section: { marginTop: 35 },
-  sectionHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, paddingHorizontal: 5 },
-  sectionHeader: { fontSize: 17, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  editLink: { fontSize: 12, fontWeight: '700', color: COLORS.medical, fontFamily: FONT_SERIF },
-  premiumMenuCard: { 
-    backgroundColor: 'white', borderRadius: 30, padding: 10,
-    elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 15
+  chipText: { fontSize: 10, fontWeight: '900', marginLeft: 5, letterSpacing: 0.5 },
+
+  statsSection: { 
+    marginTop: 25, 
+    paddingHorizontal: 20, 
+    flexDirection: 'row', 
+    flexWrap: 'wrap', 
+    justifyContent: 'space-between' 
   },
-  menuItem: { flexDirection: 'row', alignItems: 'center', padding: 15 },
-  menuIconBox: { width: 50, height: 50, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
-  menuTextContent: { flex: 1, marginLeft: 15 },
-  menuTitle: { fontSize: 16, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SERIF },
-  menuSubtitle: { fontSize: 11, fontWeight: '600', color: COLORS.secondary, marginTop: 2, fontFamily: FONT_SERIF },
-  arrowBox: { width: 32, height: 32, borderRadius: 10, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
-  menuDivider: { height: 1, backgroundColor: COLORS.background, marginHorizontal: 20 },
-  luxuryLogout: { 
-    marginTop: 45, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', 
-    backgroundColor: 'white', paddingVertical: 20, borderRadius: 25,
-    borderWidth: 1, borderColor: COLORS.medical + '15'
+  statTile: { 
+    width: (width - 55) / 2, 
+    backgroundColor: 'white', 
+    borderRadius: 24, 
+    padding: 15, 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    marginBottom: 15,
+    elevation: 4, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10
   },
-  logoutLabel: { color: COLORS.medical, fontSize: 15, fontWeight: '900', marginLeft: 12, letterSpacing: 0.5, fontFamily: FONT_SERIF },
-  versionLabel: { textAlign: 'center', marginTop: 30, color: COLORS.secondary, fontSize: 11, fontWeight: '700', opacity: 0.5, fontFamily: FONT_SERIF }
+  statIconWrapper: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
+  statTextGroup: { marginLeft: 12, flex: 1 },
+  statValue: { fontSize: 17, fontWeight: '900', color: COLORS.textMain, fontFamily: FONT_SERIF },
+  statLabel: { fontSize: 9, fontWeight: '700', color: COLORS.textSub, marginTop: 2 },
+
+  dashBody: { marginTop: 20, paddingHorizontal: 20 },
+  sectionHeading: { marginBottom: 20 },
+  sectionMainTitle: { fontSize: 20, fontWeight: '900', color: COLORS.textMain, fontFamily: FONT_SERIF },
+  accentLine: { width: 40, height: 4, backgroundColor: COLORS.accent, borderRadius: 2, marginTop: 8 },
+
+  actionPill: { 
+    backgroundColor: 'white', 
+    borderRadius: 28, 
+    padding: 15, 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginBottom: 15,
+    elevation: 8, shadowColor: COLORS.primary, shadowOpacity: 0.03, shadowRadius: 15
+  },
+  pillIconBox: { width: 56, height: 56, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
+  pillContent: { flex: 1, marginLeft: 16 },
+  pillTitle: { fontSize: 16, fontWeight: '800', color: COLORS.textMain, fontFamily: FONT_SERIF },
+  pillSubtitle: { fontSize: 12, fontWeight: '600', color: COLORS.textSub, marginTop: 2 },
+  pillBadge: { backgroundColor: COLORS.rose, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, marginRight: 10 },
+  pillBadgeText: { color: 'white', fontSize: 11, fontWeight: '900' },
+
+  settingsSection: { marginTop: 30, paddingHorizontal: 20 },
+  settingsCard: { backgroundColor: 'white', borderRadius: 30, padding: 10, elevation: 4 },
+  settingsRow: { flexDirection: 'row', alignItems: 'center', padding: 15 },
+  settingIcon: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
+  settingLabel: { flex: 1, marginLeft: 15, fontSize: 15, fontWeight: '700', color: COLORS.textMain },
+  rowDivider: { height: 1, backgroundColor: '#F1F5F9', marginHorizontal: 20 },
+
+  solidSwitchCapsule: { 
+    marginHorizontal: 20, 
+    marginTop: 45, 
+    borderRadius: 30,
+    backgroundColor: COLORS.accent,
+    elevation: 20,
+    shadowColor: COLORS.accent,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.2)'
+  },
+  solidSwitchContent: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    padding: 10,
+  },
+  solidIconCircle: { 
+    width: 44, 
+    height: 44, 
+    borderRadius: 14, 
+    backgroundColor: 'white', 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8
+  },
+  solidTextGroup: { flex: 1, marginLeft: 16 },
+  solidMainLabel: { 
+    color: 'white', 
+    fontSize: 12, 
+    fontWeight: '900', 
+    letterSpacing: 1, 
+    fontFamily: FONT_SERIF 
+  },
+  solidSubLabel: { 
+    color: 'rgba(255,255,255,0.8)', 
+    fontSize: 9, 
+    fontWeight: '600', 
+    marginTop: 2 
+  },
+  solidArrowBox: {
+    width: 32,
+    height: 32,
+    borderRadius: 10,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  footer: { marginTop: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
+  footerText: { fontSize: 10, fontWeight: '900', color: COLORS.textSub, letterSpacing: 1.5, opacity: 0.4 },
+  footerDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: COLORS.secondary, marginHorizontal: 10, opacity: 0.3 }
 });
 
 export default DoctorProfile;

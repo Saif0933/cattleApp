@@ -154,10 +154,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24, paddingTop: 30, paddingBottom: 20, 
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' 
   },
-  headerTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, fontFamily: FONT_SERIF },
+  headerTitle: { fontSize: 22, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, fontFamily: FONT_SERIF },
   plusBtn: { 
-    width: 44, height: 44, borderRadius: 14, backgroundColor: COLORS.primary, 
-    justifyContent: 'center', alignItems: 'center', elevation: 4
+    width: 42, height: 42, borderRadius: 12, backgroundColor: COLORS.medical, 
+    justifyContent: 'center', alignItems: 'center', elevation: 6,
+    shadowColor: COLORS.medical, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.25, shadowRadius: 6
   },
   searchContainer: { paddingHorizontal: 24, marginBottom: 25 },
   searchBox: { 
@@ -173,9 +174,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.05, shadowRadius: 10
   },
   iconBox: { width: 60, height: 60, borderRadius: 18, justifyContent: 'center', alignItems: 'center' },
-  recordInfo: { flex: 1, marginLeft: 15 },
-  topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  patientName: { fontSize: 17, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  recordInfo: { flex: 1, marginLeft: 15, paddingRight: 5 },
+  topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  patientName: { fontSize: 17, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, flex: 1, marginRight: 12 },
   dateText: { fontSize: 11, fontWeight: '700', color: COLORS.secondary, opacity: 0.6, fontFamily: FONT_SERIF },
   ownerText: { fontSize: 12, fontWeight: '600', color: COLORS.secondary, marginTop: 2, fontFamily: FONT_SERIF },
   diagnosisText: { fontSize: 13, fontWeight: '500', color: COLORS.primary, marginTop: 4, opacity: 0.8, fontFamily: FONT_SERIF },

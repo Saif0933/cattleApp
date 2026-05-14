@@ -17,6 +17,9 @@ import DoctorBookingScreen from './src/cattle/screen/DoctorBookingScreen';
 import BreedingScreen from './src/cattle/screen/BreedingScreen';
 import SubscriptionScreen from './src/cattle/screen/SubscriptionScreen';
 import PetCareScreen from './src/cattle/screen/PetCareScreen';
+import OrderSummaryScreen from './src/cattle/screen/OrderSummaryScreen';
+import PaymentScreen from './src/cattle/screen/PaymentScreen';
+import OrderSuccessScreen from './src/cattle/screen/OrderSuccessScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +43,9 @@ function App() {
           <Stack.Screen name="Breeding" component={BreedingScreen} />
           <Stack.Screen name="Subscription" component={SubscriptionScreen} />
           <Stack.Screen name="PetCare" component={PetCareScreen} />
+          <Stack.Screen name="OrderSummary" component={OrderSummaryScreen} />
+          <Stack.Screen name="Payment" component={PaymentScreen} />
+          <Stack.Screen name="OrderSuccess" component={OrderSuccessScreen} />
 
         </Stack.Navigator>
       </NavigationContainer>

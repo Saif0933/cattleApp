@@ -26,7 +26,7 @@ const COLORS = {
   sky: '#0EA5E9',
 };
 
-const MarketplaceScreen = () => {
+const MarketplaceScreen = ({ navigation }: any) => {
   const [activeFilter, setActiveFilter] = useState('All');
   const filters = ['All', 'Food', 'Medicine', 'Livestock', 'Breeding', 'Birds', 'Equipment'];
 
@@ -230,36 +230,45 @@ const MarketplaceScreen = () => {
     return allListings.filter(item => item.category === activeFilter);
   }, [activeFilter]);
 
-  const ProductCard = ({ title, brand, price, info, image, type, verified, commission, weight }: any) => (
-    <TouchableOpacity style={styles.modernCard}>
-      <Image source={{ uri: image }} style={styles.cardImg} />
-      <View style={styles.cardOverlay}>
-        <View style={styles.typeBadge}><Text style={styles.typeText}>{type}</Text></View>
-        {verified && (
-          <View style={styles.verifiedBadge}>
-            <Icon name="verified" size={14} color={COLORS.accent} />
-          </View>
-        )}
-      </View>
-      <View style={styles.content}>
-        <View style={styles.brandRow}>
-          <Text style={styles.brandName}>{brand.toUpperCase()}</Text>
-          {weight && <Text style={styles.weightTag}>{weight}</Text>}
+  const ProductCard = (item: any) => {
+    const { title, brand, price, info, image, type, verified, commission, weight } = item;
+    return (
+      <TouchableOpacity 
+        style={styles.modernCard}
+        onPress={() => navigation.navigate('OrderSummary', { product: item })}
+      >
+        <Image source={{ uri: image }} style={styles.cardImg} />
+        <View style={styles.cardOverlay}>
+          <View style={styles.typeBadge}><Text style={styles.typeText}>{type}</Text></View>
+          {verified && (
+            <View style={styles.verifiedBadge}>
+              <Icon name="verified" size={14} color={COLORS.accent} />
+            </View>
+          )}
         </View>
-        <Text style={styles.titleText}>{title}</Text>
-        <Text style={styles.infoText}>{info}</Text>
-        <View style={styles.footer}>
-          <View>
-            <Text style={styles.priceText}>${price}</Text>
-            <Text style={styles.commissionText}>{commission}</Text>
+        <View style={styles.content}>
+          <View style={styles.brandRow}>
+            <Text style={styles.brandName}>{brand.toUpperCase()}</Text>
+            {weight && <Text style={styles.weightTag}>{weight}</Text>}
           </View>
-          <TouchableOpacity style={styles.buyBtn}>
-            <Text style={styles.buyBtnText}>BUY NOW</Text>
-          </TouchableOpacity>
+          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.infoText}>{info}</Text>
+          <View style={styles.footer}>
+            <View>
+              <Text style={styles.priceText}>${price}</Text>
+              <Text style={styles.commissionText}>{commission}</Text>
+            </View>
+            <TouchableOpacity 
+              style={styles.buyBtn}
+              onPress={() => navigation.navigate('OrderSummary', { product: item })}
+            >
+              <Text style={styles.buyBtnText}>BUY NOW</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

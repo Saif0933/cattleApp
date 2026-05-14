@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import {
   Dimensions,
   Image,
+  Platform,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -10,7 +11,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -114,12 +114,12 @@ const DoctorMarket = () => {
       
       <View style={styles.topSection}>
         <View style={styles.header}>
-          <View>
+          <View style={{ flex: 1, marginRight: 15 }}>
             {/* <Text style={styles.headerSub}>Vet Care</Text> */}
             <Text style={styles.headerTitle}>MEDICAL <Text style={{color: COLORS.medical}}>PHARMACY</Text></Text>
           </View>
           <TouchableOpacity style={styles.cartBtn}>
-            <Icon name="shopping-basket" size={24} color={COLORS.primary} />
+            <Icon name="shopping-cart" size={22} color={COLORS.primary} />
             <View style={styles.cartCount}><Text style={styles.cartCountText}>2</Text></View>
           </TouchableOpacity>
         </View>
@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
   header: { paddingHorizontal: 24, paddingTop: 20, paddingBottom: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   headerSub: { fontSize: 14, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1, fontFamily: FONT_SERIF },
   headerTitle: { fontSize: 26, fontWeight: '900', color: COLORS.primary, letterSpacing: -0.5, marginTop: 15, fontFamily: FONT_SERIF },
-  cartBtn: { width: 30, height: 30, borderRadius: 16, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', marginTop: 15 },
-  cartCount: { position: 'absolute', top: -5, right: -5, backgroundColor: COLORS.medical, width: 15, height: 15, borderRadius: 15, justifyContent: 'center', alignItems: 'center' },
+  cartBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', marginTop: 15 },
+  cartCount: { position: 'absolute', top: -4, right: -4, backgroundColor: COLORS.medical, width: 18, height: 18, borderRadius: 9, justifyContent: 'center', alignItems: 'center', elevation: 4 },
   cartCountText: { color: 'white', fontSize: 10, fontWeight: '900', fontFamily: FONT_SERIF },
   searchContainer: { paddingHorizontal: 24, marginBottom: 15 },
   searchBox: { height: 50, backgroundColor: COLORS.background, borderRadius: 15, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15 },
