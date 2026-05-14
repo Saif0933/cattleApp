@@ -1,126 +1,120 @@
 import React, { useState } from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
   Dimensions,
   Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
+const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
 const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
+  primary: '#0F291E', 
+  accent: '#10B981', // Vibrant Emerald
+  background: '#F1F7F5', // Light Mint
   surface: '#FFFFFF',
-  emerald: '#10B981',
-  sky: '#0EA5E9',
+  text: '#1A1A1A',
+  secondary: '#666666',
 };
 
 const PaymentScreen = ({ route, navigation }: any) => {
   const { total = 0 } = route.params || {};
-  const [selectedMethod, setSelectedMethod] = useState('card');
+  const [selectedMethod, setSelectedMethod] = useState('upi');
 
-  const PaymentOption = ({ id, icon, title, subtitle, isRecommended = false }: any) => (
+  const PaymentMethod = ({ id, icon, title, isRecommended = false }: any) => (
     <TouchableOpacity 
+      activeOpacity={0.8}
       style={[styles.methodCard, selectedMethod === id && styles.selectedCard]}
       onPress={() => setSelectedMethod(id)}
     >
-      <View style={[styles.iconBox, selectedMethod === id && styles.selectedIconBox]}>
-        <Icon name={icon} size={24} color={selectedMethod === id ? 'white' : COLORS.primary} />
+      <View style={[styles.iconContainer, { backgroundColor: selectedMethod === id ? COLORS.accent : '#F5F5F5' }]}>
+        <Icon name={icon} size={28} color={selectedMethod === id ? 'white' : COLORS.primary} />
       </View>
-      <View style={styles.methodInfo}>
-        <View style={styles.titleRow}>
-          <Text style={[styles.methodTitle, selectedMethod === id && styles.selectedText]}>{title}</Text>
-          {isRecommended && (
-            <View style={styles.recommendedBadge}>
-              <Text style={styles.recommendedText}>FASTEST</Text>
-            </View>
-          )}
-        </View>
-        <Text style={[styles.methodSubtitle, selectedMethod === id && styles.selectedSubText]}>{subtitle}</Text>
+      <View style={styles.methodContent}>
+        <Text style={[styles.methodTitle, selectedMethod === id && styles.selectedTitle]}>{title}</Text>
+        {isRecommended && <Text style={styles.recommendedTag}>Recommended</Text>}
       </View>
-      <View style={[styles.radioOuter, selectedMethod === id && styles.radioSelectedOuter]}>
-        {selectedMethod === id && <View style={styles.radioInner} />}
+      <View style={[styles.checkbox, selectedMethod === id && styles.checked]}>
+        {selectedMethod === id && <Icon name="check" size={16} color="white" />}
       </View>
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
       
-      {/* Header */}
+      {/* Top Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-          <Icon name="close" size={24} color={COLORS.primary} />
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backCircle}>
+          <Icon name="arrow-back" size={24} color={COLORS.primary} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Payment Method</Text>
-        <View style={{ width: 40 }} />
+        <Text style={styles.headerText}>Checkout</Text>
+        <View style={{ width: 44 }} />
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         
-        {/* Total Amount Display */}
-        <View style={styles.amountCard}>
-          <Text style={styles.amountLabel}>AMOUNT TO PAY</Text>
-          <Text style={styles.amountValue}>${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
+        {/* Total Price Section */}
+        <View style={styles.priceCard}>
+          <Text style={styles.priceLabel}>Total Amount to Pay</Text>
+          <Text style={styles.priceValue}>${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
+          <View style={styles.secureLine}>
+            <Icon name="verified-user" size={14} color={COLORS.accent} />
+            <Text style={styles.secureText}>100% Secure Payment</Text>
+          </View>
         </View>
 
-        <Text style={styles.sectionTitle}>Select Payment Method</Text>
+        <Text style={styles.sectionHeading}>Choose Payment Method</Text>
+
+        <PaymentMethod 
+          id="upi" 
+          icon="qr-code-scanner" 
+          title="UPI (Google Pay / PhonePe)" 
+          isRecommended={true} 
+        />
         
-        <PaymentOption 
-          id="upi"
-          icon="account-balance-wallet"
-          title="UPI (PhonePe, Google Pay, BHIM)"
-          subtitle="Instant payment using any UPI app"
-          isRecommended={true}
+        <PaymentMethod 
+          id="card" 
+          icon="credit-card" 
+          title="Debit / Credit Card" 
         />
 
-        <PaymentOption 
-          id="card"
-          icon="credit-card"
-          title="Credit / Debit Card"
-          subtitle="Visa, Mastercard, RuPay & more"
+        <PaymentMethod 
+          id="net" 
+          icon="account-balance" 
+          title="Net Banking" 
         />
 
-        <PaymentOption 
-          id="netbanking"
-          icon="account-balance"
-          title="Net Banking"
-          subtitle="All major Indian banks supported"
+        <PaymentMethod 
+          id="cod" 
+          icon="payments" 
+          title="Cash on Delivery" 
         />
 
-        <PaymentOption 
-          id="cod"
-          icon="payments"
-          title="Cash on Delivery"
-          subtitle="Pay when your order arrives"
-        />
-
-        <View style={styles.securityInfo}>
-          <Icon name="lock" size={16} color={COLORS.secondary} />
-          <Text style={styles.securityText}>Your payment is encrypted and 100% secure</Text>
+        <View style={styles.infoBox}>
+          <Icon name="info" size={18} color={COLORS.secondary} />
+          <Text style={styles.infoText}>By placing this order, you agree to our Terms & Conditions.</Text>
         </View>
 
       </ScrollView>
 
-      {/* Footer Button */}
+      {/* Action Button */}
       <View style={styles.footer}>
         <TouchableOpacity 
-          style={styles.payBtn}
-          onPress={() => navigation.navigate('OrderSuccess', { orderId: 'ELT-' + Math.floor(100000 + Math.random() * 900000) })}
+          style={styles.payButton}
+          onPress={() => navigation.navigate('OrderSuccess', { orderId: 'ELT-' + Math.floor(Math.random() * 900000) })}
         >
-          <Text style={styles.payBtnText}>PAY SECURELY</Text>
-          <Icon name="shield" size={20} color="white" style={{marginLeft: 10}} />
+          <Text style={styles.payButtonText}>CONFIRM & PAY</Text>
+          <Icon name="chevron-right" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -131,40 +125,44 @@ const PaymentScreen = ({ route, navigation }: any) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
-    height: 60, 
+    height: 70, 
+    backgroundColor: 'white', 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between', 
-    paddingHorizontal: 20,
-    backgroundColor: 'white'
+    paddingHorizontal: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEEEEE'
   },
-  headerTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  backBtn: { width: 40, height: 40, justifyContent: 'center' },
+  backCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center' },
+  headerText: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   
-  scrollContent: { padding: 20, paddingBottom: 120 },
+  scroll: { padding: 20, paddingBottom: 100 },
   
-  amountCard: { 
-    backgroundColor: COLORS.primary, 
+  priceCard: { 
+    backgroundColor: 'white', 
     borderRadius: 25, 
-    padding: 25, 
-    alignItems: 'center', 
-    marginBottom: 30,
-    elevation: 10,
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
-    shadowRadius: 15
+    padding: 20, 
+    alignItems: 'center',
+    marginBottom: 25,
+    // elevation: 4,
+    // shadowColor: '#000',
+    // shadowOffset: { width: 0, height: 3 },
+    // shadowOpacity: 0.08,
+    // shadowRadius: 8
   },
-  amountLabel: { color: 'rgba(255,255,255,0.6)', fontSize: 10, fontWeight: '900', letterSpacing: 2 },
-  amountValue: { color: 'white', fontSize: 32, fontWeight: '900', marginTop: 8, fontFamily: FONT_SERIF },
+  priceLabel: { fontSize: 13, fontWeight: '700', color: COLORS.secondary, marginBottom: 2 },
+  priceValue: { fontSize: 36, fontWeight: '900', color: COLORS.accent, fontFamily: FONT_SANS },
+  secureLine: { flexDirection: 'row', alignItems: 'center', marginTop: 12, backgroundColor: COLORS.background, paddingHorizontal: 12, paddingVertical: 4, borderRadius: 15 },
+  secureText: { fontSize: 10, fontWeight: '800', color: COLORS.accent, marginLeft: 5 },
 
-  sectionTitle: { fontSize: 16, fontWeight: '900', color: COLORS.primary, marginBottom: 15, fontFamily: FONT_SERIF, marginLeft: 5 },
+  sectionHeading: { fontSize: 17, fontWeight: '900', color: COLORS.primary, marginBottom: 15, fontFamily: FONT_SERIF, marginLeft: 5 },
   
   methodCard: { 
-    flexDirection: 'row', 
     backgroundColor: 'white', 
-    borderRadius: 22, 
-    padding: 16, 
+    borderRadius: 20, 
+    padding: 12, 
+    flexDirection: 'row', 
     alignItems: 'center', 
     marginBottom: 12,
     borderWidth: 2,
@@ -173,31 +171,20 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
-    shadowRadius: 5
+    shadowRadius: 4
   },
-  selectedCard: { 
-    borderColor: COLORS.primary, 
-    backgroundColor: COLORS.primary + '05',
-    elevation: 5
-  },
-  iconBox: { width: 50, height: 50, borderRadius: 15, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
-  selectedIconBox: { backgroundColor: COLORS.primary },
-  methodInfo: { flex: 1, marginLeft: 15 },
-  titleRow: { flexDirection: 'row', alignItems: 'center' },
-  methodTitle: { fontSize: 14, fontWeight: '800', color: COLORS.primary },
-  selectedText: { color: COLORS.primary, fontWeight: '900' },
-  methodSubtitle: { fontSize: 11, color: COLORS.secondary, marginTop: 2, fontWeight: '500' },
-  selectedSubText: { color: COLORS.primary, opacity: 0.7 },
+  selectedCard: { borderColor: COLORS.accent, backgroundColor: 'white' },
+  iconContainer: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  methodContent: { flex: 1, marginLeft: 12 },
+  methodTitle: { fontSize: 15, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SANS },
+  selectedTitle: { color: COLORS.accent },
+  recommendedTag: { fontSize: 9, fontWeight: '900', color: COLORS.accent, marginTop: 2, textTransform: 'uppercase' },
   
-  recommendedBadge: { backgroundColor: COLORS.emerald + '15', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, marginLeft: 8 },
-  recommendedText: { color: COLORS.emerald, fontSize: 8, fontWeight: '900' },
+  checkbox: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: '#DDDDDD', justifyContent: 'center', alignItems: 'center' },
+  checked: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
 
-  radioOuter: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: COLORS.background, alignItems: 'center', justifyContent: 'center' },
-  radioSelectedOuter: { borderColor: COLORS.primary },
-  radioInner: { width: 12, height: 12, borderRadius: 6, backgroundColor: COLORS.primary },
-
-  securityInfo: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginTop: 25 },
-  securityText: { fontSize: 11, color: COLORS.secondary, marginLeft: 8, fontWeight: '600' },
+  infoBox: { flexDirection: 'row', paddingHorizontal: 10, marginTop: 10, alignItems: 'center' },
+  infoText: { flex: 1, fontSize: 11, color: COLORS.secondary, marginLeft: 10, fontWeight: '500', lineHeight: 16 },
 
   footer: { 
     position: 'absolute', 
@@ -207,23 +194,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', 
     padding: 20, 
     borderTopWidth: 1,
-    borderTopColor: COLORS.background,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20
+    borderTopColor: '#EEEEEE',
+    paddingBottom: Platform.OS === 'ios' ? 45 : 25
   },
-  payBtn: { 
-    backgroundColor: COLORS.primary, 
-    height: 60, 
-    borderRadius: 20, 
+  payButton: { 
+    backgroundColor: COLORS.accent, 
+    height: 64, 
+    borderRadius: 22, 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'center',
     elevation: 10,
-    shadowColor: COLORS.primary,
-    shadowOffset: { width: 0, height: 8 },
+    shadowColor: COLORS.accent,
+    shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
-    shadowRadius: 15
+    shadowRadius: 10
   },
-  payBtnText: { color: 'white', fontSize: 16, fontWeight: '900', letterSpacing: 1 }
+  payButtonText: { color: 'white', fontSize: 18, fontWeight: '900', letterSpacing: 1, marginRight: 10 }
 });
 
 export default PaymentScreen;
