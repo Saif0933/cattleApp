@@ -27,6 +27,14 @@ const COLORS = {
 const OrderSuccessScreen = ({ route, navigation }: any) => {
   const { orderId } = route.params || { orderId: 'ELT-123456' };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate('OrderTracking', { orderId: orderId });
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [navigation, orderId]);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -61,23 +69,6 @@ const OrderSuccessScreen = ({ route, navigation }: any) => {
           <Text style={styles.infoText}>A confirmation email has been sent to your registered address.</Text>
         </View>
       </View>
-
-      <View style={styles.footer}>
-        <TouchableOpacity 
-          style={styles.trackBtn}
-          onPress={() => navigation.navigate('Home')}
-        >
-          <Text style={styles.trackBtnText}>TRACK ORDER</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.homeBtn}
-          onPress={() => navigation.navigate('Market')}
-        >
-          <Text style={styles.homeBtnText}>CONTINUE SHOPPING</Text>
-        </TouchableOpacity>
-      </View>
-
     </SafeAreaView>
   );
 };
