@@ -10,6 +10,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Linking,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import MCOIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -29,7 +30,28 @@ const COLORS = {
   border: '#F1F5F3',
 };
 
-const AnimalDetailsScreen = ({ navigation }: any) => {
+const AnimalDetailsScreen = ({ route, navigation }: any) => {
+  const { product } = route.params || {};
+
+  // Fallback data for safety
+  const details = {
+    title: product?.title || 'Elite Specimen',
+    price: product?.price || '85,000',
+    breed: product?.brand || product?.title || 'Holstein Friesian',
+    location: product?.info || 'Karnal, Haryana',
+    image: product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200',
+    weight: product?.weight || '450kg',
+    yield: product?.yield || '12L/day',
+    age: product?.age || '3 Years',
+    gender: product?.gender || 'Female',
+    description: product?.desc || 'This premium specimen is from a verified lineage of high-yield producers. Excellent health records and high fat content. Currently in prime condition.',
+    phone: product?.phone || '9876543210',
+  };
+
+  const handleCall = () => {
+    Linking.openURL(`tel:${details.phone}`);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -50,7 +72,7 @@ const AnimalDetailsScreen = ({ navigation }: any) => {
         {/* Immersive Image Gallery */}
         <View style={styles.heroWrapper}>
           <Image
-            source={{ uri: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200' }}
+            source={{ uri: details.image }}
             style={styles.heroImage}
           />
           <View style={styles.galleryBadge}>
@@ -65,7 +87,7 @@ const AnimalDetailsScreen = ({ navigation }: any) => {
             <View style={styles.row}>
               <View style={styles.titleArea}>
                 <View style={styles.breedRow}>
-                  <Text style={styles.breedName}>Holstein Friesian</Text>
+                  <Text style={styles.breedName}>{details.title}</Text>
                   <View style={styles.verifiedBadge}>
                     <Icon name="verified" size={12} color={COLORS.emerald} />
                     <Text style={styles.verifiedText}>ELITE</Text>
@@ -73,11 +95,11 @@ const AnimalDetailsScreen = ({ navigation }: any) => {
                 </View>
                 <View style={styles.locationRow}>
                   <Icon name="location-on" size={14} color={COLORS.secondary} />
-                  <Text style={styles.locationText}>Karnal, Haryana • 2.4 km</Text>
+                  <Text style={styles.locationText}>{details.location}</Text>
                 </View>
               </View>
               <View style={styles.priceArea}>
-                <Text style={styles.priceText}>₹85,000</Text>
+                <Text style={styles.priceText}>₹{details.price}</Text>
                 <Text style={styles.negText}>Negotiable</Text>
               </View>
             </View>
@@ -86,10 +108,10 @@ const AnimalDetailsScreen = ({ navigation }: any) => {
 
             {/* Vital Stats Grid */}
             <View style={styles.statsGrid}>
-              <StatItem icon="water-outline" label="Milk Yield" value="12L/day" />
-              <StatItem icon="calendar-clock" label="Age" value="3 Years" />
-              <StatItem icon="weight-kilogram" label="Weight" value="450kg" />
-              <StatItem icon="gender-female" label="Gender" value="Female" />
+              <StatItem icon="water-outline" label="Milk Yield" value={details.yield} />
+              <StatItem icon="calendar-clock" label="Age" value={details.age} />
+              <StatItem icon="weight-kilogram" label="Weight" value={details.weight} />
+              <StatItem icon="gender-female" label="Gender" value={details.gender} />
             </View>
           </View>
 
@@ -97,10 +119,7 @@ const AnimalDetailsScreen = ({ navigation }: any) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Overview</Text>
             <View style={styles.descCard}>
-              <Text style={styles.descText}>
-                This premium Holstein Friesian cow is from a verified lineage of high-yield producers. 
-                Excellent health records and high fat content milk. Currently in her second lactation cycle.
-              </Text>
+              <Text style={styles.descText}>{details.description}</Text>
             </View>
           </View>
 
@@ -146,7 +165,7 @@ const AnimalDetailsScreen = ({ navigation }: any) => {
           <Icon name="chat-bubble-outline" size={20} color={COLORS.primary} />
           <Text style={styles.chatText}>Inquire</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.callBtn}>
+        <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
           <Icon name="phone-in-talk" size={20} color="white" />
           <Text style={styles.callText}>Call Seller</Text>
         </TouchableOpacity>
