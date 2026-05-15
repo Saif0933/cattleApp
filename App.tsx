@@ -27,6 +27,7 @@ import OrderHistoryScreen from './src/cattle/screen/OrderHistoryScreen';
 import StoreScreen from './src/cattle/screen/StoreScreen';
 import StoreStockScreen from './src/cattle/screen/StoreStockScreen';
 import HealthRecordScreen from './src/cattle/screen/HealthRecordScreen';
+import AnimalDetailsScreen from './src/cattle/screen/AnimalDetailsScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -60,6 +61,7 @@ function App() {
             <Stack.Screen name="Store" component={StoreScreen} />
             <Stack.Screen name="StoreStock" component={StoreStockScreen} />
             <Stack.Screen name="HealthRecord" component={HealthRecordScreen} />
+            <Stack.Screen name="AnimalDetails" component={AnimalDetailsScreen} />
 
           </Stack.Navigator>
         </NavigationContainer>

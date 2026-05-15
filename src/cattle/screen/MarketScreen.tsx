@@ -235,7 +235,7 @@ const MarketplaceScreen = ({ navigation }: any) => {
     return (
       <TouchableOpacity 
         style={styles.modernCard}
-        onPress={() => navigation.navigate('OrderSummary', { product: item })}
+        onPress={() => navigation.navigate('AnimalDetails', { product: item })}
       >
         <Image source={{ uri: image }} style={styles.cardImg} />
         <View style={styles.cardOverlay}>
