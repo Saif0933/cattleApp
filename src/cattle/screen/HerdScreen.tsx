@@ -69,7 +69,10 @@ const HerdScreen = ({ navigation }: any) => {
           <Text style={[styles.careValue, status === 'Overdue' && { color: COLORS.crimson }]}>{nextVax}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.logBtn}>
+      <TouchableOpacity 
+        style={styles.logBtn}
+        onPress={() => navigation.navigate('HealthRecord', { animalName: name, breed: breed })}
+      >
         <Icon name="history-edu" size={18} color="white" />
         <Text style={styles.logBtnText}>VIEW HEALTH RECORDS</Text>
       </TouchableOpacity>

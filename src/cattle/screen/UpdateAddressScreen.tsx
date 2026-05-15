@@ -12,6 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useUser } from '../../context/UserContext';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -26,32 +27,31 @@ const COLORS = {
   border: '#E5E7EB',
 };
 
-const UpdateAddressScreen = ({ navigation }: any) => {
-  const [address, setAddress] = useState({
-    fullName: 'John Doe',
-    phone: '+1 (555) 0123-4567',
-    street: '123 Elite Ranch Road',
-    city: 'Austin',
-    state: 'Texas',
-    zip: '78701',
-  });
-
-  const InputField = ({ label, value, onChangeText, placeholder, icon, keyboardType = 'default' }: any) => (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputWrapper}>
-        <Icon name={icon} size={20} color={COLORS.secondary} style={styles.inputIcon} />
-        <TextInput
-          style={styles.input}
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor="#9CA3AF"
-          keyboardType={keyboardType}
-        />
-      </View>
+const InputField = ({ label, value, onChangeText, placeholder, icon, keyboardType = 'default' }: any) => (
+  <View style={styles.inputContainer}>
+    <Text style={styles.label}>{label}</Text>
+    <View style={styles.inputWrapper}>
+      <Icon name={icon} size={20} color={COLORS.secondary} style={styles.inputIcon} />
+      <TextInput
+        style={styles.input}
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor="#9CA3AF"
+        keyboardType={keyboardType}
+      />
     </View>
-  );
+  </View>
+);
+
+const UpdateAddressScreen = ({ navigation }: any) => {
+  const { address: globalAddress, updateAddress } = useUser();
+  const [address, setAddress] = useState(globalAddress);
+
+  const handleSave = () => {
+    updateAddress(address);
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,7 +136,7 @@ const UpdateAddressScreen = ({ navigation }: any) => {
       <View style={styles.footer}>
         <TouchableOpacity 
           style={styles.saveBtn}
-          onPress={() => navigation.goBack()}
+          onPress={handleSave}
         >
           <Text style={styles.saveBtnText}>SAVE ADDRESS</Text>
         </TouchableOpacity>

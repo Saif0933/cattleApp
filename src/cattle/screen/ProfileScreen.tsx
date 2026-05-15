@@ -132,6 +132,15 @@ const ProfileScreen = ({ navigation }: any) => {
                 onPress={() => navigation.navigate('UpdateAddress')}
               />
               <View style={styles.menuDivider} />
+              <MenuOption 
+                icon="history" 
+                title="My Order History" 
+                subtitle="View past purchases & receipts" 
+                color={COLORS.gold} 
+                showArrow={true} 
+                onPress={() => navigation.navigate('OrderHistory')}
+              />
+              <View style={styles.menuDivider} />
               <MenuOption icon="help-center" title="Support Center" subtitle="24/7 dedicated elite support" color={COLORS.secondary} />
             </View>
           </View>

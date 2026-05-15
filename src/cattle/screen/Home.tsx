@@ -73,6 +73,7 @@ const HERD_APP = ({ navigation, route }: any) => {
         if (name === 'Doctor') navigation.navigate('DoctorBooking');
         if (name === 'Breeding') navigation.navigate('Breeding');
         if (name === 'Vaccine') navigation.navigate('PetCare');
+        if (name === 'Store') navigation.navigate('Store');
       }}
     >
       <View style={[styles.serviceIcon, { backgroundColor: color + '15' }]}>

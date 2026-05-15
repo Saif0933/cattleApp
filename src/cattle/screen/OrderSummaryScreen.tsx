@@ -12,6 +12,7 @@ import {
   Platform,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useUser } from '../../context/UserContext';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -28,6 +29,7 @@ const COLORS = {
 };
 
 const OrderSummaryScreen = ({ route, navigation }: any) => {
+  const { address } = useUser();
   // We'll fallback to a sample product if no params are passed (for testing)
   const { product } = route.params || {
     product: {
@@ -90,11 +92,11 @@ const OrderSummaryScreen = ({ route, navigation }: any) => {
               <Icon name="location-on" size={22} color={COLORS.primary} />
             </View>
             <View style={styles.addressInfo}>
-              <Text style={styles.addressName}>John Doe</Text>
-              <Text style={styles.addressText}>123 Elite Ranch Road, Austin, Texas, 78701</Text>
-              <Text style={styles.addressPhone}>+1 (555) 0123-4567</Text>
+              <Text style={styles.addressName}>{address.fullName}</Text>
+              <Text style={styles.addressText}>{address.street}, {address.city}, {address.state}, {address.zip}</Text>
+              <Text style={styles.addressPhone}>{address.phone}</Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate('UpdateAddress')}>
               <Text style={styles.editText}>Edit</Text>
             </TouchableOpacity>
           </View>
