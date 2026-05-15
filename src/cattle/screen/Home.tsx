@@ -84,30 +84,36 @@ const HERD_APP = ({ navigation, route }: any) => {
     </TouchableOpacity>
   );
 
-  const PremiumCard = ({ name, breed, price, info, image, type, verified }: any) => (
-    <TouchableOpacity style={styles.premiumListing}>
-      <Image source={{ uri: image }} style={styles.premiumImg} />
-      {verified && (
-        <View style={styles.verifiedBadge}>
-          <Icon name="verified" size={16} color={COLORS.accent} />
-          <Text style={styles.verifiedText}>TRUSTED</Text>
+  const PremiumCard = (item: any) => {
+    const { name, breed, price, info, image, type, verified } = item;
+    return (
+      <View style={styles.premiumListing}>
+        <Image source={{ uri: image }} style={styles.premiumImg} />
+        {verified && (
+          <View style={styles.verifiedBadge}>
+            <Icon name="verified" size={16} color={COLORS.accent} />
+            <Text style={styles.verifiedText}>TRUSTED</Text>
+          </View>
+        )}
+        <View style={styles.premiumTag}>
+          <Text style={styles.premiumTagText}>{type}</Text>
         </View>
-      )}
-      <View style={styles.premiumTag}>
-        <Text style={styles.premiumTagText}>{type}</Text>
-      </View>
-      <View style={styles.premiumInfo}>
-        <Text style={styles.premiumName}>{name}</Text>
-        <Text style={styles.premiumBreed}>{breed}</Text>
-        <View style={styles.premiumFooter}>
-          <Text style={styles.premiumPrice}>${price}</Text>
-          <View style={styles.premiumAction}>
-            <Icon name="arrow-forward" size={16} color="white" />
+        <View style={styles.premiumInfo}>
+          <Text style={styles.premiumName}>{name}</Text>
+          <Text style={styles.premiumBreed}>{breed}</Text>
+          <View style={styles.premiumFooter}>
+            <Text style={styles.premiumPrice}>${price}</Text>
+            <TouchableOpacity 
+              style={styles.premiumAction}
+              onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+            >
+              <Icon name="arrow-forward" size={16} color="white" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
-    </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <View style={styles.mainContainer}>
@@ -160,7 +166,12 @@ const HERD_APP = ({ navigation, route }: any) => {
         <View style={styles.section}>
           <View style={styles.rowHeader}>
             <Text style={styles.sectionTitle}>Top Promoted</Text>
-            <TouchableOpacity><Text style={styles.seeAll}>View All</Text></TouchableOpacity>
+            <View style={styles.seeAllContainer}>
+              <Text style={styles.seeAll}>View All</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('MainApp')}>
+                <Icon name="chevron-right" size={18} color={COLORS.secondary} />
+              </TouchableOpacity>
+            </View>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.premiumScroll}>
             {topListings.map((listing, idx) => <PremiumCard key={idx} {...listing} />)}
@@ -217,7 +228,8 @@ const styles = StyleSheet.create({
   section: { paddingHorizontal: 20, marginBottom: 30 },
   sectionTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, marginBottom: 15 },
   rowHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 },
-  seeAll: { color: COLORS.secondary, fontSize: 12, fontWeight: '700' },
+  seeAllContainer: { flexDirection: 'row', alignItems: 'center' },
+  seeAll: { color: COLORS.secondary, fontSize: 12, fontWeight: '700', marginRight: 4 },
   servicesGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
   serviceCard: { width: (width - 55) / 2, backgroundColor: 'white', padding: 15, borderRadius: 20, marginBottom: 15, elevation: 2 },
   serviceIcon: { width: 50, height: 50, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
@@ -230,7 +242,7 @@ const styles = StyleSheet.create({
   subTitle: { color: 'white', fontSize: 18, fontWeight: '900', fontFamily: FONT_SERIF },
   subSub: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2 },
   premiumScroll: { marginLeft: -5 },
-  premiumListing: { width: 220, backgroundColor: 'white', borderRadius: 25, marginRight: 15, overflow: 'hidden', elevation: 4 },
+  premiumListing: { width: 220, backgroundColor: 'white', borderRadius: 25, marginRight: 15, overflow: 'hidden', elevation: 4, marginBottom: 5 },
   premiumImg: { width: '100%', height: 140 },
   premiumTag: { position: 'absolute', top: 12, left: 12, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
   premiumTagText: { color: 'white', fontSize: 9, fontWeight: '900' },
