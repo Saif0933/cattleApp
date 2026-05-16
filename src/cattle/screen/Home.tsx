@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-    Dimensions,
-    Image,
-    ImageBackground,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Platform
+  Dimensions,
+  Image,
+  ImageBackground,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
@@ -40,13 +40,13 @@ const HERD_APP = ({ navigation, route }: any) => {
     {
       title: 'Premium Nutrition',
       sub: 'Save 20% on Elite Pet Food Brands',
-      image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=1200',
+      image: 'https://imgs.search.brave.com/lp9PxY3TOitWqgHHbuLEFx08wqzxOOSCUbSxnkDWcBg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzE0LzUxLzkwLzQ3/LzM2MF9GXzE0NTE5/MDQ3MTBfaFJrT2Ux/S0lOZVpMWGhDQXBR/NW1nRklhQUpEZ2pq/c00uanBn',
       badge: 'SPONSORED'
     },
     {
       title: 'Verified Doctors',
       sub: 'Top-rated specialists at your service.',
-      image: 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&q=80&w=1200',
+      image: 'https://imgs.search.brave.com/2mQ2eK5AkvOL8rKoW6gSIpGgYbqtSt95ATT_62CAkJ0/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTk5/NTQwOTM2MC9waG90/by9tYWxlLWFuZC1m/ZW1hbGUtdmV0ZXJp/bmFyeS10ZWFtLWdp/dmluZy1pbmplY3Rp/b24tdG8tcGV0LWFr/aXRhLWRvZy1pbi1z/dXJnZXJ5LmpwZz9z/PTYxMng2MTImdz0w/Jms9MjAmYz1YSXJy/VndZTVJ5OVpQVUVJ/NXhaYWtSOUZvb1hk/QXRraU5IaTVjbnpO/RjZZPQ',
       badge: 'FEATURED'
     }
   ];
@@ -137,11 +137,10 @@ const HERD_APP = ({ navigation, route }: any) => {
             {ads.map((ad, idx) => (
               <ImageBackground key={idx} source={{ uri: ad.image }} style={styles.adBanner}>
                 <View style={styles.adOverlay}>
-                  <View style={{ height: 100 }} /> 
+                  <View style={{ height: 200 }} /> 
                   <View style={styles.adBadge}><Text style={styles.adBadgeText}>{ad.badge}</Text></View>
                   <Text style={styles.adTitle}>{ad.title}</Text>
                   <Text style={styles.adSubText}>{ad.sub}</Text>
-                  <TouchableOpacity style={styles.adBtn}><Text style={styles.adBtnText}>Check Out</Text></TouchableOpacity>
                 </View>
               </ImageBackground>
             ))}
@@ -216,8 +215,8 @@ const styles = StyleSheet.create({
   },
   searchPlaceholder: { marginLeft: 10, color: '#94A3B8', fontSize: 13, fontFamily: FONT_SERIF },
   subscribeBtn: { width: 45, height: 45, backgroundColor: COLORS.primary, borderRadius: 12, marginLeft: 12, justifyContent: 'center', alignItems: 'center', elevation: 5 },
-  adsWrapper: { height: 280 },
-  adBanner: { width: width, height: 280 },
+  adsWrapper: { height: 450 },
+  adBanner: { width: width, height: 450 },
   adOverlay: { flex: 1, backgroundColor: 'rgba(15, 41, 30, 0.4)', padding: 25, justifyContent: 'center' },
   adBadge: { backgroundColor: COLORS.accent, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4, alignSelf: 'flex-start', marginBottom: 10 },
   adBadgeText: { color: COLORS.primary, fontSize: 10, fontWeight: '900', letterSpacing: 1 },
