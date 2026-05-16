@@ -66,7 +66,7 @@ const BottomTabNavigator = ({ navigation }: any) => {
             <TouchableOpacity 
               {...props} 
               style={[props.style, styles.fabContainer]} 
-              onPress={() => navigation.navigate('AddCattle')}
+              onPress={() => navigation.navigate('Community')}
             >
               <View style={styles.fabCircle}>
                 <Icon name="forum" size={35} color="white" />
