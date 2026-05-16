@@ -34,6 +34,7 @@ const BottomTabNavigator = ({ navigation }: any) => {
           else if (route.name === 'Market') iconName = 'storefront';
           else if (route.name === 'Healthcare') iconName = 'health-and-safety';
           else if (route.name === 'Profile') iconName = 'person';
+          else if (route.name === 'Community') iconName = 'forum';
           else if (route.name === 'Camera') iconName = 'photo-camera';
           return <Icon name={iconName} size={size} color={color} />;
         },
@@ -57,7 +58,7 @@ const BottomTabNavigator = ({ navigation }: any) => {
       <Tab.Screen name="Market" component={MarketScreen} options={{ tabBarLabel: 'Marketplace' }} />
       
       <Tab.Screen 
-        name="Add" 
+        name="Community" 
         component={CameraPlaceholder} 
         options={{
           tabBarLabel: '',
@@ -68,7 +69,7 @@ const BottomTabNavigator = ({ navigation }: any) => {
               onPress={() => navigation.navigate('AddCattle')}
             >
               <View style={styles.fabCircle}>
-                <Icon name="add" size={35} color="white" />
+                <Icon name="forum" size={35} color="white" />
               </View>
             </TouchableOpacity>
           ),
