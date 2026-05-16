@@ -35,9 +35,9 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
 
   // Fallback data for safety
   const details = {
-    title: product?.title || 'Elite Specimen',
+    title: product?.title || product?.name || 'Elite Specimen',
     price: product?.price || '85,000',
-    breed: product?.brand || product?.title || 'Holstein Friesian',
+    breed: product?.breed || product?.brand || product?.title || 'Holstein Friesian',
     location: product?.info || 'Karnal, Haryana',
     image: product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200',
     weight: product?.weight || '450kg',

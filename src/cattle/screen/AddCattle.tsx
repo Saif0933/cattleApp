@@ -59,10 +59,16 @@ const NewFlockScreen = ({ navigation, route }: any) => {
         newAnimal: {
           name: flockName || 'Elite Animal',
           breed: selectedAnimal,
-          price: 'Consult',
-          info: purpose,
-          type: 'Elite',
-          image: selectedImages[0] || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400'
+          price: 'Contact',
+          info: purpose || 'For Sale',
+          type: 'NEW',
+          image: selectedImages[0] || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400',
+          weight: 'N/A',
+          yield: 'N/A',
+          age: '1 Year',
+          gender: 'Female',
+          desc: description || 'No description provided.',
+          phone: '9876543210'
         }
       });
     }, 1500);
@@ -149,7 +155,7 @@ const NewFlockScreen = ({ navigation, route }: any) => {
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.skipBtn} onPress={handleCreate}>
-        <Text style={styles.skipBtnText}>Skip Promotion & Register Free</Text>
+        <Text style={styles.skipBtnText}>shikpromotion & register free</Text>
       </TouchableOpacity>
     </View>
   );

@@ -8,6 +8,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
@@ -28,6 +29,7 @@ const COLORS = {
 const HERD_APP = ({ navigation, route }: any) => {
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const services = [
     { name: 'Doctor', icon: 'medical-services', color: '#10B981', sub: '20% Comm.' },
@@ -52,9 +54,98 @@ const HERD_APP = ({ navigation, route }: any) => {
   ];
 
   const [topListings, setTopListings] = useState([
-    { name: "Siberian Husky", breed: "Pure Breed", price: "2,500", info: "Verified Breeder", type: "PREMIUM", image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400", verified: true },
-    { name: "Persian Kit", breed: "Show Quality", price: "1,200", info: "Top Seller", type: "AD", image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400", verified: false }
+    { 
+      name: "Siberian Husky", 
+      breed: "Pure Breed", 
+      price: "2,500", 
+      info: "Verified Breeder", 
+      type: "PREMIUM", 
+      image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400", 
+      verified: true,
+      weight: '25kg',
+      yield: 'N/A',
+      age: '2 Years',
+      gender: 'Male',
+      desc: 'Active and friendly Siberian Husky, fully vaccinated and ready for a new home.',
+      phone: '1234567890'
+    },
+    { 
+      name: "Jersey Elite", 
+      breed: "Show Quality", 
+      price: "78,000", 
+      info: "Top Seller", 
+      type: "AD", 
+      image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=400", 
+      verified: false,
+      weight: '380kg',
+      yield: '10L/day',
+      age: '2.5 Years',
+      gender: 'Female',
+      desc: 'High-quality Jersey cow with excellent milk yield and gentle temperament.',
+      phone: '0987654321'
+    }
   ]);
+
+  const brandProducts = [
+    {
+      title: 'Holstein Friesian',
+      name: 'Holstein Friesian',
+      price: '95,000',
+      brand: 'PetMedics',
+      info: 'Ludhiana, Punjab',
+      image: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=400',
+      weight: '520kg',
+      yield: '15L/day',
+      age: '4 Years',
+      gender: 'Female',
+      desc: 'High-quality dairy cattle with excellent milk production history. Sponsored by PetMedics.',
+      phone: '9876543210'
+    },
+    {
+      title: 'Jersey Elite',
+      name: 'Jersey Elite',
+      price: '78,000',
+      brand: 'Elite Feast',
+      info: 'Ambala, Haryana',
+      image: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=400',
+      weight: '380kg',
+      yield: '10L/day',
+      age: '2.5 Years',
+      gender: 'Female',
+      desc: 'Healthy Jersey heifer, perfect for small dairy farms. Promoted by Elite Feast.',
+      phone: '8765432109'
+    }
+  ];
+
+  const filteredListings = topListings.filter(item => 
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    item.breed.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  useEffect(() => {
+    if (route.params?.newAnimal) {
+      const newItem = route.params.newAnimal;
+      setTopListings(prev => [
+        {
+          name: newItem.name,
+          breed: newItem.breed,
+          price: newItem.price,
+          info: newItem.info,
+          type: newItem.type,
+          image: newItem.image,
+          verified: false,
+          weight: newItem.weight || 'N/A',
+          yield: newItem.yield || 'N/A',
+          age: newItem.age || 'Unknown',
+          gender: newItem.gender || 'N/A',
+          desc: newItem.desc || 'New registration.',
+          phone: newItem.phone || 'N/A'
+        },
+        ...prev
+      ]);
+      navigation.setParams({ newAnimal: undefined });
+    }
+  }, [route.params?.newAnimal]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -123,7 +214,14 @@ const HERD_APP = ({ navigation, route }: any) => {
       <View style={styles.floatingHeader}>
         <View style={styles.searchBar}>
           <Icon name="search" size={20} color={COLORS.secondary} />
-          <Text style={styles.searchPlaceholder}>Search Doctors, Food...</Text>
+          <TextInput 
+            style={styles.searchInput}
+            placeholder="Search Doctors, Food..."
+            placeholderTextColor="#94A3B8"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            underlineColorAndroid="transparent"
+          />
         </View>
         <TouchableOpacity style={styles.subscribeBtn} onPress={() => navigation.navigate('Subscription')}>
           <Icon name="star" size={18} color={COLORS.accent} />
@@ -173,23 +271,24 @@ const HERD_APP = ({ navigation, route }: any) => {
             </View>
           </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.premiumScroll}>
-            {topListings.map((listing, idx) => <PremiumCard key={idx} {...listing} />)}
+            {filteredListings.map((listing, idx) => <PremiumCard key={idx} {...listing} />)}
           </ScrollView>
         </View>
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Featured Brands</Text>
           <View style={styles.brandGrid}>
-            <TouchableOpacity style={styles.brandCard}>
-              <Image source={{ uri: 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=400' }} style={styles.brandImg} />
-              <Text style={styles.brandName}>PetMedics</Text>
-              <Text style={styles.brandCommission}>Sponsored</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.brandCard}>
-              <Image source={{ uri: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=400' }} style={styles.brandImg} />
-              <Text style={styles.brandName}>Elite Feast</Text>
-              <Text style={styles.brandCommission}>Promoted</Text>
-            </TouchableOpacity>
+            {brandProducts.map((item, idx) => (
+              <TouchableOpacity 
+                key={idx} 
+                style={styles.brandCard}
+                onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+              >
+                <Image source={{ uri: item.image }} style={styles.brandImg} />
+                <Text style={styles.brandName}>{item.brand}</Text>
+                <Text style={styles.brandCommission}>{idx === 0 ? 'Sponsored' : 'Promoted'}</Text>
+              </TouchableOpacity>
+            ))}
           </View>
         </View>
         <View style={{ height: 100 }} />
@@ -213,7 +312,7 @@ const styles = StyleSheet.create({
     flex: 1, height: 45, backgroundColor: 'rgba(255,255,255,0.9)', borderRadius: 12, 
     flexDirection: 'row', alignItems: 'center', paddingHorizontal: 15, elevation: 5 
   },
-  searchPlaceholder: { marginLeft: 10, color: '#94A3B8', fontSize: 13, fontFamily: FONT_SERIF },
+  searchInput: { flex: 1, marginLeft: 10, color: COLORS.primary, fontSize: 14, fontFamily: FONT_SERIF, paddingVertical: 0 },
   subscribeBtn: { width: 45, height: 45, backgroundColor: COLORS.primary, borderRadius: 12, marginLeft: 12, justifyContent: 'center', alignItems: 'center', elevation: 5 },
   adsWrapper: { height: 450 },
   adBanner: { width: width, height: 450 },
