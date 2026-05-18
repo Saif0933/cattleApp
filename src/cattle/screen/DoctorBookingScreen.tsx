@@ -125,7 +125,7 @@ const DoctorBookingScreen = ({ navigation }: any) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white' },
+  header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.background },
   headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   promoBox: { backgroundColor: COLORS.primary, padding: 20, borderRadius: 20, marginBottom: 25 },
   promoTitle: { color: 'white', fontSize: 18, fontWeight: '900', fontFamily: FONT_SERIF },
