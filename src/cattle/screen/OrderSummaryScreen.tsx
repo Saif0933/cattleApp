@@ -41,7 +41,7 @@ const OrderSummaryScreen = ({ route, navigation }: any) => {
     }
   };
 
-  const subtotal = parseFloat(product.price.replace(',', ''));
+  const subtotal = parseFloat(String(product.price || '0').replace(/[^0-9.]/g, '')) || 0;
   const platformFee = 5.00;
   const shipping = 12.50;
   const total = subtotal + platformFee + shipping;
@@ -76,7 +76,7 @@ const OrderSummaryScreen = ({ route, navigation }: any) => {
           <View style={styles.productCard}>
             <Image source={{ uri: product.image }} style={styles.productImage} />
             <View style={styles.productInfo}>
-              <Text style={styles.productBrand}>{product.brand.toUpperCase()}</Text>
+              <Text style={styles.productBrand}>{(product.brand || 'Elite Cattle').toUpperCase()}</Text>
               <Text style={styles.productTitle}>{product.title}</Text>
               <Text style={styles.productWeight}>{product.weight}</Text>
               <Text style={styles.productPrice}>${product.price}</Text>

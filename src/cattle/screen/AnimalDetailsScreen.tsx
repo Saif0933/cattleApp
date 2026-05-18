@@ -10,6 +10,7 @@ import {
     Text,
     TouchableOpacity,
     View,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MCOIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -161,9 +162,12 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
 
       {/* Action Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.chatBtn}>
-          <Icon name="chat-bubble-outline" size={20} color={COLORS.primary} />
-          <Text style={styles.chatText}>Inquire</Text>
+        <TouchableOpacity 
+          style={styles.buyBtn} 
+          onPress={() => navigation.navigate('OrderSummary', { product: details })}
+        >
+          <Icon name="shopping-bag" size={20} color="white" />
+          <Text style={styles.buyText}>Buy Now</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
           <Icon name="phone-in-talk" size={20} color="white" />
@@ -268,9 +272,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white', padding: 20, borderTopWidth: 1, borderTopColor: COLORS.border,
     flexDirection: 'row', paddingBottom: Platform.OS === 'ios' ? 40 : 25
   },
-  chatBtn: { flex: 1, height: 60, borderRadius: 20, backgroundColor: COLORS.background, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 15 },
-  chatText: { color: COLORS.primary, fontWeight: '900', marginLeft: 10, letterSpacing: 1 },
-  callBtn: { flex: 1.5, height: 60, borderRadius: 20, backgroundColor: COLORS.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 5, shadowColor: COLORS.primary, shadowOpacity: 0.3 },
+  buyBtn: { flex: 1.5, height: 60, borderRadius: 20, backgroundColor: COLORS.accent, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 15, elevation: 5, shadowColor: COLORS.accent, shadowOpacity: 0.3 },
+  buyText: { color: COLORS.primary, fontWeight: '900', marginLeft: 10, letterSpacing: 1 },
+  callBtn: { flex: 1, height: 60, borderRadius: 20, backgroundColor: COLORS.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 5, shadowColor: COLORS.primary, shadowOpacity: 0.3 },
   callText: { color: 'white', fontWeight: '900', marginLeft: 10, letterSpacing: 1 }
 });
 
