@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   ImageBackground,
@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -27,6 +28,9 @@ const COLORS = {
 };
 
 const StoreScreen = ({ navigation }: any) => {
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const stores = [
     { name: 'Dogs', icon: 'pets', image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=600', count: 24 },
     { name: 'Birds', icon: 'flutter-dash', image: 'https://images.unsplash.com/photo-1522926193341-e9fed195d9cb?auto=format&fit=crop&q=80&w=600', count: 142 },
@@ -39,27 +43,55 @@ const StoreScreen = ({ navigation }: any) => {
     { name: 'Care & Supplies', icon: 'shopping-cart', image: 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&q=80&w=600', count: 420 },
   ];
 
+  const filteredStores = stores.filter(store =>
+    store.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+        <TouchableOpacity 
+          onPress={() => {
+            if (isSearching) {
+              setIsSearching(false);
+              setSearchQuery('');
+            } else {
+              navigation.goBack();
+            }
+          }} 
+          style={styles.backBtn}
+        >
           <Icon name="arrow-back" size={24} color={COLORS.primary} />
         </TouchableOpacity>
-        <View style={styles.headerTitleContainer}>
-          <Text style={styles.headerSub}>ELITE TRADERS</Text>
-          <Text style={styles.headerTitle}>Animal Stores</Text>
-        </View>
-        <TouchableOpacity style={styles.searchBtn}>
-          <Icon name="search" size={24} color={COLORS.primary} />
-        </TouchableOpacity>
+        
+        {isSearching ? (
+          <TextInput
+            style={styles.searchInput}
+            autoFocus
+            placeholder="Search stores..."
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+        ) : (
+          <>
+            <View style={styles.headerTitleContainer}>
+              <Text style={styles.headerSub}>ELITE TRADERS</Text>
+              <Text style={styles.headerTitle}>Animal Stores</Text>
+            </View>
+            <TouchableOpacity style={styles.searchBtn} onPress={() => setIsSearching(true)}>
+              <Icon name="search" size={24} color={COLORS.primary} />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.grid}>
-          {stores.map((store, index) => (
+          {filteredStores.map((store, index) => (
             <TouchableOpacity 
               key={index} 
               style={styles.storeCard}
@@ -110,6 +142,17 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 22, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, marginTop: 2 },
   backBtn: { width: 44, height: 44, borderRadius: 15, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
   searchBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'flex-end' },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
+    paddingHorizontal: 15,
+    marginLeft: 10,
+    color: COLORS.primary,
+    fontFamily: FONT_SANS,
+    fontSize: 16,
+  },
 
   scrollContent: { padding: 15, paddingBottom: 50 },
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
