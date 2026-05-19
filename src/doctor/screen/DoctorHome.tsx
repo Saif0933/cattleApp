@@ -37,62 +37,122 @@ const DoctorHome = ({ navigation }: any) => {
 
   const doctors = [
     {
+      id: "doc-1",
+      userId: "user-doc-1",
       name: "Dr. Sarah Miller",
-      category: "Cattle",
-      specialty: "Senior Livestock Expert",
-      rating: "4.9",
-      exp: "12 Yrs Exp",
-      price: "45",
+      specialization: "Senior Livestock Expert",
+      experienceYears: 12,
+      consultationFee: 45.00,
+      isVerified: true,
+      rating: 4.9,
+      reviewCount: 1200,
+      bio: "Experienced in diagnosing and treating large livestock animals.",
+      clinicName: "Sarah Cattle Clinic",
+      clinicAddress: "Karnal, Haryana",
       image: "https://images.unsplash.com/photo-1559839734-2b71f153ec7a?auto=format&fit=crop&q=80&w=400",
       status: "Available Now",
+
+      // legacy compat
+      category: "Cattle",
+      specialty: "Senior Livestock Expert",
+      exp: "12 Yrs Exp",
+      price: "45",
       badge: "VERIFIED",
       color: COLORS.emerald
     },
     {
+      id: "doc-2",
+      userId: "user-doc-2",
       name: "Dr. James Wilson",
-      category: "Birds",
-      specialty: "Exotic Bird Specialist",
-      rating: "4.8",
-      exp: "8 Yrs Exp",
-      price: "60",
+      specialization: "Exotic Bird Specialist",
+      experienceYears: 8,
+      consultationFee: 60.00,
+      isVerified: true,
+      rating: 4.8,
+      reviewCount: 850,
+      bio: "Expert care for exotic birds, poultry, and avian surgical cases.",
+      clinicName: "Avian Health Center",
+      clinicAddress: "Chandigarh, Punjab",
       image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400",
       status: "In Consultation",
+
+      // legacy compat
+      category: "Birds",
+      specialty: "Exotic Bird Specialist",
+      exp: "8 Yrs Exp",
+      price: "60",
       badge: "ELITE VET",
       color: COLORS.accent
     },
     {
+      id: "doc-3",
+      userId: "user-doc-3",
       name: "Dr. Elena Rodriguez",
-      category: "Surgery",
-      specialty: "Orthopedic Surgeon",
-      rating: "5.0",
-      exp: "15 Yrs Exp",
-      price: "120",
+      specialization: "Orthopedic Surgeon",
+      experienceYears: 15,
+      consultationFee: 120.00,
+      isVerified: true,
+      rating: 5.0,
+      reviewCount: 2450,
+      bio: "Board-certified animal orthopedic surgeon specializing in joint replacement.",
+      clinicName: "Elite Vet Surgery Clinic",
+      clinicAddress: "New Delhi",
       image: "https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400",
       status: "In Surgery",
+
+      // legacy compat
+      category: "Surgery",
+      specialty: "Orthopedic Surgeon",
+      exp: "15 Yrs Exp",
+      price: "120",
       badge: "SURGEON",
       color: COLORS.crimson
     },
     {
+      id: "doc-4",
+      userId: "user-doc-4",
       name: "Dr. Michael Chen",
-      category: "Nutrition",
-      specialty: "Animal Dietitian",
-      rating: "4.7",
-      exp: "10 Yrs Exp",
-      price: "40",
+      specialization: "Animal Dietitian",
+      experienceYears: 10,
+      consultationFee: 40.00,
+      isVerified: false,
+      rating: 4.7,
+      reviewCount: 380,
+      bio: "Providing customized nutrition and diet charts for livestock and household pets.",
+      clinicName: "Chen Nutrition Hub",
+      clinicAddress: "Ludhiana, Punjab",
       image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400",
       status: "Available Now",
+
+      // legacy compat
+      category: "Nutrition",
+      specialty: "Animal Dietitian",
+      exp: "10 Yrs Exp",
+      price: "40",
       badge: "NUTRITION",
       color: COLORS.medical
     },
     {
+      id: "doc-5",
+      userId: "user-doc-5",
       name: "Dr. Sofia Khan",
-      category: "Pets",
-      specialty: "Small Animal GP",
-      rating: "4.9",
-      exp: "6 Yrs Exp",
-      price: "35",
+      specialization: "Small Animal GP",
+      experienceYears: 6,
+      consultationFee: 35.00,
+      isVerified: true,
+      rating: 4.9,
+      reviewCount: 520,
+      bio: "Comprehensive pet clinic for vaccines, general checkups, and pet microchipping.",
+      clinicName: "Sofia Pet Wellness Center",
+      clinicAddress: "Gurugram, Haryana",
       image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=400",
       status: "Available Now",
+
+      // legacy compat
+      category: "Pets",
+      specialty: "Small Animal GP",
+      exp: "6 Yrs Exp",
+      price: "35",
       badge: "VERIFIED",
       color: COLORS.emerald
     }
@@ -100,7 +160,7 @@ const DoctorHome = ({ navigation }: any) => {
 
   const filteredDoctors = React.useMemo(() => {
     if (activeTab === 'All') return doctors;
-    return doctors.filter(doc => doc.category === activeTab);
+    return doctors.filter(doc => doc.category === activeTab || doc.specialization === activeTab);
   }, [activeTab]);
 
   const QuickAction = ({ icon, label, color }: any) => (

@@ -30,54 +30,112 @@ const HerdScreen = ({ navigation }: any) => {
 
   const animals = [
     {
+      id: "profile-1",
+      ownerId: "user-123",
       name: "Oliver",
+      category: "CAT",
       breed: "Persian Cat",
-      lastVax: "Oct 12, 2025",
-      nextVax: "Nov 15, 2025",
+      ageMonths: 12,
+      gender: "MALE",
+      weight: 4.5,
+      photoUrl: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400",
+
+      vaccinations: [
+        {
+          id: "vax-1",
+          vaccineName: "Rabies Vaccine",
+          dueDate: "2026-11-15T00:00:00Z",
+          administeredDate: "2026-10-12T00:00:00Z",
+          status: "SCHEDULED"
+        }
+      ],
+
+      // legacy fallbacks
+      lastVax: "Oct 12, 2026",
+      nextVax: "Nov 15, 2026",
       status: "Upcoming",
-      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400",
+      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400"
     },
     {
+      id: "profile-2",
+      ownerId: "user-123",
       name: "Billy",
+      category: "GOAT",
       breed: "Boer Goat",
-      lastVax: "Sep 05, 2025",
-      nextVax: "Sep 30, 2025",
+      ageMonths: 24,
+      gender: "MALE",
+      weight: 65.0,
+      photoUrl: "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400",
+
+      vaccinations: [
+        {
+          id: "vax-2",
+          vaccineName: "PPR Vaccine",
+          dueDate: "2026-09-30T00:00:00Z",
+          administeredDate: "2026-09-05T00:00:00Z",
+          status: "MISSED"
+        }
+      ],
+
+      // legacy fallbacks
+      lastVax: "Sep 05, 2026",
+      nextVax: "Sep 30, 2026",
       status: "Overdue",
-      image: "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400",
+      image: "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400"
     }
   ];
 
-  const CareCard = ({ name, breed, lastVax, nextVax, status, image }: any) => (
-    <TouchableOpacity style={styles.card}>
-      <View style={styles.cardHeader}>
-        <Image source={{ uri: image }} style={styles.animalImg} />
-        <View style={styles.animalInfo}>
-          <Text style={styles.animalName}>{name}</Text>
-          <Text style={styles.breedText}>{breed}</Text>
+  const CareCard = (animal: any) => {
+    const name = animal.name;
+    const breed = animal.breed;
+    const image = animal.photoUrl || animal.image;
+    
+    // Aligned status, nextVax, lastVax from vaccinations array
+    const latestVaxItem = animal.vaccinations?.[0];
+    const status = latestVaxItem 
+      ? (latestVaxItem.status === 'MISSED' ? 'Overdue' : 'Upcoming') 
+      : animal.status;
+
+    const lastVax = latestVaxItem?.administeredDate 
+      ? new Date(latestVaxItem.administeredDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+      : animal.lastVax;
+
+    const nextVax = latestVaxItem?.dueDate 
+      ? new Date(latestVaxItem.dueDate).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
+      : animal.nextVax;
+
+    return (
+      <TouchableOpacity style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Image source={{ uri: image }} style={styles.animalImg} />
+          <View style={styles.animalInfo}>
+            <Text style={styles.animalName}>{name}</Text>
+            <Text style={styles.breedText}>{breed}</Text>
+          </View>
+          <View style={[styles.statusBadge, { backgroundColor: status === 'Overdue' ? COLORS.crimson : COLORS.emerald }]}>
+            <Text style={styles.statusText}>{status.toUpperCase()}</Text>
+          </View>
         </View>
-        <View style={[styles.statusBadge, { backgroundColor: status === 'Overdue' ? COLORS.crimson : COLORS.emerald }]}>
-          <Text style={styles.statusText}>{status.toUpperCase()}</Text>
+        <View style={styles.careRow}>
+          <View style={styles.careBox}>
+            <Text style={styles.careLabel}>LAST VACCINATION</Text>
+            <Text style={styles.careValue}>{lastVax}</Text>
+          </View>
+          <View style={styles.careBox}>
+            <Text style={styles.careLabel}>NEXT DUE</Text>
+            <Text style={[styles.careValue, status === 'Overdue' && { color: COLORS.crimson }]}>{nextVax}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.careRow}>
-        <View style={styles.careBox}>
-          <Text style={styles.careLabel}>LAST VACCINATION</Text>
-          <Text style={styles.careValue}>{lastVax}</Text>
-        </View>
-        <View style={styles.careBox}>
-          <Text style={styles.careLabel}>NEXT DUE</Text>
-          <Text style={[styles.careValue, status === 'Overdue' && { color: COLORS.crimson }]}>{nextVax}</Text>
-        </View>
-      </View>
-      <TouchableOpacity 
-        style={styles.logBtn}
-        onPress={() => navigation.navigate('HealthRecord', { animalName: name, breed: breed })}
-      >
-        <Icon name="history-edu" size={18} color="white" />
-        <Text style={styles.logBtnText}>VIEW HEALTH RECORDS</Text>
+        <TouchableOpacity 
+          style={styles.logBtn}
+          onPress={() => navigation.navigate('HealthRecord', { animalName: name, breed: breed })}
+        >
+          <Icon name="history-edu" size={18} color="white" />
+          <Text style={styles.logBtnText}>VIEW HEALTH RECORDS</Text>
+        </TouchableOpacity>
       </TouchableOpacity>
-    </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

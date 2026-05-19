@@ -34,40 +34,72 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
 
   const records = [
     {
-      id: 1,
+      id: "rec-1",
+      animalProfileId: "profile-1",
+      recordType: "VACCINATION",
+      title: "Rabies Booster",
+      diagnosis: "Routine rabies vaccination",
+      treatment: "Administered 1ml Rabisin booster dose",
+      date: "2026-10-12T00:00:00Z",
+      veterinarian: "Dr. Sarah Mitchell",
+      attachments: ["https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?auto=format&fit=crop&q=80&w=400"],
+
+      // legacy compat
       type: 'Vaccination',
-      title: 'Rabies Booster',
-      date: '12 Oct 2025',
       doctor: 'Dr. Sarah Wilson',
       status: 'Completed',
       icon: 'vaccines',
       color: COLORS.accent,
     },
     {
-      id: 2,
+      id: "rec-2",
+      animalProfileId: "profile-1",
+      recordType: "GENERAL_CHECKUP",
+      title: "General Wellness Exam",
+      diagnosis: "Healthy condition, no anomalies found",
+      treatment: "Regular deworming tablet given",
+      date: "2026-09-05T00:00:00Z",
+      veterinarian: "Dr. Sarah Mitchell",
+      attachments: [],
+
+      // legacy compat
       type: 'Checkup',
-      title: 'General Wellness Exam',
-      date: '05 Sep 2025',
       doctor: 'Dr. Sarah Wilson',
       status: 'Completed',
       icon: 'medical-services',
       color: COLORS.sky,
     },
     {
-      id: 3,
+      id: "rec-3",
+      animalProfileId: "profile-1",
+      recordType: "SURGERY",
+      title: "Dental Cleaning",
+      diagnosis: "Mild plaque buildup",
+      treatment: "Ultrasonic scaling and polishing",
+      date: "2026-08-15T00:00:00Z",
+      veterinarian: "Elite Vet Clinic",
+      attachments: [],
+
+      // legacy compat
       type: 'Surgery',
-      title: 'Dental Cleaning',
-      date: '15 Aug 2025',
       doctor: 'Elite Vet Clinic',
       status: 'Completed',
       icon: 'content-cut',
       color: COLORS.gold,
     },
     {
-      id: 4,
+      id: "rec-4",
+      animalProfileId: "profile-1",
+      recordType: "DIAGNOSTIC_TEST",
+      title: "Blood Work (Full Panel)",
+      diagnosis: "Normal blood chemistry",
+      treatment: "No clinical action required",
+      date: "2026-07-20T00:00:00Z",
+      veterinarian: "LabCentral Laboratories",
+      attachments: ["https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=400"],
+
+      // legacy compat
       type: 'Laboratory',
-      title: 'Blood Work (Full Panel)',
-      date: '20 July 2025',
       doctor: 'LabCentral',
       status: 'Completed',
       icon: 'biotech',
@@ -75,29 +107,45 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
     }
   ];
 
-  const RecordItem = ({ record }: any) => (
-    <View style={styles.timelineItem}>
-      <View style={styles.timelineLine} />
-      <View style={[styles.typeIconBox, { backgroundColor: record.color + '15' }]}>
-        <Icon name={record.icon} size={20} color={record.color} />
-      </View>
-      <View style={styles.recordCard}>
-        <View style={styles.recordHeader}>
-          <Text style={styles.recordType}>{record.type.toUpperCase()}</Text>
-          <Text style={styles.recordDate}>{record.date}</Text>
+  const RecordItem = ({ record }: any) => {
+    const type = record.recordType || record.type;
+    const title = record.title;
+    
+    // Formatting date
+    const dateVal = record.date ? new Date(record.date).toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    }) : record.date;
+
+    const doctor = record.veterinarian || record.doctor;
+    const color = record.color || (record.recordType === 'VACCINATION' ? COLORS.accent : record.recordType === 'GENERAL_CHECKUP' ? COLORS.sky : COLORS.gold);
+    const icon = record.icon || (record.recordType === 'VACCINATION' ? 'vaccines' : record.recordType === 'GENERAL_CHECKUP' ? 'medical-services' : 'biotech');
+
+    return (
+      <View style={styles.timelineItem}>
+        <View style={styles.timelineLine} />
+        <View style={[styles.typeIconBox, { backgroundColor: color + '15' }]}>
+          <Icon name={icon} size={20} color={color} />
         </View>
-        <Text style={styles.recordTitle}>{record.title}</Text>
-        <View style={styles.doctorRow}>
-          <Icon name="person" size={14} color={COLORS.secondary} />
-          <Text style={styles.doctorName}>{record.doctor}</Text>
+        <View style={styles.recordCard}>
+          <View style={styles.recordHeader}>
+            <Text style={styles.recordType}>{type.toUpperCase()}</Text>
+            <Text style={styles.recordDate}>{dateVal}</Text>
+          </View>
+          <Text style={styles.recordTitle}>{title}</Text>
+          <View style={styles.doctorRow}>
+            <Icon name="person" size={14} color={COLORS.secondary} />
+            <Text style={styles.doctorName}>{doctor}</Text>
+          </View>
+          <TouchableOpacity style={styles.viewDocBtn}>
+            <Text style={styles.viewDocText}>View Report</Text>
+            <Icon name="chevron-right" size={14} color={COLORS.accent} />
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.viewDocBtn}>
-          <Text style={styles.viewDocText}>View Report</Text>
-          <Icon name="chevron-right" size={14} color={COLORS.accent} />
-        </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

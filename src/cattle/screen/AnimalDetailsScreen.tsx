@@ -34,18 +34,18 @@ const COLORS = {
 const AnimalDetailsScreen = ({ route, navigation }: any) => {
   const { product } = route.params || {};
 
-  // Fallback data for safety
+  // Fallback data for safety aligned to the DB schema
   const details = {
     title: product?.title || product?.name || 'Elite Specimen',
-    price: product?.price || '85,000',
-    breed: product?.breed || product?.brand || product?.title || 'Holstein Friesian',
-    location: product?.info || 'Karnal, Haryana',
-    image: product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200',
-    weight: product?.weight || '450kg',
-    yield: product?.yield || '12L/day',
-    age: product?.age || '3 Years',
-    gender: product?.gender || 'Female',
-    description: product?.desc || 'This premium specimen is from a verified lineage of high-yield producers. Excellent health records and high fat content. Currently in prime condition.',
+    price: typeof product?.price === 'number' ? product.price.toLocaleString() : (product?.price || '85,000'),
+    breed: product?.breed || product?.brand || 'Holstein Friesian',
+    location: product?.address || product?.info || 'Karnal, Haryana',
+    image: (product?.images && product.images.length > 0) ? product.images[0] : (product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200'),
+    weight: typeof product?.weight === 'number' ? `${product.weight}kg` : (product?.weight || '450kg'),
+    yield: typeof product?.milkProduction === 'number' ? `${product.milkProduction}L/day` : (product?.yield || '12L/day'),
+    age: typeof product?.ageMonths === 'number' ? `${Math.floor(product.ageMonths / 12)} Years` : (product?.age || '3 Years'),
+    gender: product?.gender ? (product.gender === 'MALE' ? 'Male' : (product.gender === 'FEMALE' ? 'Female' : product.gender)) : 'Female',
+    description: product?.description || product?.desc || 'This premium specimen is from a verified lineage of high-yield producers. Excellent health records and high fat content. Currently in prime condition.',
     phone: product?.phone || '9876543210',
   };
 

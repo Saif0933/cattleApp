@@ -27,15 +27,35 @@ const COLORS = {
 };
 
 const MarketplaceScreen = ({ navigation }: any) => {
-  const [activeFilter, setActiveFilter] = useState('All');
-  const filters = ['All', 'Food', 'Medicine', 'Livestock', 'Breeding', 'Birds', 'Equipment'];
+  const [activeFilter, setActiveFilter] = useState('ALL');
+  const filters = [
+    { label: 'All', value: 'ALL' },
+    { label: 'Medicines', value: 'MEDICINES' },
+    { label: 'Dog Food', value: 'DOG_FOOD' },
+    { label: 'Cat Food', value: 'CAT_FOOD' },
+    { label: 'Cattle Feed', value: 'CATTLE_FEED' },
+    { label: 'Supplements', value: 'SUPPLEMENTS' },
+    { label: 'Farming Tools', value: 'FARMING_TOOLS' },
+    { label: 'Vaccines', value: 'VACCINES' },
+    { label: 'Accessories', value: 'ACCESSORIES' },
+  ];
 
   const allListings = [
     {
+      id: "prod-101",
+      vendorId: "vendor-1",
+      name: "Royal Canine Elite",
+      description: "High Protein Kibble for Active Dogs",
+      price: 85.00,
+      stock: 30,
+      category: "DOG_FOOD",
+      images: ["https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: true,
+      rating: 4.8,
+      
+      // compatibility fields
       title: "Royal Canine Elite",
       brand: "Elite Nutrition",
-      category: "Food",
-      price: "85",
       info: "High Protein Kibble for Active Dogs",
       weight: "15kg Bag",
       type: "PROMOTED",
@@ -44,10 +64,20 @@ const MarketplaceScreen = ({ navigation }: any) => {
       commission: "5% Platform Fee"
     },
     {
+      id: "prod-102",
+      vendorId: "vendor-2",
+      name: "VaxPro Healthcare",
+      description: "Full Vaccination Pack for Livestock",
+      price: 120.00,
+      stock: 45,
+      category: "VACCINES",
+      images: ["https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: true,
+      rating: 4.7,
+
+      // compatibility fields
       title: "VaxPro Healthcare",
       brand: "HealthGuard",
-      category: "Medicine",
-      price: "120",
       info: "Full Vaccination Pack for Livestock",
       weight: "5 Doses",
       type: "BRAND",
@@ -56,10 +86,20 @@ const MarketplaceScreen = ({ navigation }: any) => {
       commission: "Ads Charge Apply"
     },
     {
+      id: "prod-103",
+      vendorId: "vendor-3",
+      name: "DewormElite Plus",
+      description: "Broad Spectrum Dewormer for Pets",
+      price: 35.00,
+      stock: 120,
+      category: "MEDICINES",
+      images: ["https://images.unsplash.com/photo-1631549916768-4119cb8e20ca?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: false,
+      rating: 4.5,
+
+      // compatibility fields
       title: "DewormElite Plus",
       brand: "VetCare",
-      category: "Medicine",
-      price: "35",
       info: "Broad Spectrum Dewormer for Pets",
       weight: "10 Tabs",
       type: "STANDARD",
@@ -68,82 +108,20 @@ const MarketplaceScreen = ({ navigation }: any) => {
       commission: "5% Comm."
     },
     {
-      title: "Majestic Brahman",
-      brand: "Texas Ranches",
-      category: "Livestock",
-      price: "12,500",
-      info: "A++ Grade Show-Quality Bull",
-      weight: "850kg",
-      type: "PREMIUM",
-      image: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Subscription"
-    },
-    {
-      title: "Holstein Dairy Queen",
-      brand: "Empire Dairy",
-      category: "Livestock",
-      price: "4,200",
-      info: "High Milk Yield Certified Cow",
-      weight: "620kg",
-      type: "ELITE",
-      image: "https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Featured"
-    },
-    {
-      title: "Champion Siberian",
-      brand: "Arctic Breeds",
-      category: "Breeding",
-      price: "1,500",
-      info: "Certified AKC Stud Service",
-      weight: "Proven Sire",
-      type: "ELITE",
-      image: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Listing Fee Paid"
-    },
-    {
-      title: "GSD Alpha Male",
-      brand: "K9 Academy",
-      category: "Breeding",
-      price: "2,000",
-      info: "Working Line German Shepherd Stud",
-      weight: "IPO3 Certified",
-      type: "PROMOTED",
-      image: "https://images.unsplash.com/photo-1589944173175-400144838d05?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Ads Charge"
-    },
-    {
-      title: "Scarlet Macaw",
-      brand: "Exotic Aviary",
-      category: "Birds",
-      price: "2,800",
-      info: "Hand-Raised Friendly Macaw",
-      weight: "1.2kg",
-      type: "EXCLUSIVE",
-      image: "https://images.unsplash.com/photo-1484557918186-7b4e561c9948?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Commission 10%"
-    },
-    {
-      title: "African Grey",
-      brand: "Smart Birds",
-      category: "Birds",
-      price: "3,500",
-      info: "Highly Intelligent Talking Parrot",
-      weight: "500g",
-      type: "PREMIUM",
-      image: "https://images.unsplash.com/photo-1552728089-57bdde30ebe3?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Elite"
-    },
-    {
+      id: "prod-104",
+      vendorId: "vendor-4",
+      name: "Elite Cattle Feed",
+      description: "High-Calorie Organic Growth Feed",
+      price: 45.00,
+      stock: 80,
+      category: "CATTLE_FEED",
+      images: ["https://images.unsplash.com/photo-1516733958632-afb5fd88bb1a?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: false,
+      rating: 4.6,
+
+      // compatibility fields
       title: "Elite Cattle Feed",
       brand: "Green Pastures",
-      category: "Food",
-      price: "45",
       info: "High-Calorie Organic Growth Feed",
       weight: "50kg Bag",
       type: "STANDARD",
@@ -152,10 +130,20 @@ const MarketplaceScreen = ({ navigation }: any) => {
       commission: "Comm. Apply"
     },
     {
+      id: "prod-105",
+      vendorId: "vendor-5",
+      name: "Persian Feast",
+      description: "Grain-Free Salmon & Rice Mix",
+      price: 45.00,
+      stock: 90,
+      category: "CAT_FOOD",
+      images: ["https://images.unsplash.com/photo-1568640347023-a616a30bc3bd?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: false,
+      rating: 4.4,
+
+      // compatibility fields
       title: "Persian Feast",
       brand: "Kitty Gourmet",
-      category: "Food",
-      price: "45",
       info: "Grain-Free Salmon & Rice Mix",
       weight: "2kg Pack",
       type: "STANDARD",
@@ -164,10 +152,20 @@ const MarketplaceScreen = ({ navigation }: any) => {
       commission: "Comm. Apply"
     },
     {
+      id: "prod-106",
+      vendorId: "vendor-6",
+      name: "Elite Dog Manor",
+      description: "Weather-Proof Premium Wooden Dog House",
+      price: 450.00,
+      stock: 10,
+      category: "ACCESSORIES",
+      images: ["https://images.unsplash.com/photo-1591130901021-39e99292944d?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: true,
+      rating: 4.9,
+
+      // compatibility fields
       title: "Elite Dog Manor",
       brand: "PetShelter Pro",
-      category: "Equipment",
-      price: "450",
       info: "Weather-Proof Premium Wooden Dog House",
       weight: "Large Size",
       type: "EXCLUSIVE",
@@ -176,46 +174,20 @@ const MarketplaceScreen = ({ navigation }: any) => {
       commission: "10% Platform"
     },
     {
-      title: "Sky-High Bird Palace",
-      brand: "Aviary Elite",
-      category: "Equipment",
-      price: "180",
-      info: "Stainless Steel Designer Hanging Cage",
-      weight: "Exotic Grade",
-      type: "PREMIUM",
-      image: "https://images.unsplash.com/photo-1550929989-8d38a063160e?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Ads Charge"
-    },
-    {
-      title: "Elite Rabbit Retreat",
-      brand: "BunnyBoutique",
-      category: "Equipment",
-      price: "220",
-      info: "Multi-Level Luxury Wooden Rabbit Hutch",
-      weight: "12kg Unit",
-      type: "BRAND",
-      image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "5% Comm."
-    },
-    {
-      title: "Pro Grooming Table",
-      brand: "VetGroom",
-      category: "Equipment",
-      price: "320",
-      info: "Heavy-Duty Hydraulic Grooming Table",
-      weight: "Pro Grade",
-      type: "STANDARD",
-      image: "https://images.unsplash.com/photo-1581888227599-779811939961?auto=format&fit=crop&q=80&w=600",
-      verified: true,
-      commission: "Comm. Apply"
-    },
-    {
+      id: "prod-107",
+      vendorId: "vendor-7",
+      name: "Pro Cattle Feeder",
+      description: "Heavy-Duty Automatic Feeding System",
+      price: 850.00,
+      stock: 4,
+      category: "FARMING_TOOLS",
+      images: ["https://images.unsplash.com/photo-1500382017468-9049fee74a62?auto=format&fit=crop&q=80&w=600"],
+      isFeatured: true,
+      rating: 4.9,
+
+      // compatibility fields
       title: "Pro Cattle Feeder",
       brand: "FarmTech",
-      category: "Equipment",
-      price: "850",
       info: "Heavy-Duty Automatic Feeding System",
       weight: "500kg Cap.",
       type: "ELITE",
@@ -226,12 +198,21 @@ const MarketplaceScreen = ({ navigation }: any) => {
   ];
 
   const filteredListings = useMemo(() => {
-    if (activeFilter === 'All') return allListings;
+    if (activeFilter === 'ALL') return allListings;
     return allListings.filter(item => item.category === activeFilter);
   }, [activeFilter]);
 
   const ProductCard = (item: any) => {
-    const { title, brand, price, info, image, type, verified, commission, weight } = item;
+    const title = item.name || item.title || 'Premium Item';
+    const brand = item.brand || item.category || 'Elite Brand';
+    const price = typeof item.price === 'number' ? item.price : parseFloat(item.price || '0');
+    const info = item.description || item.info || 'No description provided';
+    const image = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=600');
+    const type = item.isFeatured ? 'FEATURED' : (item.type || 'STANDARD');
+    const verified = item.verified || false;
+    const commission = item.commission || (item.stock ? `${item.stock} left in stock` : 'Available');
+    const weight = item.weight || '';
+
     return (
       <TouchableOpacity 
         style={styles.modernCard}
@@ -249,7 +230,7 @@ const MarketplaceScreen = ({ navigation }: any) => {
         <View style={styles.content}>
           <View style={styles.brandRow}>
             <Text style={styles.brandName}>{brand.toUpperCase()}</Text>
-            {weight && <Text style={styles.weightTag}>{weight}</Text>}
+            {weight ? <Text style={styles.weightTag}>{weight}</Text> : null}
           </View>
           <Text style={styles.titleText}>{title}</Text>
           <Text style={styles.infoText}>{info}</Text>
@@ -285,10 +266,10 @@ const MarketplaceScreen = ({ navigation }: any) => {
           {filters.map((f, i) => (
             <TouchableOpacity 
               key={i} 
-              onPress={() => setActiveFilter(f)}
-              style={[styles.filterPill, activeFilter === f && styles.activePill]}
+              onPress={() => setActiveFilter(f.value)}
+              style={[styles.filterPill, activeFilter === f.value && styles.activePill]}
             >
-              <Text style={[styles.filterText, activeFilter === f && styles.activeFilterText]}>{f}</Text>
+              <Text style={[styles.filterText, activeFilter === f.value && styles.activeFilterText]}>{f.label}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>

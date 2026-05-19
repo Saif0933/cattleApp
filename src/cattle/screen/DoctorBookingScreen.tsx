@@ -28,34 +28,55 @@ const COLORS = {
 const DoctorBookingScreen = ({ navigation }: any) => {
   const doctors = [
     {
+      id: "doc-1",
+      userId: "user-doc-1",
       name: "Dr. Sarah Mitchell",
+      specialization: "Livestock Specialist",
+      experienceYears: 12,
+      consultationFee: 150.00,
+      isVerified: true,
+      rating: 4.9,
+      reviewCount: 1200,
+      isFeatured: true,
+      image: "https://images.unsplash.com/photo-1559839734-2b71f153ef7ef?auto=format&fit=crop&q=80&w=400",
+
+      // legacy compat
       specialty: "Livestock Specialist",
-      rating: "4.9",
       experience: "12 Years",
       fee: "150",
-      image: "https://images.unsplash.com/photo-1559839734-2b71f15367ef?auto=format&fit=crop&q=80&w=400",
       verified: true,
       featured: true,
       reviews: "1.2k"
     },
     {
+      id: "doc-2",
+      userId: "user-doc-2",
       name: "Dr. James Wilson",
+      specialization: "Pet Surgeon",
+      experienceYears: 8,
+      consultationFee: 200.00,
+      isVerified: true,
+      rating: 4.8,
+      reviewCount: 850,
+      isFeatured: false,
+      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400",
+
+      // legacy compat
       specialty: "Pet Surgeon",
-      rating: "4.8",
       experience: "8 Years",
       fee: "200",
-      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400",
       verified: true,
       featured: false,
       reviews: "850"
     }
   ];
 
-  const handleBooking = (docName: string, fee: string) => {
-    const commission = (parseFloat(fee) * 0.2).toFixed(2);
+  const handleBooking = (docName: string, feeStr: string) => {
+    const feeNum = parseFloat(feeStr);
+    const commission = (feeNum * 0.2).toFixed(2);
     Alert.alert(
       "Confirm Booking",
-      `Book ${docName}?\n\nService Fee: $${fee}\nPlatform Commission: $${commission}\n\nTotal: $${fee}`,
+      `Book ${docName}?\n\nService Fee: $${feeNum.toFixed(2)}\nPlatform Commission (20%): $${commission}\n\nTotal: $${feeNum.toFixed(2)}`,
       [
         { text: "Cancel", style: "cancel" },
         { text: "Confirm", onPress: () => Alert.alert("Success", "Appointment Request Sent! 20% Commission Secured.") }
@@ -63,40 +84,52 @@ const DoctorBookingScreen = ({ navigation }: any) => {
     );
   };
 
-  const DoctorCard = ({ name, specialty, rating, experience, fee, image, verified, featured, reviews }: any) => (
-    <TouchableOpacity style={[styles.docCard, featured && styles.featuredCard]}>
-      {featured && (
-        <View style={styles.featuredBadge}>
-          <Icon name="star" size={12} color="white" />
-          <Text style={styles.featuredText}>TOP RATED</Text>
-        </View>
-      )}
-      <View style={styles.cardHeader}>
-        <Image source={{ uri: image }} style={styles.docImg} />
-        <View style={styles.docInfo}>
-          <View style={styles.nameRow}>
-            <Text style={styles.docName}>{name}</Text>
-            {verified && <Icon name="verified" size={16} color={COLORS.accent} style={{ marginLeft: 5 }} />}
+  const DoctorCard = (doc: any) => {
+    const name = doc.name;
+    const specialty = doc.specialization || doc.specialty;
+    const rating = typeof doc.rating === 'number' ? doc.rating.toFixed(1) : doc.rating;
+    const experience = typeof doc.experienceYears === 'number' ? `${doc.experienceYears} Years` : doc.experience;
+    const fee = typeof doc.consultationFee === 'number' ? doc.consultationFee.toFixed(0) : doc.fee;
+    const verified = doc.isVerified ?? doc.verified;
+    const featured = doc.isFeatured ?? doc.featured;
+    const reviews = typeof doc.reviewCount === 'number' ? `${(doc.reviewCount / 1000).toFixed(1)}k` : doc.reviews;
+    const image = doc.image;
+
+    return (
+      <TouchableOpacity style={[styles.docCard, featured && styles.featuredCard]}>
+        {featured && (
+          <View style={styles.featuredBadge}>
+            <Icon name="star" size={12} color="white" />
+            <Text style={styles.featuredText}>TOP RATED</Text>
           </View>
-          <Text style={styles.docSpec}>{specialty}</Text>
-          <View style={styles.statsRow}>
-            <Icon name="star" size={14} color={COLORS.accent} />
-            <Text style={styles.statText}>{rating} ({reviews} Reviews)</Text>
+        )}
+        <View style={styles.cardHeader}>
+          <Image source={{ uri: image }} style={styles.docImg} />
+          <View style={styles.docInfo}>
+            <View style={styles.nameRow}>
+              <Text style={styles.docName}>{name}</Text>
+              {verified && <Icon name="verified" size={16} color={COLORS.accent} style={{ marginLeft: 5 }} />}
+            </View>
+            <Text style={styles.docSpec}>{specialty}</Text>
+            <View style={styles.statsRow}>
+              <Icon name="star" size={14} color={COLORS.accent} />
+              <Text style={styles.statText}>{rating} ({reviews} Reviews)</Text>
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.divider} />
-      <View style={styles.cardFooter}>
-        <View>
-          <Text style={styles.feeLabel}>CONSULTATION FEE</Text>
-          <Text style={styles.feeValue}>${fee}</Text>
+        <View style={styles.divider} />
+        <View style={styles.cardFooter}>
+          <View>
+            <Text style={styles.feeLabel}>CONSULTATION FEE</Text>
+            <Text style={styles.feeValue}>${fee}</Text>
+          </View>
+          <TouchableOpacity style={styles.bookBtn} onPress={() => handleBooking(name, fee)}>
+            <Text style={styles.bookBtnText}>BOOK NOW</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.bookBtn} onPress={() => handleBooking(name, fee)}>
-          <Text style={styles.bookBtnText}>BOOK NOW</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>

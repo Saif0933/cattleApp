@@ -30,6 +30,17 @@ const COLORS = {
 };
 
 const ProfileScreen = ({ navigation }: any) => {
+  const user = {
+    id: "user-123",
+    email: "rashi@cattleapp.com",
+    phone: "+91 99999 99999",
+    name: "Rashi Cattle",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+    roles: ["USER", "SELLER"],
+    isVerifiedSeller: true,
+    address: "Karnal, Haryana"
+  };
+
   const MenuOption = ({ icon, title, subtitle, color = COLORS.primary, showArrow = true, onPress }: any) => (
     <TouchableOpacity style={styles.menuItem} onPress={onPress}>
       <View style={[styles.menuIconBox, { backgroundColor: color + '15' }]}>
@@ -70,16 +81,18 @@ const ProfileScreen = ({ navigation }: any) => {
           <View style={styles.profileFloatingCard}>
             <View style={styles.avatarContainer}>
               <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200' }} 
+                source={{ uri: user.avatar }} 
                 style={styles.avatar}
               />
               <View style={styles.statusDot} />
             </View>
             <View style={styles.infoBox}>
-              <Text style={styles.userName}>Rashi Cattle</Text>
+              <Text style={styles.userName}>{user.name}</Text>
               <View style={styles.premiumBadge}>
                 <Icon name="stars" size={16} color={COLORS.accent} />
-                <Text style={styles.premiumText}>PLATINUM MEMBER</Text>
+                <Text style={styles.premiumText}>
+                  {user.isVerifiedSeller ? "VERIFIED SELLER" : "PLATINUM MEMBER"}
+                </Text>
               </View>
             </View>
           </View>

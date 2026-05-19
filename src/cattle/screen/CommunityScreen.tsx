@@ -39,6 +39,11 @@ interface Message {
   time: string;
   isSelf: boolean;
   avatar?: string;
+  
+  // Aligned database fields
+  authorId?: string;
+  category?: 'GENERAL' | 'DISEASE_ALERT' | 'BREEDING_TIPS' | 'FEED_MANAGEMENT' | 'GOVERNMENT_SCHEMES';
+  isExpertAnswered?: boolean;
 }
 
 const INITIAL_MESSAGES: Message[] = [
@@ -49,6 +54,9 @@ const INITIAL_MESSAGES: Message[] = [
     time: '10:00 AM',
     isSelf: false,
     avatar: 'https://i.pravatar.cc/150?u=john',
+    authorId: 'usr-john',
+    category: 'GENERAL',
+    isExpertAnswered: true
   },
   {
     id: '2',
@@ -57,6 +65,9 @@ const INITIAL_MESSAGES: Message[] = [
     time: '10:05 AM',
     isSelf: false,
     avatar: 'https://i.pravatar.cc/150?u=sarah',
+    authorId: 'usr-sarah',
+    category: 'DISEASE_ALERT',
+    isExpertAnswered: false
   },
   {
     id: '3',
@@ -64,6 +75,9 @@ const INITIAL_MESSAGES: Message[] = [
     sender: 'You',
     time: '10:10 AM',
     isSelf: true,
+    authorId: 'usr-self',
+    category: 'FEED_MANAGEMENT',
+    isExpertAnswered: false
   },
   {
     id: '4',
@@ -72,6 +86,9 @@ const INITIAL_MESSAGES: Message[] = [
     time: '10:12 AM',
     isSelf: false,
     avatar: 'https://i.pravatar.cc/150?u=mike',
+    authorId: 'usr-mike',
+    category: 'FEED_MANAGEMENT',
+    isExpertAnswered: true
   },
   {
     id: '5',
@@ -79,6 +96,9 @@ const INITIAL_MESSAGES: Message[] = [
     sender: 'You',
     time: '10:15 AM',
     isSelf: true,
+    authorId: 'usr-self',
+    category: 'GENERAL',
+    isExpertAnswered: false
   },
 ];
 
@@ -96,6 +116,9 @@ const CommunityScreen = ({ navigation }: any) => {
       sender: 'You',
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isSelf: true,
+      authorId: 'usr-self',
+      category: 'GENERAL',
+      isExpertAnswered: false
     };
 
     setMessages([...messages, newMessage]);
@@ -116,7 +139,17 @@ const CommunityScreen = ({ navigation }: any) => {
           item.isSelf ? styles.selfBubble : styles.otherBubble,
           !item.isSelf && styles.otherBubbleShadow
         ]}>
-          {!item.isSelf && <Text style={styles.senderName}>{item.sender}</Text>}
+          {!item.isSelf && (
+            <View style={styles.senderHeader}>
+              <Text style={styles.senderName}>{item.sender}</Text>
+              {item.isExpertAnswered && (
+                <View style={styles.expertBadge}>
+                  <Icon name="verified" size={10} color="white" />
+                  <Text style={styles.expertBadgeText}>EXPERT</Text>
+                </View>
+              )}
+            </View>
+          )}
           <Text style={[styles.messageText, item.isSelf ? styles.selfText : styles.otherText]}>
             {item.text}
           </Text>
@@ -281,11 +314,31 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
   },
+  senderHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+    gap: 6
+  },
+  expertBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.emerald,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    gap: 3
+  },
+  expertBadgeText: {
+    color: 'white',
+    fontSize: 8,
+    fontWeight: '900',
+    letterSpacing: 0.5
+  },
   senderName: {
     fontSize: 12,
     fontWeight: '800',
     color: COLORS.accent,
-    marginBottom: 4,
   },
   messageText: {
     fontSize: 15,

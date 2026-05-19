@@ -31,22 +31,56 @@ const BreedingScreen = ({ navigation }: any) => {
 
   const breeders = [
     {
-      name: "Thunder",
+      id: "srv-1",
+      breederId: "breeder-1",
+      title: "Thunder",
       breed: "Pure Arabian Horse",
+      category: "HORSE",
+      price: 1500.00,
+      images: ["https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=400"],
+      availability: "Available Now",
+      description: "Elite breeding services for purebred horses.",
+      
+      breeder: {
+        businessName: "Elite Stables",
+        experienceYears: 10,
+        address: "Karnal, Haryana",
+        isVerified: true,
+        rating: 4.8
+      },
+
+      // legacy fallbacks
+      name: "Thunder",
       owner: "Elite Stables",
       fee: "1,500",
       image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=400",
-      verified: true,
-      category: "Horses"
+      verified: true
     },
     {
-      name: "Rex",
+      id: "srv-2",
+      breederId: "breeder-2",
+      title: "Rex",
       breed: "German Shepherd",
+      category: "DOG",
+      price: 500.00,
+      images: ["https://images.unsplash.com/photo-1589944173175-400144838d05?auto=format&fit=crop&q=80&w=400"],
+      availability: "Available Now",
+      description: "High agility German Shepherd for guard dog breeding.",
+      
+      breeder: {
+        businessName: "Apex K9 Studios",
+        experienceYears: 6,
+        address: "Chandigarh",
+        isVerified: true,
+        rating: 4.7
+      },
+
+      // legacy fallbacks
+      name: "Rex",
       owner: "Apex K9",
       fee: "500",
       image: "https://images.unsplash.com/photo-1589944173175-400144838d05?auto=format&fit=crop&q=80&w=400",
-      verified: true,
-      category: "Dogs"
+      verified: true
     }
   ];
 
@@ -61,32 +95,41 @@ const BreedingScreen = ({ navigation }: any) => {
     );
   };
 
-  const BreedingCard = ({ name, breed, owner, fee, image, verified }: any) => (
-    <TouchableOpacity style={styles.card}>
-      <Image source={{ uri: image }} style={styles.cardImg} />
-      <View style={styles.content}>
-        <View style={styles.headerRow}>
-          <Text style={styles.animalName}>{name}</Text>
-          {verified && <Icon name="verified" size={18} color={COLORS.accent} />}
-        </View>
-        <Text style={styles.breedText}>{breed}</Text>
-        <View style={styles.divider} />
-        <View style={styles.footer}>
-          <View>
-            <Text style={styles.ownerLabel}>BREEDER</Text>
-            <Text style={styles.ownerName}>{owner}</Text>
+  const BreedingCard = (service: any) => {
+    const name = service.title || service.name;
+    const breed = service.breed;
+    const owner = service.breeder?.businessName || service.owner;
+    const priceVal = typeof service.price === 'number' ? service.price.toLocaleString() : service.fee;
+    const image = service.images?.[0] || service.image;
+    const verified = service.breeder?.isVerified ?? service.verified;
+
+    return (
+      <TouchableOpacity style={styles.card}>
+        <Image source={{ uri: image }} style={styles.cardImg} />
+        <View style={styles.content}>
+          <View style={styles.headerRow}>
+            <Text style={styles.animalName}>{name}</Text>
+            {verified && <Icon name="verified" size={18} color={COLORS.accent} />}
           </View>
-          <View style={{ alignItems: 'flex-end' }}>
-            <Text style={styles.feeLabel}>SERVICE FEE</Text>
-            <Text style={styles.feeValue}>${fee}</Text>
+          <Text style={styles.breedText}>{breed}</Text>
+          <View style={styles.divider} />
+          <View style={styles.footer}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.ownerLabel}>BREEDER</Text>
+              <Text style={styles.ownerName} numberOfLines={1}>{owner}</Text>
+            </View>
+            <View style={{ alignItems: 'flex-end' }}>
+              <Text style={styles.feeLabel}>SERVICE FEE</Text>
+              <Text style={styles.feeValue}>${priceVal}</Text>
+            </View>
           </View>
+          <TouchableOpacity style={styles.connectBtn} onPress={() => handleConnect(name, owner)}>
+            <Text style={styles.connectBtnText}>CONNECT FOR BREEDING</Text>
+          </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.connectBtn} onPress={() => handleConnect(name, owner)}>
-          <Text style={styles.connectBtnText}>CONNECT FOR BREEDING</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -120,7 +163,14 @@ const BreedingScreen = ({ navigation }: any) => {
         </View>
 
         <View style={styles.grid}>
-          {breeders.filter(b => activeTab === 'All' || b.category === activeTab).map((b, i) => (
+          {breeders.filter(b => {
+            if (activeTab === 'All') return true;
+            const catLower = b.category.toLowerCase();
+            if (activeTab === 'Cattle' && (catLower.includes('cow') || catLower.includes('buffalo'))) return true;
+            if (activeTab === 'Dogs' && catLower.includes('dog')) return true;
+            if (activeTab === 'Horses' && catLower.includes('horse')) return true;
+            return false;
+          }).map((b, i) => (
             <BreedingCard key={i} {...b} />
           ))}
         </View>

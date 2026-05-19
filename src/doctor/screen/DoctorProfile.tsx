@@ -38,6 +38,26 @@ const GRADIENTS = {
 };
 
 const DoctorProfile = ({ navigation }: any) => {
+  const doctor = {
+    id: "doc-2",
+    userId: "user-doc-2",
+    user: {
+      name: "Dr. James Wilson",
+      avatar: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200",
+      roles: ["DOCTOR", "USER"]
+    },
+    specialization: "Lead Veterinary Physician",
+    experienceYears: 12,
+    clinicName: "Avian & Pet Health Center",
+    clinicAddress: "Chandigarh, Punjab",
+    consultationFee: 60.00,
+    isVerified: true,
+    bio: "Lead veterinary physician with extensive expertise in orthopedic pet surgeries and exotic bird medical consultations.",
+    rating: 4.9,
+    reviewCount: 850,
+    patientsCount: 2480,
+    consultationsCount: 1200
+  };
 
   const InfoChip = ({ icon, label, color }: any) => (
     <View style={[styles.chip, { backgroundColor: color + '15' }]}>
@@ -102,17 +122,17 @@ const DoctorProfile = ({ navigation }: any) => {
           <View style={styles.profileHeader}>
             <View style={styles.avatarOutline}>
               <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=200' }} 
+                source={{ uri: doctor.user.avatar }} 
                 style={styles.mainAvatar}
               />
               <View style={styles.activeDot} />
             </View>
             <View style={styles.mainInfo}>
-              <Text style={styles.userName}>Dr. James Wilson</Text>
-              <Text style={styles.userRole}>Lead Veterinary Physician</Text>
+              <Text style={styles.userName}>{doctor.user.name}</Text>
+              <Text style={styles.userRole}>{doctor.specialization}</Text>
               <View style={styles.chipRow}>
-                <InfoChip icon="star" label="4.9" color={COLORS.gold} />
-                <InfoChip icon="verified" label="VETCORE PRO" color={COLORS.accent} />
+                <InfoChip icon="star" label={String(doctor.rating)} color={COLORS.gold} />
+                {doctor.isVerified && <InfoChip icon="verified" label="VETCORE PRO" color={COLORS.accent} />}
               </View>
             </View>
           </View>
@@ -120,9 +140,9 @@ const DoctorProfile = ({ navigation }: any) => {
 
         {/* Statistics Section */}
         <View style={styles.statsSection}>
-          <StatTile label="Total Patients" value="2,480" icon="people-alt" color={COLORS.accent} />
+          <StatTile label="Total Patients" value={doctor.patientsCount.toLocaleString()} icon="people-alt" color={COLORS.accent} />
           <StatTile label="Consultations" value="1.2k+" icon="medical-services" color={COLORS.emerald} />
-          <StatTile label="Experience" value="12yrs" icon="workspace-premium" color={COLORS.violet} />
+          <StatTile label="Experience" value={`${doctor.experienceYears}yrs`} icon="workspace-premium" color={COLORS.violet} />
         </View>
 
         {/* Action Dashboard */}

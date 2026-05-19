@@ -29,84 +29,126 @@ const COLORS = {
 };
 
 const DoctorMarket = () => {
-  const [activeFilter, setActiveFilter] = useState('All');
-  const filters = ['All', 'Vaccines', 'Supplements', 'Antibiotics', 'Equipment', 'Surgical'];
+  const [activeFilter, setActiveFilter] = useState('ALL');
+  const filters = [
+    { label: 'All', value: 'ALL' },
+    { label: 'Vaccines', value: 'VACCINES' },
+    { label: 'Supplements', value: 'SUPPLEMENTS' },
+    { label: 'Medicines', value: 'MEDICINES' },
+    { label: 'Farming Tools', value: 'FARMING_TOOLS' },
+  ];
 
   const products = [
     {
+      id: "prod-vax",
+      vendorId: "vendor-1",
+      name: "Premium Vaccine",
+      description: "BioCattle Pro High-fidelity cow immunization vaccine.",
+      price: 120.00,
+      stock: 50,
+      category: "VACCINES",
+      images: ["https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?auto=format&fit=crop&q=80&w=400"],
+      
+      // legacy compat
       title: "Premium Vaccine",
       brand: "BioCattle Pro",
-      category: "Vaccines",
-      price: "120",
       rating: "4.9",
-      stock: "In Stock",
       image: "https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?auto=format&fit=crop&q=80&w=400",
       badge: "BEST SELLER",
       badgeColor: COLORS.emerald
     },
     {
+      id: "prod-eq",
+      vendorId: "vendor-2",
+      name: "Digital Thermometer",
+      description: "VetTech Elite high accuracy animal clinical thermometer.",
+      price: 85.00,
+      stock: 5,
+      category: "FARMING_TOOLS",
+      images: ["https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&q=80&w=400"],
+
+      // legacy compat
       title: "Digital Thermometer",
       brand: "VetTech Elite",
-      category: "Equipment",
-      price: "85",
       rating: "4.8",
-      stock: "Low Stock",
       image: "https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?auto=format&fit=crop&q=80&w=400",
       badge: "TOP RATED",
       badgeColor: COLORS.accent
     },
     {
+      id: "prod-sup",
+      vendorId: "vendor-3",
+      name: "Calcium Booster",
+      description: "NutriHerd premium organic calcium supplement for maximum daily yield.",
+      price: 45.00,
+      stock: 12,
+      category: "SUPPLEMENTS",
+      images: ["https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=400"],
+
+      // legacy compat
       title: "Calcium Booster",
       brand: "NutriHerd",
-      category: "Supplements",
-      price: "45",
       rating: "4.7",
-      stock: "In Stock",
       image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=400",
       featured: true
     }
   ];
 
   const filteredProducts = useMemo(() => {
-    if (activeFilter === 'All') return products;
+    if (activeFilter === 'ALL') return products;
     return products.filter(item => item.category === activeFilter);
   }, [activeFilter]);
 
-  const ProductCard = ({ title, brand, price, rating, stock, image, badge, badgeColor }: any) => (
-    <TouchableOpacity style={styles.modernCard}>
-      <Image source={{ uri: image }} style={styles.cardImg} />
-      {badge && (
-        <View style={[styles.cardBadge, { backgroundColor: badgeColor }]}>
-          <Text style={styles.badgeText}>{badge}</Text>
+  const ProductCard = (item: any) => {
+    const title = item.name || item.title;
+    const brand = item.brand || "VETCARE PRO";
+    const price = typeof item.price === 'number' ? item.price.toFixed(0) : item.price;
+    const rating = item.rating;
+    const image = item.images?.[0] || item.image;
+    const badge = item.badge;
+    const badgeColor = item.badgeColor;
+
+    // Aligned stock rendering
+    const stock = typeof item.stock === 'number' 
+      ? (item.stock > 10 ? 'In Stock' : item.stock > 0 ? 'Low Stock' : 'Out of Stock') 
+      : item.stock;
+
+    return (
+      <TouchableOpacity style={styles.modernCard}>
+        <Image source={{ uri: image }} style={styles.cardImg} />
+        {badge && (
+          <View style={[styles.cardBadge, { backgroundColor: badgeColor }]}>
+            <Text style={styles.badgeText}>{badge}</Text>
+          </View>
+        )}
+        <View style={styles.glassContent}>
+          <View style={styles.cardHeader}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.cardBrand}>{brand.toUpperCase()}</Text>
+              <Text style={styles.cardTitle} numberOfLines={1}>{title}</Text>
+            </View>
+            <View style={styles.pricePill}>
+              <Text style={styles.priceValue}>${price}</Text>
+            </View>
+          </View>
+          <View style={styles.cardFooter}>
+            <View style={styles.ratingBox}>
+              <Icon name="star" size={14} color={COLORS.accent} />
+              <Text style={styles.ratingText}>{rating}</Text>
+            </View>
+            <View style={styles.stockBox}>
+              <View style={[styles.stockDot, { backgroundColor: stock.includes('In') ? COLORS.emerald : COLORS.accent }]} />
+              <Text style={styles.stockText}>{stock}</Text>
+            </View>
+          </View>
+          <TouchableOpacity style={styles.addBtn}>
+            <Icon name="add-shopping-cart" size={20} color="white" />
+            <Text style={styles.addBtnText}>ADD TO CART</Text>
+          </TouchableOpacity>
         </View>
-      )}
-      <View style={styles.glassContent}>
-        <View style={styles.cardHeader}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.cardBrand}>{brand.toUpperCase()}</Text>
-            <Text style={styles.cardTitle} numberOfLines={1}>{title}</Text>
-          </View>
-          <View style={styles.pricePill}>
-            <Text style={styles.priceValue}>${price}</Text>
-          </View>
-        </View>
-        <View style={styles.cardFooter}>
-          <View style={styles.ratingBox}>
-            <Icon name="star" size={14} color={COLORS.accent} />
-            <Text style={styles.ratingText}>{rating}</Text>
-          </View>
-          <View style={styles.stockBox}>
-            <View style={[styles.stockDot, { backgroundColor: stock.includes('In') ? COLORS.emerald : COLORS.accent }]} />
-            <Text style={styles.stockText}>{stock}</Text>
-          </View>
-        </View>
-        <TouchableOpacity style={styles.addBtn}>
-          <Icon name="add-shopping-cart" size={20} color="white" />
-          <Text style={styles.addBtnText}>ADD TO CART</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -136,10 +178,10 @@ const DoctorMarket = () => {
             {filters.map((filter, idx) => (
               <TouchableOpacity 
                 key={idx} 
-                onPress={() => setActiveFilter(filter)}
-                style={[styles.filterPill, activeFilter === filter && styles.activeFilterPill]}
+                onPress={() => setActiveFilter(filter.value)}
+                style={[styles.filterPill, activeFilter === filter.value && styles.activeFilterPill]}
               >
-                <Text style={[styles.filterText, activeFilter === filter && styles.activeFilterText]}>{filter}</Text>
+                <Text style={[styles.filterText, activeFilter === filter.value && styles.activeFilterText]}>{filter.label}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>

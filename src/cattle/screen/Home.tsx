@@ -55,6 +55,9 @@ const HERD_APP = ({ navigation, route }: any) => {
 
   const [topListings, setTopListings] = useState([
     { 
+      id: "listing-1",
+      sellerId: "seller-1",
+      title: "Siberian Husky", 
       name: "Siberian Husky", 
       breed: "Pure Breed", 
       price: "2,500", 
@@ -67,9 +70,23 @@ const HERD_APP = ({ navigation, route }: any) => {
       age: '2 Years',
       gender: 'Male',
       desc: 'Active and friendly Siberian Husky, fully vaccinated and ready for a new home.',
-      phone: '1234567890'
+      phone: '1234567890',
+      
+      // DB Model fields
+      category: "DOG",
+      ageMonths: 24,
+      vaccination: "VACCINATED",
+      isNegotiable: true,
+      images: ["https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&q=80&w=400"],
+      videos: [],
+      isFeatured: true,
+      isPremium: true,
+      status: "ACTIVE"
     },
     { 
+      id: "listing-2",
+      sellerId: "seller-2",
+      title: "Jersey Elite", 
       name: "Jersey Elite", 
       breed: "Show Quality", 
       price: "78,000", 
@@ -82,12 +99,26 @@ const HERD_APP = ({ navigation, route }: any) => {
       age: '2.5 Years',
       gender: 'Female',
       desc: 'High-quality Jersey cow with excellent milk yield and gentle temperament.',
-      phone: '0987654321'
+      phone: '0987654321',
+
+      // DB Model fields
+      category: "COW",
+      ageMonths: 30,
+      vaccination: "PARTIALLY_VACCINATED",
+      milkProduction: 10.0,
+      isNegotiable: false,
+      images: ["https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=400"],
+      videos: [],
+      isFeatured: true,
+      isPremium: false,
+      status: "ACTIVE"
     }
   ]);
 
   const brandProducts = [
     {
+      id: "prod-1",
+      vendorId: "vendor-1",
       title: 'Holstein Friesian',
       name: 'Holstein Friesian',
       price: '95,000',
@@ -99,9 +130,18 @@ const HERD_APP = ({ navigation, route }: any) => {
       age: '4 Years',
       gender: 'Female',
       desc: 'High-quality dairy cattle with excellent milk production history. Sponsored by PetMedics.',
-      phone: '9876543210'
+      phone: '9876543210',
+
+      // DB Model fields
+      category: "CATTLE_FEED",
+      stock: 12,
+      images: ["https://images.unsplash.com/photo-1589923188900-85dae523342b?auto=format&fit=crop&q=80&w=400"],
+      isFeatured: true,
+      rating: 4.9
     },
     {
+      id: "prod-2",
+      vendorId: "vendor-2",
       title: 'Jersey Elite',
       name: 'Jersey Elite',
       price: '78,000',
@@ -113,12 +153,118 @@ const HERD_APP = ({ navigation, route }: any) => {
       age: '2.5 Years',
       gender: 'Female',
       desc: 'Healthy Jersey heifer, perfect for small dairy farms. Promoted by Elite Feast.',
-      phone: '8765432109'
+      phone: '8765432109',
+
+      // DB Model fields
+      category: "CATTLE_FEED",
+      stock: 5,
+      images: ["https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&q=80&w=400"],
+      isFeatured: false,
+      rating: 4.7
+    }
+  ];
+
+  const suggestedProducts = [
+    {
+      id: "prod-3",
+      vendorId: "vendor-3",
+      name: "Premium Dog Food",
+      breed: "Nutrition",
+      price: "1,200",
+      info: "Top Seller",
+      type: "FOOD",
+      image: "https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&q=80&w=400",
+      verified: true,
+      weight: "15kg",
+      yield: "N/A",
+      age: "All Ages",
+      gender: "N/A",
+      desc: "Complete feed for adult and mature dogs.",
+      phone: "1231231234",
+
+      // DB Model fields
+      category: "DOG_FOOD",
+      stock: 100,
+      images: ["https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&q=80&w=400"],
+      isFeatured: true,
+      rating: 4.8
+    },
+    {
+      id: "prod-4",
+      vendorId: "vendor-4",
+      name: "Horse Saddle",
+      breed: "Equipment",
+      price: "12,500",
+      info: "Premium Gear",
+      type: "GEAR",
+      image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=400",
+      verified: false,
+      weight: "5kg",
+      yield: "N/A",
+      age: "N/A",
+      gender: "N/A",
+      desc: "Premium leather horse saddle for riding.",
+      phone: "4321432143",
+
+      // DB Model fields
+      category: "ACCESSORIES",
+      stock: 15,
+      images: ["https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=400"],
+      isFeatured: false,
+      rating: 4.5
+    },
+    {
+      id: "prod-5",
+      vendorId: "vendor-5",
+      name: "Aquarium 50L",
+      breed: "Accessories",
+      price: "4,000",
+      info: "Starter Kit",
+      type: "ACCESSORY",
+      image: "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=400",
+      verified: true,
+      weight: "10kg",
+      yield: "N/A",
+      age: "N/A",
+      gender: "N/A",
+      desc: "50-liter glass aquarium with LED light and filter.",
+      phone: "5555555555",
+
+      // DB Model fields
+      category: "ACCESSORIES",
+      stock: 8,
+      images: ["https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=400"],
+      isFeatured: true,
+      rating: 4.6
+    },
+    {
+      id: "prod-6",
+      vendorId: "vendor-6",
+      name: "Cat Tree 3-Tier",
+      breed: "Toys",
+      price: "2,800",
+      info: "Best Seller",
+      type: "TOY",
+      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400",
+      verified: false,
+      weight: "8kg",
+      yield: "N/A",
+      age: "N/A",
+      gender: "N/A",
+      desc: "3-tier cat tree with scratching posts and hammock.",
+      phone: "9999999999",
+
+      // DB Model fields
+      category: "ACCESSORIES",
+      stock: 20,
+      images: ["https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400"],
+      isFeatured: false,
+      rating: 4.4
     }
   ];
 
   const filteredListings = topListings.filter(item => 
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (item.title || item.name).toLowerCase().includes(searchQuery.toLowerCase()) || 
     item.breed.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -127,19 +273,42 @@ const HERD_APP = ({ navigation, route }: any) => {
       const newItem = route.params.newAnimal;
       setTopListings(prev => [
         {
-          name: newItem.name,
+          id: String(prev.length + 1),
+          sellerId: "current_user",
+          title: newItem.title || newItem.name,
+          description: newItem.description || newItem.desc,
+          category: newItem.category || 'COW',
           breed: newItem.breed,
-          price: newItem.price,
-          info: newItem.info,
-          type: newItem.type,
-          image: newItem.image,
+          ageMonths: newItem.ageMonths || 12,
+          gender: newItem.gender || 'MALE',
+          weight: newItem.weight || 0,
+          healthCondition: newItem.healthCondition || 'Excellent',
+          vaccination: newItem.vaccination || 'NOT_VACCINATED',
+          milkProduction: newItem.milkProduction || null,
+          price: newItem.price || "0",
+          isNegotiable: newItem.isNegotiable || false,
+          latitude: null,
+          longitude: null,
+          address: newItem.address || 'Unknown',
+          images: newItem.images || [newItem.image],
+          videos: [],
+          isFeatured: newItem.isFeatured || false,
+          isPremium: newItem.isPremium || false,
+          status: 'ACTIVE',
+          postedDate: new Date().toISOString(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+
+          // Compatibility fallbacks
+          name: newItem.title || newItem.name,
+          info: newItem.address || newItem.info,
+          type: newItem.type || 'NEW',
+          image: newItem.images ? newItem.images[0] : newItem.image,
           verified: false,
-          weight: newItem.weight || 'N/A',
-          yield: newItem.yield || 'N/A',
-          age: newItem.age || 'Unknown',
-          gender: newItem.gender || 'N/A',
-          desc: newItem.desc || 'New registration.',
-          phone: newItem.phone || 'N/A'
+          yield: newItem.milkProduction ? `${newItem.milkProduction}L/day` : 'N/A',
+          age: newItem.ageMonths ? `${Math.floor(newItem.ageMonths / 12)} Years` : '1 Year',
+          desc: newItem.description || newItem.desc,
+          phone: newItem.phone || '9876543210'
         },
         ...prev
       ]);
@@ -176,7 +345,13 @@ const HERD_APP = ({ navigation, route }: any) => {
   );
 
   const PremiumCard = (item: any) => {
-    const { name, breed, price, info, image, type, verified } = item;
+    const title = item.title || item.name || 'Elite Listing';
+    const breed = item.breed || 'Unknown';
+    const price = item.price ? `${item.price}` : '0';
+    const image = (item.images && item.images.length > 0) ? item.images[0] : (item.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400');
+    const type = item.isPremium ? 'PREMIUM' : (item.isFeatured ? 'FEATURED' : (item.type || 'STANDARD'));
+    const verified = item.verified || item.seller?.isVerifiedSeller;
+
     return (
       <View style={styles.premiumListing}>
         <Image source={{ uri: image }} style={styles.premiumImg} />
@@ -190,7 +365,7 @@ const HERD_APP = ({ navigation, route }: any) => {
           <Text style={styles.premiumTagText}>{type}</Text>
         </View>
         <View style={styles.premiumInfo}>
-          <Text style={styles.premiumName}>{name}</Text>
+          <Text style={styles.premiumName}>{title}</Text>
           <Text style={styles.premiumBreed}>{breed}</Text>
           <View style={styles.premiumFooter}>
             <Text style={styles.premiumPrice}>${price}</Text>
@@ -246,7 +421,7 @@ const HERD_APP = ({ navigation, route }: any) => {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Elite Services</Text>
+          <Text style={styles.sectionTitle}>Cattle Services</Text>
           <View style={styles.servicesGrid}>
             {services.map((s, i) => <ServiceCard key={i} {...s} />)}
           </View>
@@ -291,6 +466,22 @@ const HERD_APP = ({ navigation, route }: any) => {
             ))}
           </View>
         </View>
+
+        <View style={styles.section}>
+          <View style={styles.rowHeader}>
+            <Text style={styles.sectionTitle}>More Products</Text>
+            <View style={styles.seeAllContainer}>
+              <Text style={styles.seeAll}>View All</Text>
+              <TouchableOpacity onPress={() => navigation.navigate('Store')}>
+                <Icon name="chevron-right" size={18} color={COLORS.secondary} />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.premiumScroll}>
+            {suggestedProducts.map((product, idx) => <PremiumCard key={`suggested-${idx}`} {...product} />)}
+          </ScrollView>
+        </View>
+
         <View style={{ height: 100 }} />
       </ScrollView>
 

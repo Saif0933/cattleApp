@@ -55,20 +55,46 @@ const NewFlockScreen = ({ navigation, route }: any) => {
   const handleCreate = () => {
     Alert.alert('Registering...', 'Finalizing your elite listing.');
     setTimeout(() => {
+      // Map category to AnimalCategory enum: COW, BUFFALO, GOAT, DOG, CAT, HORSE, SHEEP, RABBIT, POULTRY, EXOTIC, OTHER
+      let animalCategory = 'OTHER';
+      const animalLower = selectedAnimal.toLowerCase();
+      if (animalLower.includes('cow') || animalLower.includes('bull')) animalCategory = 'COW';
+      else if (animalLower.includes('buffalo')) animalCategory = 'BUFFALO';
+      else if (animalLower.includes('goat')) animalCategory = 'GOAT';
+      else if (animalLower.includes('dog')) animalCategory = 'DOG';
+      else if (animalLower.includes('cat')) animalCategory = 'CAT';
+      else if (animalLower.includes('horse')) animalCategory = 'HORSE';
+      else if (animalLower.includes('sheep')) animalCategory = 'SHEEP';
+      else if (animalLower.includes('rabbit')) animalCategory = 'RABBIT';
+      
       navigation.navigate('Home', { 
         newAnimal: {
-          name: flockName || 'Elite Animal',
+          title: flockName || 'Elite Animal',
+          category: animalCategory,
           breed: selectedAnimal,
-          price: 'Contact',
-          info: purpose || 'For Sale',
+          price: "15,000",
+          description: description || 'No description provided.',
+          images: selectedImages.length > 0 ? selectedImages : ['https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400'],
+          weight: 120.0,
+          milkProduction: 10.0,
+          ageMonths: 12,
+          gender: 'FEMALE',
+          vaccination: 'VACCINATED',
+          isNegotiable: true,
+          isFeatured: false,
+          isPremium: false,
+          status: 'ACTIVE',
+          address: 'Ambala, Haryana',
+          phone: '9876543210',
+
+          // Compatibility fields for legacy screens
+          name: flockName || 'Elite Animal',
+          info: 'Ambala, Haryana',
           type: 'NEW',
           image: selectedImages[0] || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=400',
-          weight: 'N/A',
-          yield: 'N/A',
+          yield: '10L/day',
           age: '1 Year',
-          gender: 'Female',
-          desc: description || 'No description provided.',
-          phone: '9876543210'
+          desc: description || 'No description provided.'
         }
       });
     }, 1500);
