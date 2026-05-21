@@ -11,6 +11,7 @@ import {
     TouchableOpacity,
     View,
     Alert,
+    Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MCOIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,6 +35,11 @@ const COLORS = {
 const AnimalDetailsScreen = ({ route, navigation }: any) => {
   const { product } = route.params || {};
 
+  const [activeImageIndex, setActiveImageIndex] = React.useState(0);
+  const [viewerVisible, setViewerVisible] = React.useState(false);
+  const [viewerIndex, setViewerIndex] = React.useState(0);
+  const modalScrollRef = React.useRef<ScrollView>(null);
+
   // Fallback data for safety aligned to the DB schema
   const details = {
     title: product?.title || product?.name || 'Elite Specimen',
@@ -49,9 +55,48 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
     phone: product?.phone || '9876543210',
   };
 
+  // Ensure there are at least 3 banner images with sliding style
+  const getImagesList = (): string[] => {
+    if (product?.images && product.images.length > 0) {
+      if (product.images.length === 1) {
+        return [
+          product.images[0],
+          'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=1200',
+          'https://images.unsplash.com/photo-1527153857715-3908f2bac5e8?auto=format&fit=crop&q=80&w=1200'
+        ];
+      }
+      return product.images;
+    }
+    const mainImg = product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200';
+    return [
+      mainImg,
+      'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=1200',
+      'https://images.unsplash.com/photo-1527153857715-3908f2bac5e8?auto=format&fit=crop&q=80&w=1200'
+    ];
+  };
+
+  const images = getImagesList();
+
   const handleCall = () => {
     Linking.openURL(`tel:${details.phone}`);
   };
+
+  const onScroll = (event: any) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / width);
+    setActiveImageIndex(index);
+  };
+
+  React.useEffect(() => {
+    if (viewerVisible) {
+      setTimeout(() => {
+        modalScrollRef.current?.scrollTo({
+          x: viewerIndex * width,
+          animated: false,
+        });
+      }, 50);
+    }
+  }, [viewerVisible]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -70,15 +115,52 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* Immersive Image Gallery */}
+        {/* Immersive Image Gallery Slider */}
         <View style={styles.heroWrapper}>
-          <Image
-            source={{ uri: details.image }}
-            style={styles.heroImage}
-          />
+          <ScrollView
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={onScroll}
+            scrollEventThrottle={16}
+            style={styles.heroScrollView}
+          >
+            {images.map((imgUri: string, index: number) => (
+              <TouchableOpacity
+                key={index}
+                activeOpacity={0.9}
+                onPress={() => {
+                  setViewerIndex(index);
+                  setViewerVisible(true);
+                }}
+                style={{ width }}
+              >
+                <Image
+                  source={{ uri: imgUri }}
+                  style={styles.heroImage}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          {/* Dots Pagination */}
+          <View style={styles.paginationDots}>
+            {images.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.dot,
+                  activeImageIndex === index ? styles.activeDot : styles.inactiveDot,
+                ]}
+              />
+            ))}
+          </View>
+
+          {/* Photos Badge */}
           <View style={styles.galleryBadge}>
             <Icon name="photo-library" size={14} color="white" />
-            <Text style={styles.galleryText}>1/5 Photos</Text>
+            <Text style={styles.galleryText}>{activeImageIndex + 1}/{images.length} Photos</Text>
           </View>
         </View>
 
@@ -167,13 +249,71 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
           onPress={() => navigation.navigate('OrderSummary', { product: details })}
         >
           <Icon name="shopping-bag" size={20} color="white" />
-          <Text style={styles.buyText}>Buy Now</Text>
+          <Text style={styles.buyText}>Inspect & Buy</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
           <Icon name="phone-in-talk" size={20} color="white" />
           <Text style={styles.callText}>Call Seller</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Fullscreen Image Viewer Modal */}
+      <Modal
+        visible={viewerVisible}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setViewerVisible(false)}
+      >
+        <SafeAreaView style={styles.modalContainer}>
+          <StatusBar barStyle="light-content" backgroundColor="black" />
+          
+          {/* Modal Header */}
+          <View style={styles.modalHeader}>
+            <TouchableOpacity 
+              onPress={() => setViewerVisible(false)} 
+              style={styles.modalCloseBtn}
+            >
+              <Icon name="close" size={28} color="white" />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>
+              {viewerIndex + 1} / {images.length}
+            </Text>
+            <View style={{ width: 40 }} />
+          </View>
+
+          {/* Modal Slider */}
+          <ScrollView
+            ref={modalScrollRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={(event) => {
+              const offsetX = event.nativeEvent.contentOffset.x;
+              const index = Math.round(offsetX / width);
+              setViewerIndex(index);
+            }}
+            scrollEventThrottle={16}
+            style={styles.modalScrollView}
+          >
+            {images.map((imgUri: string, index: number) => (
+              <ScrollView
+                key={index}
+                maximumZoomScale={3}
+                minimumZoomScale={1}
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.modalImageContainer}
+              >
+                <Image
+                  source={{ uri: imgUri }}
+                  style={styles.modalImage}
+                  resizeMode="contain"
+                />
+              </ScrollView>
+            ))}
+          </ScrollView>
+        </SafeAreaView>
+      </Modal>
 
     </SafeAreaView>
   );
@@ -223,6 +363,71 @@ const styles = StyleSheet.create({
   heroImage: { width: '100%', height: '100%' },
   galleryBadge: { position: 'absolute', bottom: 20, right: 20, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, flexDirection: 'row', alignItems: 'center' },
   galleryText: { color: 'white', fontSize: 10, fontWeight: '900', marginLeft: 6 },
+
+  heroScrollView: { width: '100%', height: '100%' },
+  paginationDots: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dot: {
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    width: 20,
+    backgroundColor: COLORS.accent,
+  },
+  inactiveDot: {
+    width: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#000000',
+  },
+  modalHeader: {
+    width: '100%',
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 10,
+    zIndex: 10,
+  },
+  modalCloseBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  modalScrollView: {
+    flex: 1,
+    width: '100%',
+  },
+  modalImageContainer: {
+    width: width,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#000000',
+  },
+  modalImage: {
+    width: '100%',
+    height: '100%',
+  },
 
   content: { padding: 20 },
   mainInfoCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 20 },
