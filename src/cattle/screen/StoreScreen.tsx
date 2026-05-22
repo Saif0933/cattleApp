@@ -141,14 +141,15 @@ const StoreScreen = ({ navigation }: any) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
-      {/* Location, Title & Cart Header */}
+      {/* Top Header */}
       <View style={styles.topHeader}>
-        <View style={styles.locationContainer}>
-          <Icon name="location-on" size={18} color="#475569" />
-          <Text style={styles.locationText}>Abilene, TX</Text>
-        </View>
+        <View style={{ width: 32 }} />
         <Text style={styles.brandTitle}>AgriMarket</Text>
-        <TouchableOpacity style={styles.cartBtn} activeOpacity={0.7}>
+        <TouchableOpacity 
+          style={styles.cartBtn} 
+          activeOpacity={0.7}
+          onPress={() => navigation.navigate('OrderSummary')}
+        >
           <Icon name="shopping-cart" size={24} color="#1E293B" />
         </TouchableOpacity>
       </View>

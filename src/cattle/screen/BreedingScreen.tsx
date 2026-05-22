@@ -267,10 +267,12 @@ const BreedingScreen = ({ navigation }: any) => {
       
       {/* Top Header */}
       <View style={styles.topHeader}>
-        <TouchableOpacity style={styles.locationSelector} activeOpacity={0.7}>
-          <Icon name="location-on" size={16} color={COLORS.accent} />
-          <Text style={styles.locationText}>Abilene, TX</Text>
-          <Icon name="keyboard-arrow-down" size={16} color={COLORS.secondary} />
+        <TouchableOpacity 
+          style={styles.backButton} 
+          activeOpacity={0.7}
+          onPress={() => navigation.goBack()}
+        >
+          <Icon name="arrow-back" size={20} color={COLORS.primary} />
         </TouchableOpacity>
 
         <Text style={styles.logoTitle}>AgriBreeding</Text>
@@ -371,6 +373,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     backgroundColor: '#F8FAFC',
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
   },
   locationSelector: {
     flexDirection: 'row',
