@@ -56,6 +56,10 @@ const StoreStockScreen = ({ route, navigation }: any) => {
       { id: 8, title: 'Winter Fleece Coat', price: '28.00', info: 'Weatherproof | Medium', desc: 'Keep your pets warm during winters with this insulated, stylish fleece jacket.', image: 'https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&q=80&w=600' },
       { id: 9, title: 'Elite Wooden Kennel', price: '185.00', info: 'Spacious | Weatherproof', desc: 'Durable, high-quality wooden shelter for outdoor and indoor use. Easy to clean.', image: 'https://images.unsplash.com/photo-1541175070483-b9979d3996c6?auto=format&fit=crop&q=80&w=600' },
     ],
+    'Small Animals': [
+      { id: 20, title: 'Dumbo Rat (Double Rex)', price: '25.00', info: 'Hand Tamed | 2 Months | Female', desc: 'Highly intelligent and extremely social Dumbo Rat with soft curly Rex fur. Friendly, dewormed, and fully acclimated to handling.', image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&q=80&w=600' },
+      { id: 21, title: 'Fancy Rat (Agouti Husky)', price: '18.00', info: 'Active | 3 Months | Male', desc: 'Sleek Agouti Husky pattern Fancy Rat. Playful, alert, and very active. Raised on premium rodent grains and organic greens.', image: 'https://images.unsplash.com/photo-1548767791-514684d06bb8?auto=format&fit=crop&q=80&w=600' },
+    ],
     // Fallback data for other categories
   };
 

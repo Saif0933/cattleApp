@@ -187,7 +187,9 @@ const StoreScreen = ({ navigation }: any) => {
                 activeOpacity={0.7}
                 onPress={() => navigation.navigate('StoreStock', { category: store.name })}
               >
-                <Image source={{ uri: store.image }} style={styles.storeImage} />
+                <View style={styles.imageWrapper}>
+                  <Image source={{ uri: store.image }} style={styles.storeImage} resizeMode="cover" />
+                </View>
                 
                 <View style={styles.cardInfo}>
                   <View style={styles.nameRow}>
@@ -304,11 +306,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#F1F5F9',
   },
-  storeImage: {
+  imageWrapper: {
     width: 80,
     height: 80,
     borderRadius: 12,
     backgroundColor: '#E2E8F0',
+    overflow: 'hidden',
+  },
+  storeImage: {
+    width: '100%',
+    height: '100%',
   },
   cardInfo: {
     flex: 1,
