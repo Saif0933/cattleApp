@@ -1,17 +1,16 @@
 import React from 'react';
 import {
-    Dimensions,
-    Image,
-    Linking,
-    Platform,
-    ScrollView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    Alert,
-    Modal,
+  Dimensions,
+  Image,
+  Linking,
+  Modal,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MCOIcon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,6 +29,19 @@ const COLORS = {
   emerald: '#10B981',
   crimson: '#EF4444',
   border: '#F1F5F3',
+};
+
+const formatPrice = (priceVal: any) => {
+  if (!priceVal) return '';
+  const str = String(priceVal);
+  if (str.startsWith('$') || str.startsWith('₹')) {
+    return str;
+  }
+  const num = parseFloat(str.replace(/,/g, ''));
+  if (!isNaN(num) && num < 1000) {
+    return `$${num.toFixed(2)}`;
+  }
+  return `₹${str}`;
 };
 
 const AnimalDetailsScreen = ({ route, navigation }: any) => {
@@ -109,7 +121,8 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Animal Details</Text>
         <TouchableOpacity style={styles.headerCircle}>
-          <Icon name="favorite-border" size={24} color={COLORS.primary} />
+          <Icon name="favorite-border" 
+          size={24} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
 
@@ -133,7 +146,7 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
                   setViewerIndex(index);
                   setViewerVisible(true);
                 }}
-                style={{ width }}
+                style={{ width, height: '100%' }}
               >
                 <Image
                   source={{ uri: imgUri }}
@@ -182,7 +195,7 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
                 </View>
               </View>
               <View style={styles.priceArea}>
-                <Text style={styles.priceText}>₹{details.price}</Text>
+                <Text style={styles.priceText}>{formatPrice(details.price)}</Text>
                 <Text style={styles.negText}>Negotiable</Text>
               </View>
             </View>
@@ -248,7 +261,7 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
           style={styles.buyBtn} 
           onPress={() => navigation.navigate('OrderSummary', { product: details })}
         >
-          <Icon name="shopping-bag" size={20} color="white" />
+          <Icon name="shopping-bag" size={20} color={COLORS.primary} />
           <Text style={styles.buyText}>Inspect & Buy</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
@@ -351,7 +364,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: 'white',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border
+    borderBottomColor: COLORS.border,
+    zIndex: 10,
   },
   backCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
   headerCircle: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
@@ -433,7 +447,7 @@ const styles = StyleSheet.create({
   mainInfoCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 20 },
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   titleArea: { flex: 1 },
-  breedRow: { flexDirection: 'row', alignItems: 'center' },
+  breedRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
   breedName: { fontSize: 22, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   verifiedBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.emerald + '15', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, marginLeft: 10 },
   verifiedText: { color: COLORS.emerald, fontSize: 8, fontWeight: '900', marginLeft: 4 },
@@ -447,7 +461,7 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: COLORS.border, marginVertical: 20 },
   
   statsGrid: { flexDirection: 'row', justifyContent: 'space-between' },
-  statItem: { alignItems: 'center', width: (width - 100) / 4 },
+  statItem: { alignItems: 'center', flex: 1 },
   statIconBox: { width: 44, height: 44, borderRadius: 14, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', marginBottom: 8 },
   statLab: { fontSize: 8, fontWeight: '800', color: COLORS.secondary, letterSpacing: 0.5 },
   statVal: { fontSize: 11, fontWeight: '900', color: COLORS.primary, marginTop: 2 },
@@ -475,11 +489,12 @@ const styles = StyleSheet.create({
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
     backgroundColor: 'white', padding: 20, borderTopWidth: 1, borderTopColor: COLORS.border,
-    flexDirection: 'row', paddingBottom: Platform.OS === 'ios' ? 40 : 25
+    flexDirection: 'row', paddingBottom: Platform.OS === 'ios' ? 40 : 25,
+    zIndex: 10,
   },
-  buyBtn: { flex: 1.5, height: 60, borderRadius: 20, backgroundColor: COLORS.accent, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 15, elevation: 5, shadowColor: COLORS.accent, shadowOpacity: 0.3 },
+  buyBtn: { flex: 1.5, height: 60, borderRadius: 20, backgroundColor: COLORS.accent, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 15, elevation: 5, shadowColor: COLORS.accent, shadowOpacity: 0.3, shadowOffset: { width: 0, height: 4 }, shadowRadius: 5 },
   buyText: { color: COLORS.primary, fontWeight: '900', marginLeft: 10, letterSpacing: 1 },
-  callBtn: { flex: 1, height: 60, borderRadius: 20, backgroundColor: COLORS.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 5, shadowColor: COLORS.primary, shadowOpacity: 0.3 },
+  callBtn: { flex: 1, height: 60, borderRadius: 20, backgroundColor: COLORS.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 5, shadowColor: COLORS.primary, shadowOpacity: 0.3, shadowOffset: { width: 0, height: 4 }, shadowRadius: 5 },
   callText: { color: 'white', fontWeight: '900', marginLeft: 10, letterSpacing: 1 }
 });
 
