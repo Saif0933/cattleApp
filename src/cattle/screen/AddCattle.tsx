@@ -46,7 +46,12 @@ const NewFlockScreen = ({ navigation, route }: any) => {
   }, [route.params?.initialImage]);
 
   const handleImagePick = () => {
-    Alert.alert('Select Photo', 'Choose a source to add your animal photo', [
+    if (selectedImages.length >= 5) {
+      Alert.alert('Limit Reached', 'You can upload a maximum of 5 photos.');
+      return;
+    }
+
+    Alert.alert('Select Photo', 'Choose a source to add your animal photo (Max 5)', [
       { 
         text: 'Camera', 
         onPress: () => ImagePicker.launchCamera({ mediaType: 'photo' }, (res) => {
@@ -57,9 +62,19 @@ const NewFlockScreen = ({ navigation, route }: any) => {
       },
       { 
         text: 'Gallery', 
-        onPress: () => ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (res) => {
-          if (res.assets && res.assets[0].uri) {
-            setSelectedImages([...selectedImages, res.assets[0].uri]);
+        onPress: () => ImagePicker.launchImageLibrary({ 
+          mediaType: 'photo',
+          selectionLimit: 5 - selectedImages.length
+        }, (res) => {
+          if (res.assets) {
+            const newUris = res.assets.map(asset => asset.uri).filter((uri): uri is string => !!uri);
+            const combined = [...selectedImages, ...newUris];
+            if (combined.length > 5) {
+              Alert.alert('Limit Reached', 'You can only select up to 5 photos.');
+              setSelectedImages(combined.slice(0, 5));
+            } else {
+              setSelectedImages(combined);
+            }
           }
         }) 
       },
