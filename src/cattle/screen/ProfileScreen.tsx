@@ -117,8 +117,7 @@ const ProfileScreen = ({ navigation }: any) => {
 
           <View style={styles.section}>
             <View style={styles.sectionHeaderRow}>
-              <Text style={styles.sectionHeader}>Business Profile</Text>
-              <TouchableOpacity><Text style={styles.editLink}>Edit</Text></TouchableOpacity>
+              <Text style={styles.sectionHeader}>Business & Account Settings</Text>
             </View>
             <View style={styles.premiumMenuCard}>
               <MenuOption icon="account-balance-wallet" title="Wallet & Earnings" subtitle="View your marketplace revenue" color={COLORS.emerald} />
@@ -126,12 +125,7 @@ const ProfileScreen = ({ navigation }: any) => {
               <MenuOption icon="inventory-2" title="My Herd Inventory" subtitle="Manage livestock & birds" color={COLORS.primary} />
               <View style={styles.menuDivider} />
               <MenuOption icon="insights" title="Market Insights" subtitle="Track local price trends" color={COLORS.accent} />
-            </View>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionHeader}>Account & Settings</Text>
-            <View style={styles.premiumMenuCard}>
+              <View style={styles.menuDivider} />
               <MenuOption icon="verified-user" title="Security & Privacy" subtitle="Two-factor authentication active" color={COLORS.secondary} />
               <View style={styles.menuDivider} />
               <MenuOption icon="notifications-active" title="Notifications" subtitle="Alerts for new listings & sales" color={COLORS.primary} />

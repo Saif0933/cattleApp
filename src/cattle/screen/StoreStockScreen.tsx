@@ -70,7 +70,7 @@ const StoreStockScreen = ({ route, navigation }: any) => {
   const StockCard = ({ item }: any) => (
     <TouchableOpacity 
       style={styles.card}
-      onPress={() => navigation.navigate('AnimalDetails', { product: { ...item, brand: category } })}
+      onPress={() => navigation.navigate('ProductDetails', { product: { ...item, brand: category } })}
     >
       <Image source={{ uri: item.image }} style={styles.cardImage} />
       <View style={styles.cardContent}>
