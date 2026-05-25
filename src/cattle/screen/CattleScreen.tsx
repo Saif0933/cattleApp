@@ -24,7 +24,7 @@ const HerdScreen = ({ navigation, route }: any) => {
   const styles = getStyles(COLORS);
 
   const [activeMarketTab, setActiveMarketTab] = useState('buy'); // 'buy' or 'sell'
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('All Cattle');
   const [searchQuery, setSearchQuery] = useState('');
   const [likedItems, setLikedItems] = useState<string[]>([]);
 
@@ -69,7 +69,7 @@ const HerdScreen = ({ navigation, route }: any) => {
   ];
 
   // Recent listings data
-  const recentListings = [
+  const initialRecentListings = [
     {
       id: 'R001',
       name: 'Jersey Cow',
@@ -98,6 +98,44 @@ const HerdScreen = ({ navigation, route }: any) => {
       image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=400'
     }
   ];
+
+  const [recentList, setRecentList] = useState(initialRecentListings);
+  const [sellList, setSellList] = useState<any[]>([]);
+
+  // Listen to new cattle additions
+  React.useEffect(() => {
+    if (route.params?.newAnimal) {
+      const newAnimal = route.params.newAnimal;
+      
+      const formattedListing = {
+        id: newAnimal.id || `R${Math.floor(100 + Math.random() * 900)}`,
+        name: `${newAnimal.name} (${newAnimal.breed})`,
+        age: newAnimal.age || '3 Years',
+        location: newAnimal.location || 'Punjab',
+        price: newAnimal.price || '₹ 55,000',
+        status: 'For Sale',
+        image: newAnimal.image
+      };
+
+      // Add to recent listings list
+      setRecentList(prev => {
+        if (prev.some(x => x.id === formattedListing.id)) return prev;
+        return [formattedListing, ...prev];
+      });
+
+      // Add to sell listings list
+      setSellList(prev => {
+        if (prev.some(x => x.id === formattedListing.id)) return prev;
+        return [formattedListing, ...prev];
+      });
+
+      // Auto-switch to sell tab to display user's listing
+      setActiveMarketTab('sell');
+
+      // Clear route params so it doesn't duplicate on page reload/navigation
+      navigation.setParams({ newAnimal: undefined });
+    }
+  }, [route.params?.newAnimal]);
 
   const toggleLike = (id: string) => {
     setLikedItems(prev => 
@@ -190,145 +228,205 @@ const HerdScreen = ({ navigation, route }: any) => {
           </TouchableOpacity>
         </View>
 
-        {/* Featured Listings Section */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Featured Listings</Text>
-          <TouchableOpacity>
-            <View style={styles.viewAllRow}>
-              <Text style={styles.viewAllText}>View All</Text>
-              <Icon name="chevron-right" size={16} color="#16A34A" />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={styles.featuredScroll}
-        >
-          {featuredListings.map((item) => (
-            <TouchableOpacity 
-              key={item.id} 
-              style={styles.featuredCard}
-              onPress={() => navigation.navigate('AnimalDetails', { product: item })}
-              activeOpacity={0.9}
-            >
-              <View style={styles.featuredImageContainer}>
-                <Image source={{ uri: item.image }} style={styles.featuredImg} />
-                {item.isPremium && (
-                  <View style={styles.premiumBadge}>
-                    <Text style={styles.premiumBadgeText}>Premium</Text>
-                  </View>
-                )}
-              </View>
-              <View style={styles.featuredInfo}>
-                <Text style={styles.featuredName}>{item.name}</Text>
-                <View style={styles.metaRow}>
-                  <View style={styles.metaItem}>
-                    <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                    <Text style={styles.metaText}>{item.age}</Text>
-                  </View>
-                  <View style={styles.metaItem}>
-                    <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                    <Text style={styles.metaText}>{item.location}</Text>
-                  </View>
+        {activeMarketTab === 'buy' ? (
+          <>
+            {/* Featured Listings Section */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Featured Listings</Text>
+              <TouchableOpacity>
+                <View style={styles.viewAllRow}>
+                  <Text style={styles.viewAllText}>View All</Text>
+                  <Icon name="chevron-right" size={16} color="#16A34A" />
                 </View>
-                <View style={styles.priceRow}>
-                  <Text style={styles.priceText}>{item.price}</Text>
-                  <TouchableOpacity onPress={() => toggleLike(item.id)}>
-                    <Icon 
-                      name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
-                      size={20} 
-                      color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
-
-        {/* Browse by Category Section */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Browse by Category</Text>
-        </View>
-
-        <ScrollView 
-          horizontal 
-          showsHorizontalScrollIndicator={false} 
-          contentContainerStyle={styles.categoryScroll}
-        >
-          {categories.map((cat, idx) => {
-            const isActive = activeCategory === cat.name;
-            return (
-              <TouchableOpacity 
-                key={idx}
-                style={styles.categoryCard}
-                onPress={() => setActiveCategory(cat.name)}
-                activeOpacity={0.8}
-              >
-                <View style={[styles.categoryCircle, isActive && styles.activeCategoryCircle]}>
-                  <Icon name={cat.icon} size={28} color={isActive ? '#16A34A' : '#000000'} />
-                </View>
-                <Text style={[styles.categoryLabel, isActive && styles.activeCategoryLabel]}>
-                  {cat.name}
-                </Text>
               </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-
-        {/* Recent Listings Section */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Listings</Text>
-          <TouchableOpacity>
-            <View style={styles.viewAllRow}>
-              <Text style={styles.viewAllText}>View All</Text>
-              <Icon name="chevron-right" size={16} color="#16A34A" />
             </View>
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.recentContainer}>
-          {recentListings.map((item) => (
-            <TouchableOpacity 
-              key={item.id} 
-              style={styles.recentCard}
-              onPress={() => navigation.navigate('AnimalDetails', { product: item })}
-              activeOpacity={0.9}
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              contentContainerStyle={styles.featuredScroll}
             >
-              <Image source={{ uri: item.image }} style={styles.recentImg} />
-              <View style={styles.recentInfo}>
-                <View style={styles.recentHeaderRow}>
-                  <Text style={styles.recentName}>{item.name}</Text>
-                  <Text style={styles.recentPrice}>{item.price}</Text>
-                </View>
-                <View style={styles.recentMetaRow}>
-                  <View style={styles.metaItem}>
-                    <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                    <Text style={styles.metaText}>{item.age}</Text>
+              {featuredListings.map((item) => (
+                <TouchableOpacity 
+                  key={item.id} 
+                  style={styles.featuredCard}
+                  onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+                  activeOpacity={0.9}
+                >
+                  <View style={styles.featuredImageContainer}>
+                    <Image source={{ uri: item.image }} style={styles.featuredImg} />
+                    {item.isPremium && (
+                      <View style={styles.premiumBadge}>
+                        <Text style={styles.premiumBadgeText}>Premium</Text>
+                      </View>
+                    )}
                   </View>
-                  <View style={styles.metaItem}>
-                    <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                    <Text style={styles.metaText}>{item.location}</Text>
+                  <View style={styles.featuredInfo}>
+                    <Text style={styles.featuredName}>{item.name}</Text>
+                    <View style={styles.metaRow}>
+                      <View style={styles.metaItem}>
+                        <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                        <Text style={styles.metaText}>{item.age}</Text>
+                      </View>
+                      <View style={styles.metaItem}>
+                        <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                        <Text style={styles.metaText}>{item.location}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.priceRow}>
+                      <Text style={styles.priceText}>{item.price}</Text>
+                      <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                        <Icon 
+                          name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                          size={20} 
+                          color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-                <View style={styles.recentFooterRow}>
-                  <View style={styles.statusBadge}>
-                    <Text style={styles.statusBadgeText}>{item.status}</Text>
-                  </View>
-                  <TouchableOpacity onPress={() => toggleLike(item.id)}>
-                    <Icon 
-                      name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
-                      size={20} 
-                      color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
-                    />
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Browse by Category Section */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Browse by Category</Text>
+            </View>
+
+            <ScrollView 
+              horizontal 
+              showsHorizontalScrollIndicator={false} 
+              contentContainerStyle={styles.categoryScroll}
+            >
+              {categories.map((cat, idx) => {
+                const isActive = activeCategory === cat.name;
+                return (
+                  <TouchableOpacity 
+                    key={idx}
+                    style={styles.categoryCard}
+                    onPress={() => setActiveCategory(cat.name)}
+                    activeOpacity={0.8}
+                  >
+                    <View style={[styles.categoryCircle, isActive && styles.activeCategoryCircle]}>
+                      <Icon name={cat.icon} size={28} color={isActive ? '#16A34A' : '#000000'} />
+                    </View>
+                    <Text style={[styles.categoryLabel, isActive && styles.activeCategoryLabel]}>
+                      {cat.name}
+                    </Text>
                   </TouchableOpacity>
+                );
+              })}
+            </ScrollView>
+
+            {/* Recent Listings Section */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>Recent Listings</Text>
+              <TouchableOpacity>
+                <View style={styles.viewAllRow}>
+                  <Text style={styles.viewAllText}>View All</Text>
+                  <Icon name="chevron-right" size={16} color="#16A34A" />
                 </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.recentContainer}>
+              {recentList.map((item) => (
+                <TouchableOpacity 
+                  key={item.id} 
+                  style={styles.recentCard}
+                  onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+                  activeOpacity={0.9}
+                >
+                  <Image source={{ uri: item.image }} style={styles.recentImg} />
+                  <View style={styles.recentInfo}>
+                    <View style={styles.recentHeaderRow}>
+                      <Text style={styles.recentName}>{item.name}</Text>
+                      <Text style={styles.recentPrice}>{item.price}</Text>
+                    </View>
+                    <View style={styles.recentMetaRow}>
+                      <View style={styles.metaItem}>
+                        <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                        <Text style={styles.metaText}>{item.age}</Text>
+                      </View>
+                      <View style={styles.metaItem}>
+                        <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                        <Text style={styles.metaText}>{item.location}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.recentFooterRow}>
+                      <View style={styles.statusBadge}>
+                        <Text style={styles.statusBadgeText}>{item.status}</Text>
+                      </View>
+                      <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                        <Icon 
+                          name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                          size={20} 
+                          color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </>
+        ) : (
+          <>
+            {/* Sell Listings Section */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>My Cattle for Sale</Text>
+            </View>
+
+            <View style={styles.recentContainer}>
+              {sellList.length > 0 ? (
+                sellList.map((item) => (
+                  <TouchableOpacity 
+                    key={item.id} 
+                    style={styles.recentCard}
+                    onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+                    activeOpacity={0.9}
+                  >
+                    <Image source={{ uri: item.image }} style={styles.recentImg} />
+                    <View style={styles.recentInfo}>
+                      <View style={styles.recentHeaderRow}>
+                        <Text style={styles.recentName}>{item.name}</Text>
+                        <Text style={styles.recentPrice}>{item.price}</Text>
+                      </View>
+                      <View style={styles.recentMetaRow}>
+                        <View style={styles.metaItem}>
+                          <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                          <Text style={styles.metaText}>{item.age}</Text>
+                        </View>
+                        <View style={styles.metaItem}>
+                          <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                          <Text style={styles.metaText}>{item.location}</Text>
+                        </View>
+                      </View>
+                      <View style={styles.recentFooterRow}>
+                        <View style={[styles.statusBadge, { backgroundColor: '#FEF3C7' }]}>
+                          <Text style={[styles.statusBadgeText, { color: '#D97706' }]}>Active Listing</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                          <Icon 
+                            name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                            size={20} 
+                            color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View style={styles.emptyStateContainer}>
+                  <Icon name="tag-multiple-outline" size={56} color="#6B7280" style={{ opacity: 0.4, marginBottom: 8 }} />
+                  <Text style={styles.emptyStateTitle}>No Cattle Listed Yet</Text>
+                  <Text style={styles.emptyStateSub}>Click "Post Your Cattle" below to list your first animal for sale.</Text>
+                </View>
+              )}
+            </View>
+          </>
+        )}
       </ScrollView>
 
       {/* Floating Action Button */}
@@ -713,6 +811,32 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     fontFamily: FONT_SANS
+  },
+
+  emptyStateContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+  },
+  emptyStateTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#0F291E',
+    marginTop: 8,
+    fontFamily: FONT_SERIF,
+  },
+  emptyStateSub: {
+    fontSize: 13,
+    color: '#6B7280',
+    textAlign: 'center',
+    marginTop: 6,
+    lineHeight: 18,
+    fontFamily: FONT_SANS,
   },
 
   // Floating button wrapper

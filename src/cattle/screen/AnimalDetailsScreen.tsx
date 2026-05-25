@@ -34,11 +34,18 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
   const [activeTab, setActiveTab] = useState('Overview');
   const tabs = ['Overview', 'Health', 'Breeding', 'Activity'];
 
+  const animalDescription = product?.description || 'A healthy, highly productive dairy cow with an excellent feeding record. Known for consistent milk yield and calm behavior on the farm.';
+  const color = product?.color || 'Black & White';
+
   const overviewDetails = [
+    { label: 'Animal Name', value: name },
     { label: 'Breed', value: breed },
+    { label: 'Color', value: color },
+    { label: 'Gender', value: gender },
+    { label: 'Age', value: age },
+    { label: 'Weight', value: product?.weight || '450 kg' },
+    { label: 'Milk Yield', value: product?.milkYield || '12 L/day' },
     { label: 'Date of Birth', value: '10 Mar 2021' },
-    { label: 'Weight', value: '450 kg' },
-    { label: 'Milk Yield', value: '12 L/day' },
     { label: 'Owner', value: 'Rashi Farm' }
   ];
 
@@ -63,7 +70,7 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Cow Image with absolute cover */}
         <View style={styles.imageContainer}>
-          <Image source={{ uri: image }} style={styles.cowImage} resizeMode="cover" />
+          <Image source={{ uri: image }} style={styles.cowImage as any} resizeMode="cover" />
         </View>
 
         {/* Tab Buttons */}
@@ -84,31 +91,232 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
 
         {/* Tab Content */}
         {activeTab === 'Overview' && (
-          <View style={styles.grid}>
-            {overviewDetails.map((detail, idx) => (
-              <View key={idx} style={styles.gridCell}>
-                <Text style={styles.cellLabel}>{detail.label}</Text>
-                <Text style={styles.cellValue}>{detail.value}</Text>
-              </View>
-            ))}
+          <View style={styles.sectionContainer}>
+            <View style={styles.descriptionCard}>
+              <Text style={styles.sectionTitle}>About {name}</Text>
+              <Text style={styles.descriptionText}>{animalDescription}</Text>
+            </View>
+
+            <Text style={[styles.sectionTitle, { marginTop: 24, marginBottom: 12 }]}>Animal Details</Text>
+            <View style={styles.grid}>
+              {overviewDetails.map((detail, idx) => (
+                <View key={idx} style={styles.gridCell}>
+                  <Text style={styles.cellLabel}>{detail.label}</Text>
+                  <Text style={styles.cellValue}>{detail.value}</Text>
+                </View>
+              ))}
+            </View>
           </View>
         )}
 
         {activeTab === 'Health' && (
-          <View style={styles.tabPlaceholder}>
-            <Text style={styles.placeholderText}>Recent vaccine: FMD Vaccine (Administered May 25, 2024)</Text>
+          <View style={styles.sectionContainer}>
+            {/* Health Status Card */}
+            <View style={[styles.statusCard, { borderColor: COLORS.primary }]}>
+              <View style={styles.statusHeader}>
+                <Icon name="favorite" size={24} color={COLORS.primary} />
+                <Text style={styles.statusTitle}>Overall Health: Healthy</Text>
+              </View>
+              <Text style={styles.statusDescription}>
+                All vaccinations are up to date. Last checkup was done by Dr. Verma on 15 May 2026.
+              </Text>
+            </View>
+
+            {/* Vaccination Section */}
+            <Text style={styles.sectionSubtitle}>Vaccination History</Text>
+            <View style={styles.infoList}>
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
+                  <Icon name="vaccines" size={22} color={COLORS.medical} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>FMD Vaccine</Text>
+                  <Text style={styles.listSubtext}>Administered: 10 May 2026 • Doctor: Dr. Verma</Text>
+                </View>
+                <View style={styles.badgeSuccess}>
+                  <Text style={styles.badgeText}>Completed</Text>
+                </View>
+              </View>
+
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
+                  <Icon name="vaccines" size={22} color={COLORS.medical} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>Brucellosis Vaccine</Text>
+                  <Text style={styles.listSubtext}>Administered: 05 Jan 2026 • Doctor: Dr. Verma</Text>
+                </View>
+                <View style={styles.badgeSuccess}>
+                  <Text style={styles.badgeText}>Completed</Text>
+                </View>
+              </View>
+
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(59, 130, 246, 0.1)' }]}>
+                  <Icon name="vaccines" size={22} color={COLORS.medical} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>HS Vaccine</Text>
+                  <Text style={styles.listSubtext}>Next due: 20 Aug 2026 (Scheduled)</Text>
+                </View>
+                <View style={styles.badgeWarning}>
+                  <Text style={styles.badgeTextWarning}>Pending</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Deworming Card */}
+            <Text style={styles.sectionSubtitle}>Deworming & Checkups</Text>
+            <View style={styles.dewormingCard}>
+              <View style={styles.dewormingRow}>
+                <Icon name="healing" size={20} color={COLORS.gold} />
+                <Text style={styles.dewormingTitle}>Last Deworming: 12 Apr 2026</Text>
+              </View>
+              <Text style={styles.dewormingText}>Next Deworming is scheduled in 6 weeks (Recommended: Albendazole).</Text>
+            </View>
           </View>
         )}
 
         {activeTab === 'Breeding' && (
-          <View style={styles.tabPlaceholder}>
-            <Text style={styles.placeholderText}>AI Schedule: May 25, 2024. Status: Confirmed.</Text>
+          <View style={styles.sectionContainer}>
+            {/* Breeding Status Card */}
+            <View style={[styles.statusCard, { borderColor: COLORS.gold }]}>
+              <View style={styles.statusHeader}>
+                <Icon name="child-care" size={24} color={COLORS.gold} />
+                <Text style={styles.statusTitle}>Breeding Status: Pregnant</Text>
+              </View>
+              <Text style={styles.statusDescription}>
+                Successfully inseminated on 20 Feb 2026. Calving expected date: 25 Nov 2026 (approx 3 months pregnant).
+              </Text>
+            </View>
+
+            {/* Breeding Stats */}
+            <View style={styles.statsRow}>
+              <View style={styles.statBox}>
+                <Text style={styles.statLabel}>Total Calvings</Text>
+                <Text style={styles.statValue}>2 Times</Text>
+              </View>
+              <View style={styles.statBox}>
+                <Text style={styles.statLabel}>Insemination Count</Text>
+                <Text style={styles.statValue}>3 Cycles</Text>
+              </View>
+            </View>
+
+            {/* Breeding History */}
+            <Text style={styles.sectionSubtitle}>Breeding History</Text>
+            <View style={styles.infoList}>
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+                  <Icon name="event" size={22} color={COLORS.gold} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>2nd Calving (Female Calf)</Text>
+                  <Text style={styles.listSubtext}>Date: 15 Apr 2025 • Health: Healthy</Text>
+                </View>
+                <View style={styles.badgeSuccess}>
+                  <Text style={styles.badgeText}>Success</Text>
+                </View>
+              </View>
+
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+                  <Icon name="event" size={22} color={COLORS.gold} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>1st Calving (Male Calf)</Text>
+                  <Text style={styles.listSubtext}>Date: 10 Jan 2024 • Health: Healthy</Text>
+                </View>
+                <View style={styles.badgeSuccess}>
+                  <Text style={styles.badgeText}>Success</Text>
+                </View>
+              </View>
+
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+                  <Icon name="event" size={22} color={COLORS.gold} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>Artificial Insemination</Text>
+                  <Text style={styles.listSubtext}>Date: 12 Mar 2023 • Inseminator: Dr. Verma</Text>
+                </View>
+                <View style={styles.badgeDanger}>
+                  <Text style={styles.badgeTextDanger}>Failed</Text>
+                </View>
+              </View>
+            </View>
           </View>
         )}
 
         {activeTab === 'Activity' && (
-          <View style={styles.tabPlaceholder}>
-            <Text style={styles.placeholderText}>Activity level: Normal. No alerts.</Text>
+          <View style={styles.sectionContainer}>
+            {/* Activity Summary Cards */}
+            <View style={styles.activityStatsGrid}>
+              <View style={styles.activityStatBox}>
+                <Icon name="directions-walk" size={24} color={COLORS.primary} />
+                <Text style={styles.activityStatValue}>8,420</Text>
+                <Text style={styles.activityStatLabel}>Steps Today</Text>
+              </View>
+              <View style={styles.activityStatBox}>
+                <Icon name="restaurant" size={24} color={COLORS.primary} />
+                <Text style={styles.activityStatValue}>7.5 hrs</Text>
+                <Text style={styles.activityStatLabel}>Grazing Time</Text>
+              </View>
+              <View style={styles.activityStatBox}>
+                <Icon name="update" size={24} color={COLORS.primary} />
+                <Text style={styles.activityStatValue}>420 min</Text>
+                <Text style={styles.activityStatLabel}>Rumination</Text>
+              </View>
+              <View style={styles.activityStatBox}>
+                <Icon name="hotel" size={24} color={COLORS.primary} />
+                <Text style={styles.activityStatValue}>9.0 hrs</Text>
+                <Text style={styles.activityStatLabel}>Resting Time</Text>
+              </View>
+            </View>
+
+            {/* Activity Level Status */}
+            <View style={[styles.statusCard, { borderColor: COLORS.primary, marginTop: 15 }]}>
+              <View style={styles.statusHeader}>
+                <Icon name="speed" size={24} color={COLORS.primary} />
+                <Text style={styles.statusTitle}>Activity Level: Normal</Text>
+              </View>
+              <Text style={styles.statusDescription}>
+                Animal shows normal grazing, rumination and resting patterns. No anomalies or heat symptoms detected in the last 48 hours.
+              </Text>
+            </View>
+
+            {/* Detailed Activity Logs */}
+            <Text style={styles.sectionSubtitle}>Recent Activity Timeline</Text>
+            <View style={styles.infoList}>
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(22, 163, 74, 0.1)' }]}>
+                  <Icon name="check-circle" size={22} color={COLORS.primary} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>Grazing & Feed Intake</Text>
+                  <Text style={styles.listSubtext}>10:00 AM - 02:00 PM • Healthy appetite observed</Text>
+                </View>
+              </View>
+
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(22, 163, 74, 0.1)' }]}>
+                  <Icon name="check-circle" size={22} color={COLORS.primary} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>Rumination Cycle</Text>
+                  <Text style={styles.listSubtext}>02:30 PM - 04:30 PM • 120 minutes of rumination</Text>
+                </View>
+              </View>
+
+              <View style={styles.listItem}>
+                <View style={[styles.listIconBg, { backgroundColor: 'rgba(22, 163, 74, 0.1)' }]}>
+                  <Icon name="check-circle" size={22} color={COLORS.primary} />
+                </View>
+                <View style={styles.listTextContainer}>
+                  <Text style={styles.listHeading}>Resting Period</Text>
+                  <Text style={styles.listSubtext}>05:00 PM - 07:00 PM • Normal resting heart rate</Text>
+                </View>
+              </View>
+            </View>
           </View>
         )}
       </ScrollView>
@@ -177,11 +385,216 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   cellLabel: { fontSize: 12, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SANS },
   cellValue: { fontSize: 15, fontWeight: '900', color: COLORS.darkGreen, marginTop: 6, fontFamily: FONT_SERIF },
 
-  tabPlaceholder: { 
-    backgroundColor: '#FFFFFF', borderRadius: 20, padding: 25, 
-    justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: COLORS.border
+  sectionContainer: {
+    flex: 1,
   },
-  placeholderText: { fontSize: 13, color: COLORS.secondary, lineHeight: 20, textAlign: 'center', fontFamily: FONT_SANS },
+  descriptionCard: {
+    backgroundColor: '#F5F7F5',
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: COLORS.darkGreen,
+    fontFamily: FONT_SERIF,
+    marginBottom: 8,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: COLORS.secondary,
+    lineHeight: 20,
+    fontFamily: FONT_SANS,
+  },
+  statusCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1.5,
+    marginBottom: 20,
+  },
+  statusHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  statusTitle: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: COLORS.darkGreen,
+    fontFamily: FONT_SERIF,
+    marginLeft: 8,
+  },
+  statusDescription: {
+    fontSize: 13,
+    color: COLORS.secondary,
+    lineHeight: 18,
+    fontFamily: FONT_SANS,
+  },
+  sectionSubtitle: {
+    fontSize: 15,
+    fontWeight: '900',
+    color: COLORS.darkGreen,
+    fontFamily: FONT_SERIF,
+    marginBottom: 12,
+  },
+  infoList: {
+    marginBottom: 20,
+  },
+  listItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    marginBottom: 10,
+  },
+  listIconBg: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  listTextContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  listHeading: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: COLORS.darkGreen,
+    fontFamily: FONT_SANS,
+  },
+  listSubtext: {
+    fontSize: 12,
+    color: COLORS.secondary,
+    marginTop: 2,
+    fontFamily: FONT_SANS,
+  },
+  badgeSuccess: {
+    backgroundColor: 'rgba(22, 163, 74, 0.1)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#16A34A',
+    fontFamily: FONT_SANS,
+  },
+  badgeWarning: {
+    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  badgeTextWarning: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#F59E0B',
+    fontFamily: FONT_SANS,
+  },
+  badgeDanger: {
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+  },
+  badgeTextDanger: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: '#EF4444',
+    fontFamily: FONT_SANS,
+  },
+  dewormingCard: {
+    backgroundColor: '#F9FAFB',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  dewormingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  dewormingTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: COLORS.darkGreen,
+    fontFamily: FONT_SANS,
+    marginLeft: 6,
+  },
+  dewormingText: {
+    fontSize: 13,
+    color: COLORS.secondary,
+    lineHeight: 18,
+    fontFamily: FONT_SANS,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+    gap: 12,
+  },
+  statBox: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+  },
+  statLabel: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: COLORS.secondary,
+    fontFamily: FONT_SANS,
+  },
+  statValue: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: COLORS.darkGreen,
+    marginTop: 4,
+    fontFamily: FONT_SERIF,
+  },
+  activityStatsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: 12,
+    marginBottom: 10,
+  },
+  activityStatBox: {
+    width: (width - 60) / 2,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+  },
+  activityStatValue: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: COLORS.darkGreen,
+    marginTop: 6,
+    fontFamily: FONT_SERIF,
+  },
+  activityStatLabel: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: COLORS.secondary,
+    marginTop: 2,
+    fontFamily: FONT_SANS,
+  },
 
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
