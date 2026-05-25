@@ -37,6 +37,56 @@ const HomeScreen = ({ navigation }: any) => {
     { name: 'Reports', icon: 'chart-bar', route: 'Reports', color: '#3B82F6', bg: '#DBEAFE' }
   ];
 
+  const [recentList, setRecentList] = React.useState([
+    {
+      id: 'R001',
+      name: 'Jersey Cow',
+      category: 'Cow',
+      age: '2 Years',
+      location: 'Maharashtra',
+      price: '₹ 70,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R002',
+      name: 'Gir Calf',
+      category: 'Cow',
+      age: '6 Months',
+      location: 'Gujarat',
+      price: '₹ 25,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R003',
+      name: 'Murrah Buffalo',
+      category: 'Buffalo',
+      age: '3 Years',
+      location: 'Punjab',
+      price: '₹ 90,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R004',
+      name: 'Barbari Goat',
+      category: 'Goat',
+      age: '2 Years',
+      location: 'Uttar Pradesh',
+      price: '₹ 12,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1610444983050-8b6b0a1d6361?auto=format&fit=crop&q=80&w=400'
+    }
+  ]);
+
+  const [likedItems, setLikedItems] = React.useState<string[]>([]);
+  const toggleLike = (id: string) => {
+    setLikedItems(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
@@ -116,6 +166,58 @@ const HomeScreen = ({ navigation }: any) => {
           </View>
         </View>
 
+        {/* Recent Listings Section */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Recent Listings</Text>
+          <TouchableOpacity onPress={() => navigation.navigate('Cattle')}>
+            <View style={styles.viewAllRow}>
+              <Text style={styles.viewAllText}>View All</Text>
+              <MIcon name="chevron-right" size={16} color="#16A34A" />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.recentContainer}>
+          {recentList.map((item) => (
+            <TouchableOpacity 
+              key={item.id} 
+              style={styles.recentCard}
+              onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+              activeOpacity={0.9}
+            >
+              <Image source={{ uri: item.image }} style={styles.recentImg} />
+              <View style={styles.recentInfo}>
+                <View style={styles.recentHeaderRow}>
+                  <Text style={styles.recentName}>{item.name}</Text>
+                  <Text style={styles.recentPrice}>{item.price}</Text>
+                </View>
+                <View style={styles.recentMetaRow}>
+                  <View style={styles.metaItem}>
+                    <MIcon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                    <Text style={styles.metaText}>{item.age}</Text>
+                  </View>
+                  <View style={styles.metaItem}>
+                    <MIcon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                    <Text style={styles.metaText}>{item.location}</Text>
+                  </View>
+                </View>
+                <View style={styles.recentFooterRow}>
+                  <View style={styles.statusBadge}>
+                    <Text style={styles.statusBadgeText}>{item.status}</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                    <MIcon 
+                      name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                      size={20} 
+                      color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+
       </ScrollView>
     </SafeAreaView>
   );
@@ -190,7 +292,101 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     justifyContent: 'center', alignItems: 'center', marginBottom: 8,
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
   },
-  actionName: { fontSize: 12, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SANS, textAlign: 'center' }
+  actionName: { fontSize: 12, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SANS, textAlign: 'center' },
+
+  // Recent Listings styles
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 15
+  },
+  viewAllRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4
+  },
+  viewAllText: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: '#16A34A',
+    fontFamily: FONT_SANS
+  },
+  recentContainer: {
+    gap: 12
+  },
+  recentCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: COLORS.border || '#E5E7EB',
+    padding: 10,
+    alignItems: 'center'
+  },
+  recentImg: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+    resizeMode: 'cover'
+  },
+  recentInfo: {
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: 'center'
+  },
+  recentHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  recentName: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#0F291E',
+    fontFamily: FONT_SERIF
+  },
+  recentPrice: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#16A34A',
+    fontFamily: FONT_SANS
+  },
+  recentMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+    gap: 12
+  },
+  metaItem: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  metaText: {
+    fontSize: 11,
+    color: '#6B7280',
+    fontWeight: '600',
+    fontFamily: FONT_SANS
+  },
+  recentFooterRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8
+  },
+  statusBadge: {
+    backgroundColor: '#EBFDF2',
+    borderRadius: 6,
+    paddingHorizontal: 8,
+    paddingVertical: 3
+  },
+  statusBadgeText: {
+    color: '#16A34A',
+    fontSize: 11,
+    fontWeight: '800',
+    fontFamily: FONT_SANS
+  }
 });
 
 export default HomeScreen;

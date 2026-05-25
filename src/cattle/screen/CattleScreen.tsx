@@ -33,6 +33,7 @@ const HerdScreen = ({ navigation, route }: any) => {
     {
       id: 'F001',
       name: 'HF Cross Cow',
+      category: 'Cow',
       age: '3 Years',
       location: 'Punjab',
       price: '₹ 85,000',
@@ -42,6 +43,7 @@ const HerdScreen = ({ navigation, route }: any) => {
     {
       id: 'F002',
       name: 'Sahiwal Cow',
+      category: 'Cow',
       age: '5 Years',
       location: 'Haryana',
       price: '₹ 65,000',
@@ -51,21 +53,55 @@ const HerdScreen = ({ navigation, route }: any) => {
     {
       id: 'F003',
       name: 'Murrah Buffalo',
+      category: 'Buffalo',
       age: '4 Years',
       location: 'Uttar Pradesh',
       price: '₹ 95,000',
       isPremium: false,
       image: 'https://images.unsplash.com/photo-1563865436874-9aef32095ffd?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'F004',
+      name: 'Sirohi Goat',
+      category: 'Goat',
+      age: '1.5 Years',
+      location: 'Rajasthan',
+      price: '₹ 15,000',
+      isPremium: true,
+      image: 'https://images.unsplash.com/photo-1524443169398-9aa1ceab67d5?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'F005',
+      name: 'Persian Cat',
+      category: 'Cat',
+      age: '1 Year',
+      location: 'Delhi',
+      price: '₹ 20,000',
+      isPremium: false,
+      image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'F006',
+      name: 'German Shepherd',
+      category: 'Dog',
+      age: '2 Years',
+      location: 'Punjab',
+      price: '₹ 25,000',
+      isPremium: true,
+      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400'
     }
   ];
 
-  // Category list with icons
+  // Category list with real images
   const categories = [
-    { name: 'All Cattle', icon: 'cow' },
-    { name: 'Cow', icon: 'cow' },
-    { name: 'Buffalo', icon: 'water-buffalo' },
-    { name: 'Calf', icon: 'baby-carriage' },
-    { name: 'Bull', icon: 'cow' }
+    { name: 'All Cattle', image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Cow', image: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Buffalo', image: 'https://images.unsplash.com/photo-1563865436874-9aef32095ffd?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Goat', image: 'https://images.unsplash.com/photo-1524443169398-9aa1ceab67d5?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Fish', image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Birds', image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Cat', image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=150' },
+    { name: 'Dog', image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=150' }
   ];
 
   // Recent listings data
@@ -73,6 +109,7 @@ const HerdScreen = ({ navigation, route }: any) => {
     {
       id: 'R001',
       name: 'Jersey Cow',
+      category: 'Cow',
       age: '2 Years',
       location: 'Maharashtra',
       price: '₹ 70,000',
@@ -82,6 +119,7 @@ const HerdScreen = ({ navigation, route }: any) => {
     {
       id: 'R002',
       name: 'Gir Calf',
+      category: 'Cow',
       age: '6 Months',
       location: 'Gujarat',
       price: '₹ 25,000',
@@ -91,11 +129,62 @@ const HerdScreen = ({ navigation, route }: any) => {
     {
       id: 'R003',
       name: 'Murrah Buffalo',
+      category: 'Buffalo',
       age: '3 Years',
       location: 'Punjab',
       price: '₹ 90,000',
       status: 'For Sale',
       image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R004',
+      name: 'Barbari Goat',
+      category: 'Goat',
+      age: '2 Years',
+      location: 'Uttar Pradesh',
+      price: '₹ 12,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1610444983050-8b6b0a1d6361?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R005',
+      name: 'Siamese Cat',
+      category: 'Cat',
+      age: '6 Months',
+      location: 'Mumbai',
+      price: '₹ 18,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R006',
+      name: 'Labrador Retriever',
+      category: 'Dog',
+      age: '3 Months',
+      location: 'Karnataka',
+      price: '₹ 22,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R007',
+      name: 'Arowana Fish',
+      category: 'Fish',
+      age: '1 Year',
+      location: 'West Bengal',
+      price: '₹ 8,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=400'
+    },
+    {
+      id: 'R008',
+      name: 'Macaw Parrot',
+      category: 'Birds',
+      age: '1.5 Years',
+      location: 'Kerala',
+      price: '₹ 35,000',
+      status: 'For Sale',
+      image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80&w=400'
     }
   ];
 
@@ -110,6 +199,7 @@ const HerdScreen = ({ navigation, route }: any) => {
       const formattedListing = {
         id: newAnimal.id || `R${Math.floor(100 + Math.random() * 900)}`,
         name: `${newAnimal.name} (${newAnimal.breed})`,
+        category: newAnimal.type || 'Cow',
         age: newAnimal.age || '3 Years',
         location: newAnimal.location || 'Punjab',
         price: newAnimal.price || '₹ 55,000',
@@ -142,6 +232,18 @@ const HerdScreen = ({ navigation, route }: any) => {
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
+
+  const displayedFeatured = activeCategory === 'All Cattle'
+    ? featuredListings
+    : featuredListings.filter(item => item.category === activeCategory);
+
+  const displayedRecent = activeCategory === 'All Cattle'
+    ? recentList
+    : recentList.filter(item => item.category === activeCategory);
+
+  const displayedSell = activeCategory === 'All Cattle'
+    ? sellList
+    : sellList.filter(item => item.category === activeCategory);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -308,7 +410,7 @@ const HerdScreen = ({ navigation, route }: any) => {
                     activeOpacity={0.8}
                   >
                     <View style={[styles.categoryCircle, isActive && styles.activeCategoryCircle]}>
-                      <Icon name={cat.icon} size={28} color={isActive ? '#16A34A' : '#000000'} />
+                      <Image source={{ uri: cat.image }} style={styles.categoryImg} />
                     </View>
                     <Text style={[styles.categoryLabel, isActive && styles.activeCategoryLabel]}>
                       {cat.name}
@@ -318,57 +420,7 @@ const HerdScreen = ({ navigation, route }: any) => {
               })}
             </ScrollView>
 
-            {/* Recent Listings Section */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>Recent Listings</Text>
-              <TouchableOpacity>
-                <View style={styles.viewAllRow}>
-                  <Text style={styles.viewAllText}>View All</Text>
-                  <Icon name="chevron-right" size={16} color="#16A34A" />
-                </View>
-              </TouchableOpacity>
-            </View>
 
-            <View style={styles.recentContainer}>
-              {recentList.map((item) => (
-                <TouchableOpacity 
-                  key={item.id} 
-                  style={styles.recentCard}
-                  onPress={() => navigation.navigate('AnimalDetails', { product: item })}
-                  activeOpacity={0.9}
-                >
-                  <Image source={{ uri: item.image }} style={styles.recentImg} />
-                  <View style={styles.recentInfo}>
-                    <View style={styles.recentHeaderRow}>
-                      <Text style={styles.recentName}>{item.name}</Text>
-                      <Text style={styles.recentPrice}>{item.price}</Text>
-                    </View>
-                    <View style={styles.recentMetaRow}>
-                      <View style={styles.metaItem}>
-                        <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                        <Text style={styles.metaText}>{item.age}</Text>
-                      </View>
-                      <View style={styles.metaItem}>
-                        <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                        <Text style={styles.metaText}>{item.location}</Text>
-                      </View>
-                    </View>
-                    <View style={styles.recentFooterRow}>
-                      <View style={styles.statusBadge}>
-                        <Text style={styles.statusBadgeText}>{item.status}</Text>
-                      </View>
-                      <TouchableOpacity onPress={() => toggleLike(item.id)}>
-                        <Icon 
-                          name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
-                          size={20} 
-                          color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </TouchableOpacity>
-              ))}
-            </View>
           </>
         ) : (
           <>
@@ -378,8 +430,8 @@ const HerdScreen = ({ navigation, route }: any) => {
             </View>
 
             <View style={styles.recentContainer}>
-              {sellList.length > 0 ? (
-                sellList.map((item) => (
+              {displayedSell.length > 0 ? (
+                displayedSell.map((item) => (
                   <TouchableOpacity 
                     key={item.id} 
                     style={styles.recentCard}
@@ -716,24 +768,30 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     marginRight: 20
   },
   categoryCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: '#E5E7EB',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 6,
-    elevation: 1,
+    overflow: 'hidden',
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.02,
-    shadowRadius: 2
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4
   },
   activeCategoryCircle: {
     borderColor: '#16A34A',
-    borderWidth: 2
+    borderWidth: 2.5
+  },
+  categoryImg: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover'
   },
   categoryLabel: {
     fontSize: 12,

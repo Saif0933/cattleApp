@@ -39,6 +39,7 @@ const SettingsScreen = ({ navigation }: any) => {
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        <Text style={styles.sectionTitleLabel}>Application Preferences</Text>
         <View style={styles.menuCard}>
           {/* Language Selector */}
           <TouchableOpacity style={styles.menuItem} activeOpacity={0.8}>
@@ -147,7 +148,16 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
 
-  scrollContent: { paddingHorizontal: 24, paddingTop: 15, paddingBottom: 50 },
+  scrollContent: { paddingHorizontal: 24, paddingTop: 30, paddingBottom: 50 },
+  sectionTitleLabel: {
+    fontSize: 11,
+    fontWeight: '900',
+    color: COLORS.secondary,
+    marginBottom: 12,
+    marginLeft: 4,
+    letterSpacing: 0.5,
+    textTransform: 'uppercase'
+  },
   menuCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 24,

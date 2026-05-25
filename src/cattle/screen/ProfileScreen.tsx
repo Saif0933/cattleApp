@@ -23,71 +23,139 @@ const ProfileScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
 
-  const menuOptions = [
-    { name: 'Farm Profile', icon: 'business', route: 'FarmProfile', color: '#16A34A' },
-    { name: 'Users & Staff', icon: 'people-outline', route: '', color: COLORS.darkGreen },
-    { name: 'Payments', icon: 'payment', route: 'Payment', color: '#3B82F6' },
-    { name: 'Settings', icon: 'settings', route: 'Settings', color: COLORS.secondary },
-    { name: 'Help & Support', icon: 'help-outline', route: 'HelpSupport', color: '#F59E0B' },
-    { name: 'About Us', icon: 'info-outline', route: '', color: COLORS.darkGreen }
+  const menuSections = [
+    {
+      title: 'FARM MANAGEMENT',
+      options: [
+        { name: 'Farm Profile', icon: 'business', route: 'FarmProfile', color: '#16A34A' },
+        { name: 'Milk Reports', icon: 'assessment', route: 'MilkProductionReport', color: '#8B5CF6' },
+        { name: 'Order History', icon: 'receipt-long', route: 'OrderHistory', color: '#3B82F6' },
+      ]
+    },
+    {
+      title: 'APP PREFERENCES',
+      options: [
+        { name: 'Cattle Subscription', icon: 'stars', route: 'Subscription', color: '#F59E0B' },
+        { name: 'Settings & Security', icon: 'settings', route: 'Settings', color: '#6B7280' },
+        { name: 'Help & Support', icon: 'contact-support', route: 'HelpSupport', color: '#14B8A6' },
+      ]
+    }
   ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle="dark-content" backgroundColor="#F5F7F5" />
       
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>More</Text>
-        <View style={{ width: 44 }} />
+        <Text style={styles.headerTitle}>Account & Settings</Text>
+        <TouchableOpacity style={styles.headerIconBtn} activeOpacity={0.7}>
+          <Icon name="notifications-none" size={24} color={COLORS.darkGreen} />
+        </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
         {/* Profile Card Header */}
         <View style={styles.profileCard}>
-          <Image 
-            source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200' }} 
-            style={styles.avatar} 
-          />
-          <View style={styles.profileMeta}>
-            <Text style={styles.farmName}>Rashi Farm</Text>
-            <Text style={styles.email}>rashi.farm@gmail.com</Text>
+          <View style={styles.profileHeaderRow}>
+            <View style={styles.avatarContainer}>
+              <Image 
+                source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200' }} 
+                style={styles.avatar} 
+              />
+              <View style={styles.editBadge}>
+                <Icon name="edit" size={12} color="#0D9488" />
+              </View>
+            </View>
+            <View style={styles.profileMeta}>
+              <View style={styles.titleRow}>
+                <Text style={styles.farmName}>Rashi Farm</Text>
+                <View style={styles.proPill}>
+                  <Text style={styles.proText}>PRO</Text>
+                </View>
+              </View>
+              <Text style={styles.email}>rashi.farm@gmail.com</Text>
+              <View style={styles.locationRow}>
+                <Icon name="place" size={14} color="rgba(255, 255, 255, 0.7)" style={{ marginRight: 4 }} />
+                <Text style={styles.locationText}>Pune, MH</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Stats Bar */}
+          <View style={styles.statsContainer}>
+            <View style={styles.statsRow}>
+              <View style={styles.statCol}>
+                <Text style={styles.statNumber}>48</Text>
+                <Text style={styles.statLabel}>Cattle</Text>
+              </View>
+              <View style={styles.statDividerVertical} />
+              <View style={styles.statCol}>
+                <Text style={styles.statNumber}>1.2k L</Text>
+                <Text style={styles.statLabel}>Milk/Day</Text>
+              </View>
+              <View style={styles.statDividerVertical} />
+              <View style={styles.statCol}>
+                <Text style={styles.statNumber}>Active</Text>
+                <Text style={styles.statLabel}>Member</Text>
+              </View>
+            </View>
           </View>
         </View>
 
-        {/* Menu Options List */}
-        <View style={styles.menuList}>
-          {menuOptions.map((opt, idx) => (
-            <TouchableOpacity 
-              key={idx}
-              style={styles.menuItem}
-              onPress={() => {
-                if (opt.route) {
-                  navigation.navigate(opt.route);
-                } else {
-                  Alert.alert(opt.name, `${opt.name} integration is active.`);
-                }
-              }}
-              activeOpacity={0.8}
-            >
-              <View style={[styles.iconBox, { backgroundColor: opt.color + '0B' }]}>
-                <Icon name={opt.icon} size={22} color={opt.color} />
-              </View>
-              <Text style={styles.menuItemText}>{opt.name}</Text>
-              <Icon name="chevron-right" size={20} color={COLORS.secondary} style={{ opacity: 0.5 }} />
-            </TouchableOpacity>
-          ))}
+        {/* Premium Membership Banner */}
+        <View style={styles.primeBanner}>
+          <View style={styles.primeLeft}>
+            <Icon name="verified" size={24} color="#F59E0B" style={{ marginRight: 10 }} />
+            <View>
+              <Text style={styles.primeTitle}>Cattle Prime Active</Text>
+              <Text style={styles.primeSub}>Auto-renews on 15 Dec 2026</Text>
+            </View>
+          </View>
+          <Icon name="chevron-right" size={20} color="#F59E0B" />
         </View>
+
+        {/* Menu Options Sections */}
+        {menuSections.map((section, sIdx) => (
+          <View key={sIdx} style={styles.sectionContainer}>
+            <Text style={styles.sectionTitleLabel}>{section.title}</Text>
+            <View style={styles.menuGroup}>
+              {section.options.map((opt, idx) => (
+                <TouchableOpacity 
+                  key={idx}
+                  style={[
+                    styles.menuItem,
+                    idx === section.options.length - 1 && { borderBottomWidth: 0 }
+                  ]}
+                  onPress={() => {
+                    if (opt.route) {
+                      navigation.navigate(opt.route);
+                    } else {
+                      Alert.alert(opt.name, `${opt.name} feature is currently active.`);
+                    }
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={[styles.iconBox, { backgroundColor: opt.color + '15' }]}>
+                    <Icon name={opt.icon} size={22} color={opt.color} />
+                  </View>
+                  <Text style={styles.menuItemText}>{opt.name}</Text>
+                  <Icon name="keyboard-arrow-right" size={20} color={COLORS.secondary} style={{ opacity: 0.7 }} />
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        ))}
 
         {/* Logout Button */}
         <TouchableOpacity 
           style={styles.logoutBtn} 
           onPress={() => navigation.navigate('SelectRole')}
-          activeOpacity={0.85}
+          activeOpacity={0.8}
         >
           <Icon name="logout" size={20} color={COLORS.crimson} />
-          <Text style={styles.logoutText}>Logout</Text>
+          <Text style={styles.logoutText}>Sign Out Account</Text>
         </TouchableOpacity>
 
       </ScrollView>
@@ -96,58 +164,206 @@ const ProfileScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: '#F5F7F5' },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#F5F7F5'
   },
   headerTitle: { fontSize: 22, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  headerIconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
 
-  scrollContent: { paddingHorizontal: 24, paddingTop: 15, paddingBottom: 50 },
+  scrollContent: { paddingHorizontal: 20, paddingTop: 10, paddingBottom: 50 },
   
   profileCard: {
+    backgroundColor: '#0D9488',
+    padding: 20,
+    borderRadius: 28,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    marginBottom: 20
+  },
+  profileHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: 16,
-    borderRadius: 24,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4,
-    marginBottom: 25
   },
-  avatar: { width: 60, height: 60, borderRadius: 30 },
+  avatarContainer: {
+    position: 'relative',
+  },
+  avatar: { 
+    width: 72, 
+    height: 72, 
+    borderRadius: 36, 
+    borderWidth: 2, 
+    borderColor: '#FFFFFF',
+  },
+  editBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: '#FFFFFF',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#0D9488',
+  },
   profileMeta: { marginLeft: 16, flex: 1 },
-  farmName: { fontSize: 18, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
-  email: { fontSize: 13, color: COLORS.secondary, marginTop: 4, fontWeight: '600', fontFamily: FONT_SANS },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  farmName: { fontSize: 20, fontWeight: '900', color: '#FFFFFF', fontFamily: FONT_SERIF },
+  proPill: {
+    backgroundColor: '#F59E0B',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginLeft: 8,
+  },
+  proText: {
+    fontSize: 9,
+    fontWeight: '900',
+    color: '#0F291E',
+  },
+  email: { fontSize: 13, color: '#FFFFFF', opacity: 0.8, marginTop: 4, fontFamily: FONT_SANS },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  locationText: {
+    fontSize: 12,
+    color: '#FFFFFF',
+    opacity: 0.7,
+    fontFamily: FONT_SANS,
+  },
 
-  menuList: { gap: 14, marginBottom: 30 },
+  statsContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    marginTop: 18,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  statCol: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 16,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    fontFamily: FONT_SANS,
+  },
+  statLabel: {
+    fontSize: 11,
+    color: '#FFFFFF',
+    opacity: 0.6,
+    marginTop: 2,
+    fontFamily: FONT_SANS,
+  },
+  statDividerVertical: {
+    width: 1,
+    height: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+  },
+
+  primeBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 158, 11, 0.25)',
+    padding: 16,
+    borderRadius: 20,
+    marginBottom: 24,
+  },
+  primeLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  primeTitle: {
+    fontSize: 14,
+    fontWeight: '900',
+    color: '#D97706',
+    fontFamily: FONT_SANS,
+  },
+  primeSub: {
+    fontSize: 11,
+    color: '#6B7280',
+    marginTop: 2,
+    fontFamily: FONT_SANS,
+  },
+
+  sectionContainer: {
+    marginBottom: 20,
+  },
+  sectionTitleLabel: {
+    fontSize: 11,
+    fontWeight: '900',
+    color: COLORS.secondary,
+    marginBottom: 8,
+    marginLeft: 4,
+    letterSpacing: 0.5,
+  },
+  menuGroup: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    overflow: 'hidden',
+  },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
     padding: 14,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
-  iconBox: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
-  menuItemText: { flex: 1, fontSize: 15, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  iconBox: { 
+    width: 40, 
+    height: 40, 
+    borderRadius: 12, 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    marginRight: 14 
+  },
+  menuItemText: { flex: 1, fontSize: 14, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SANS },
 
   logoutBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(239, 68, 68, 0.08)',
     paddingVertical: 16,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderColor: COLORS.crimson + '20',
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.15)',
+    marginTop: 10,
+    marginBottom: 20,
   },
   logoutText: { fontSize: 15, fontWeight: '900', color: COLORS.crimson, marginLeft: 8, fontFamily: FONT_SANS }
 });
