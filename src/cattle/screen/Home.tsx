@@ -10,9 +10,8 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
@@ -88,187 +87,273 @@ const HomeScreen = ({ navigation }: any) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" translucent={true} backgroundColor="transparent" />
       
-      {/* Header */}
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.greetingText}>Hello, Rashi 👋</Text>
-          <Text style={styles.welcomeText}>Good Morning</Text>
-        </View>
-        <View style={styles.rightActions}>
-          <TouchableOpacity style={styles.bellBtn} onPress={() => navigation.navigate('Reminders')}>
-            <Icon name="notifications-none" size={24} color={COLORS.darkGreen} />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.profileBtn} 
-            onPress={() => navigation.navigate('More')}
-          >
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150' }} 
-              style={styles.avatar as any} 
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        {/* Farm Status Card */}
-        <View style={styles.statusCard}>
+        {/* Top Header Background Wrapper */}
+        <View style={styles.topHeaderWrapper}>
           <Image 
             source={require('../../../assets/cattle_farm.png')} 
-            style={styles.statusBgImage as any} 
+            style={styles.topBgImage as any} 
             resizeMode="cover"
           />
-          <View style={styles.statusOverlay}>
-            <View style={styles.statusHeader}>
-              <View style={styles.greenDot} />
-              <Text style={styles.statusTitle}>Farm Overview</Text>
-            </View>
-            <Text style={styles.statusText}>All systems are running well</Text>
-          </View>
-        </View>
+          <View style={styles.topBgOverlay} />
 
-        {/* 2x2 Stats Grid */}
-        <View style={styles.statsGrid}>
-          {stats.map((stat, idx) => (
-            <View key={idx} style={styles.statCard}>
-              <View style={[styles.statIconWrapper, { backgroundColor: stat.bg }]}>
-                <MIcon name={stat.icon} size={24} color={stat.color} />
-              </View>
-              <View style={styles.statMeta}>
-                <Text style={styles.statVal}>{stat.value}</Text>
-                <Text style={styles.statLabel}>{stat.label}</Text>
+          {/* Header row on top of background image */}
+          <View style={styles.header}>
+            <View style={styles.headerLeft}>
+              <TouchableOpacity style={styles.menuBtn}>
+                <Icon name="menu" size={24} color="#0F291E" />
+              </TouchableOpacity>
+              <View style={styles.headerGreeting}>
+                <Text style={styles.greetingText}>Hello, Rashid 👋</Text>
+                <Text style={styles.welcomeText}>Good Morning</Text>
               </View>
             </View>
-          ))}
-        </View>
-
-        {/* Quick Actions horizontal block */}
-        <View style={styles.actionsSection}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.actionsRow}>
-            {quickActions.map((action, idx) => (
-              <TouchableOpacity 
-                key={idx} 
-                style={styles.actionBtnCol}
-                onPress={() => navigation.navigate(action.route)}
-                activeOpacity={0.8}
-              >
-                <View style={[styles.actionIconBox, { backgroundColor: action.bg }]}>
-                  <MIcon name={action.icon} size={26} color={action.color} />
+            <View style={styles.rightActions}>
+              <TouchableOpacity style={styles.bellBtn} onPress={() => navigation.navigate('Reminders')}>
+                <MIcon name="bell-outline" size={24} color="#0F291E" />
+                <View style={styles.bellBadge}>
+                  <Text style={styles.bellBadgeText}>3</Text>
                 </View>
-                <Text style={styles.actionName}>{action.name}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+        </View>
+
+        {/* Main Content Container (with horizontal padding) */}
+        <View style={styles.mainContentContainer}>
+          {/* 2x2 Stats Grid */}
+          <View style={styles.statsGrid}>
+            {stats.map((stat, idx) => (
+              <View key={idx} style={styles.statCard}>
+                <View style={[styles.statIconWrapper, { backgroundColor: stat.bg }]}>
+                  <MIcon name={stat.icon} size={24} color={stat.color} />
+                </View>
+                <View style={styles.statMeta}>
+                  <Text style={styles.statVal}>{stat.value}</Text>
+                  <Text style={styles.statLabel}>{stat.label}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          {/* Quick Actions horizontal block */}
+          <View style={styles.actionsSection}>
+            <Text style={styles.sectionTitle}>Quick Actions</Text>
+            <View style={styles.actionsRow}>
+              {quickActions.map((action, idx) => (
+                <TouchableOpacity 
+                  key={idx} 
+                  style={styles.actionBtnCol}
+                  onPress={() => navigation.navigate(action.route)}
+                  activeOpacity={0.8}
+                >
+                  <View style={[styles.actionIconBox, { backgroundColor: action.bg }]}>
+                    <MIcon name={action.icon} size={26} color={action.color} />
+                  </View>
+                  <Text style={styles.actionName}>{action.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+
+          {/* Recent Listings Section */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Recent Listings</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Cattle')}>
+              <View style={styles.viewAllRow}>
+                <Text style={styles.viewAllText}>View All</Text>
+                <MIcon name="chevron-right" size={16} color="#16A34A" />
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.recentContainer}>
+            {recentList.map((item) => (
+              <TouchableOpacity 
+                key={item.id} 
+                style={styles.recentCard}
+                onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+                activeOpacity={0.9}
+              >
+                <Image source={{ uri: item.image }} style={styles.recentImg} />
+                <View style={styles.recentInfo}>
+                  <View style={styles.recentHeaderRow}>
+                    <Text style={styles.recentName}>{item.name}</Text>
+                    <Text style={styles.recentPrice}>{item.price}</Text>
+                  </View>
+                  <View style={styles.recentMetaRow}>
+                    <View style={styles.metaItem}>
+                      <MIcon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                      <Text style={styles.metaText}>{item.age}</Text>
+                    </View>
+                    <View style={styles.metaItem}>
+                      <MIcon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                      <Text style={styles.metaText}>{item.location}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.recentFooterRow}>
+                    <View style={styles.statusBadge}>
+                      <Text style={styles.statusBadgeText}>{item.status}</Text>
+                    </View>
+                    <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                      <MIcon 
+                        name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                        size={20} 
+                        color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
               </TouchableOpacity>
             ))}
           </View>
         </View>
 
-        {/* Recent Listings Section */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Recent Listings</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Cattle')}>
-            <View style={styles.viewAllRow}>
-              <Text style={styles.viewAllText}>View All</Text>
-              <MIcon name="chevron-right" size={16} color="#16A34A" />
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.recentContainer}>
-          {recentList.map((item) => (
-            <TouchableOpacity 
-              key={item.id} 
-              style={styles.recentCard}
-              onPress={() => navigation.navigate('AnimalDetails', { product: item })}
-              activeOpacity={0.9}
-            >
-              <Image source={{ uri: item.image }} style={styles.recentImg} />
-              <View style={styles.recentInfo}>
-                <View style={styles.recentHeaderRow}>
-                  <Text style={styles.recentName}>{item.name}</Text>
-                  <Text style={styles.recentPrice}>{item.price}</Text>
-                </View>
-                <View style={styles.recentMetaRow}>
-                  <View style={styles.metaItem}>
-                    <MIcon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                    <Text style={styles.metaText}>{item.age}</Text>
-                  </View>
-                  <View style={styles.metaItem}>
-                    <MIcon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                    <Text style={styles.metaText}>{item.location}</Text>
-                  </View>
-                </View>
-                <View style={styles.recentFooterRow}>
-                  <View style={styles.statusBadge}>
-                    <Text style={styles.statusBadgeText}>{item.status}</Text>
-                  </View>
-                  <TouchableOpacity onPress={() => toggleLike(item.id)}>
-                    <MIcon 
-                      name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
-                      size={20} 
-                      color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </View>
-
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: '#FAFAFA' },
+  topHeaderWrapper: {
+    height: Platform.OS === 'ios' ? 340 : 310,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  topBgImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+  },
+  topBgOverlay: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 15,
+    paddingHorizontal: 20,
+    paddingTop: Platform.OS === 'ios' ? 50 : 36,
     paddingBottom: 10,
-    backgroundColor: '#FFFFFF'
   },
-  greetingText: { fontSize: 13, fontWeight: '800', color: COLORS.secondary, letterSpacing: 0.5, fontFamily: FONT_SANS },
-  welcomeText: { fontSize: 24, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginTop: 2 },
-  rightActions: { flexDirection: 'row', alignItems: 'center', gap: 15 },
-  bellBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'center' },
-  profileBtn: { 
-    width: 44, height: 44, borderRadius: 22, 
-    borderWidth: 1.5, borderColor: COLORS.border, overflow: 'hidden'
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12
   },
-  avatar: { width: '100%', height: '100%' },
-  
-  scrollContent: { paddingHorizontal: 24, paddingBottom: 100 },
-
-  statusCard: {
-    height: 160,
-    borderRadius: 24,
-    overflow: 'hidden',
-    marginTop: 15,
-    elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 8,
+  menuBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.75)',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  headerGreeting: {
+    justifyContent: 'center'
+  },
+  greetingText: { fontSize: 13, fontWeight: '800', color: '#556B60', letterSpacing: 0.5, fontFamily: FONT_SANS },
+  welcomeText: { fontSize: 22, fontWeight: '900', color: '#0F291E', fontFamily: FONT_SERIF, marginTop: 1 },
+  rightActions: { flexDirection: 'row', alignItems: 'center' },
+  bellBtn: { 
+    width: 40, 
+    height: 40, 
+    borderRadius: 20, 
+    backgroundColor: 'rgba(255, 255, 255, 0.75)', 
+    justifyContent: 'center', 
+    alignItems: 'center',
     position: 'relative'
   },
-  statusBgImage: { width: '100%', height: '100%', position: 'absolute' },
-  statusOverlay: { 
-    flex: 1, 
-    backgroundColor: 'rgba(15, 41, 30, 0.4)', 
-    padding: 20, 
-    justifyContent: 'flex-end' 
+  bellBadge: {
+    position: 'absolute',
+    top: 6,
+    right: 6,
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#EF4444',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF'
   },
-  statusHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 6 },
-  greenDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: '#10B981', marginRight: 8 },
-  statusTitle: { color: '#E5E7EB', fontSize: 11, fontWeight: '800', letterSpacing: 1.2, textTransform: 'uppercase', fontFamily: FONT_SANS },
-  statusText: { color: 'white', fontSize: 20, fontWeight: '900', fontFamily: FONT_SERIF },
-
+  bellBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 8,
+    fontWeight: '900',
+  },
+  bannerStatusCard: {
+    backgroundColor: 'rgba(15, 41, 30, 0.82)',
+    borderRadius: 18,
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: 20,
+    marginTop: 15,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    elevation: 4,
+    shadowColor: '#0F291E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8
+  },
+  bannerStatusLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1
+  },
+  greenCircleCheck: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bannerStatusTextContainer: {
+    flex: 1
+  },
+  bannerStatusTitle: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '800',
+    fontFamily: FONT_SANS
+  },
+  bannerStatusSub: {
+    color: '#A7B7B0',
+    fontSize: 11,
+    fontWeight: '600',
+    fontFamily: FONT_SANS,
+    marginTop: 1
+  },
+  bannerStatusArrowBg: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  
+  scrollContent: { paddingBottom: 100 },
+  mainContentContainer: {
+    paddingHorizontal: 20,
+  },
+ 
   statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 15, marginTop: 25 },
   statCard: {
-    width: (width - 63) / 2,
+    width: (width - 55) / 2,
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
     padding: 16,
@@ -286,7 +371,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   actionsSection: { marginTop: 30 },
   sectionTitle: { fontSize: 18, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginBottom: 18 },
   actionsRow: { flexDirection: 'row', justifyContent: 'space-between' },
-  actionBtnCol: { alignItems: 'center', width: (width - 48) / 4 },
+  actionBtnCol: { alignItems: 'center', width: (width - 40) / 4 },
   actionIconBox: { 
     width: 60, height: 60, borderRadius: 30, 
     justifyContent: 'center', alignItems: 'center', marginBottom: 8,
