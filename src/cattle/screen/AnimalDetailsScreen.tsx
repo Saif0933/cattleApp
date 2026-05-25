@@ -335,6 +335,15 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
           <Text style={styles.recordBtnText}>Health Record</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Chat FAB */}
+      <TouchableOpacity 
+        style={styles.chatFab}
+        onPress={() => navigation.navigate('Community')}
+        activeOpacity={0.85}
+      >
+        <Icon name="chat" size={26} color="#FFFFFF" />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -610,7 +619,24 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
     elevation: 3, shadowColor: '#16A34A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8
   },
-  recordBtnText: { fontSize: 15, fontWeight: '900', color: '#FFFFFF', fontFamily: FONT_SANS }
+  recordBtnText: { fontSize: 15, fontWeight: '900', color: '#FFFFFF', fontFamily: FONT_SANS },
+  chatFab: {
+    position: 'absolute',
+    bottom: 110,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#16A34A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#16A34A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    zIndex: 999
+  }
 });
 
 export default AnimalDetailsScreen;

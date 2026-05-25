@@ -233,17 +233,39 @@ const HerdScreen = ({ navigation, route }: any) => {
     );
   };
 
-  const displayedFeatured = activeCategory === 'All Cattle'
-    ? featuredListings
-    : featuredListings.filter(item => item.category === activeCategory);
+  const displayedFeatured = featuredListings.filter(item => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    return (
+      item.name.toLowerCase().includes(query) ||
+      (item.category && item.category.toLowerCase().includes(query)) ||
+      (item.location && item.location.toLowerCase().includes(query))
+    );
+  });
 
-  const displayedRecent = activeCategory === 'All Cattle'
-    ? recentList
-    : recentList.filter(item => item.category === activeCategory);
+  const displayedRecent = recentList.filter(item => {
+    const query = searchQuery.toLowerCase().trim();
+    if (query) {
+      return (
+        item.name.toLowerCase().includes(query) ||
+        (item.category && item.category.toLowerCase().includes(query)) ||
+        (item.location && item.location.toLowerCase().includes(query))
+      );
+    }
+    return activeCategory === 'All Cattle' || item.category === activeCategory;
+  });
 
-  const displayedSell = activeCategory === 'All Cattle'
-    ? sellList
-    : sellList.filter(item => item.category === activeCategory);
+  const displayedSell = sellList.filter(item => {
+    const query = searchQuery.toLowerCase().trim();
+    if (query) {
+      return (
+        item.name.toLowerCase().includes(query) ||
+        (item.category && item.category.toLowerCase().includes(query)) ||
+        (item.location && item.location.toLowerCase().includes(query))
+      );
+    }
+    return activeCategory === 'All Cattle' || item.category === activeCategory;
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -314,20 +336,6 @@ const HerdScreen = ({ navigation, route }: any) => {
               onChangeText={setSearchQuery}
             />
           </View>
-
-          <TouchableOpacity style={styles.dropdownBtn}>
-            <Text style={styles.dropdownText}>Species</Text>
-            <Icon name="chevron-down" size={16} color="#4B5563" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.dropdownBtn}>
-            <Text style={styles.dropdownText}>Location</Text>
-            <Icon name="chevron-down" size={16} color="#4B5563" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.filterIconBtn}>
-            <Icon name="tune" size={20} color="#0F291E" />
-          </TouchableOpacity>
         </View>
 
         {activeMarketTab === 'buy' ? (
@@ -348,7 +356,7 @@ const HerdScreen = ({ navigation, route }: any) => {
               showsHorizontalScrollIndicator={false} 
               contentContainerStyle={styles.featuredScroll}
             >
-              {featuredListings.map((item) => (
+              {displayedFeatured.map((item) => (
                 <TouchableOpacity 
                   key={item.id} 
                   style={styles.featuredCard}
@@ -419,6 +427,60 @@ const HerdScreen = ({ navigation, route }: any) => {
                 );
               })}
             </ScrollView>
+
+            {/* Species Listings Section */}
+            <View style={styles.sectionHeader}>
+              <Text style={styles.sectionTitle}>{activeCategory} Listings</Text>
+            </View>
+
+            <View style={styles.recentContainer}>
+              {displayedRecent.length > 0 ? (
+                displayedRecent.map((item) => (
+                  <TouchableOpacity 
+                    key={item.id} 
+                    style={styles.recentCard}
+                    onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+                    activeOpacity={0.9}
+                  >
+                    <Image source={{ uri: item.image }} style={styles.recentImg} />
+                    <View style={styles.recentInfo}>
+                      <View style={styles.recentHeaderRow}>
+                        <Text style={styles.recentName}>{item.name}</Text>
+                        <Text style={styles.recentPrice}>{item.price}</Text>
+                      </View>
+                      <View style={styles.recentMetaRow}>
+                        <View style={styles.metaItem}>
+                          <Icon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                          <Text style={styles.metaText}>{item.age}</Text>
+                        </View>
+                        <View style={styles.metaItem}>
+                          <Icon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                          <Text style={styles.metaText}>{item.location}</Text>
+                        </View>
+                      </View>
+                      <View style={styles.recentFooterRow}>
+                        <View style={styles.statusBadge}>
+                          <Text style={styles.statusBadgeText}>{item.status}</Text>
+                        </View>
+                        <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                          <Icon 
+                            name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                            size={20} 
+                            color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View style={styles.emptyStateContainer}>
+                  <Icon name="tag-multiple-outline" size={56} color="#6B7280" style={{ opacity: 0.4, marginBottom: 8 }} />
+                  <Text style={styles.emptyStateTitle}>No Listings Found</Text>
+                  <Text style={styles.emptyStateSub}>No animals available in this category currently.</Text>
+                </View>
+              )}
+            </View>
 
 
           </>
@@ -601,7 +663,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     gap: 8
   },
   searchBox: {
-    flex: 2,
+    flex: 1,
     height: 44,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
