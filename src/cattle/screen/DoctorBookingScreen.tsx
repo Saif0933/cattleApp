@@ -13,19 +13,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  emerald: '#10B981',
-};
-
 const DoctorBookingScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const doctors = [
     {
       id: "doc-1",
@@ -99,7 +95,7 @@ const DoctorBookingScreen = ({ navigation }: any) => {
       <TouchableOpacity style={[styles.docCard, featured && styles.featuredCard]}>
         {featured && (
           <View style={styles.featuredBadge}>
-            <Icon name="star" size={12} color="white" />
+            <Icon name="star" size={12} color={COLORS.surface} />
             <Text style={styles.featuredText}>TOP RATED</Text>
           </View>
         )}
@@ -108,11 +104,11 @@ const DoctorBookingScreen = ({ navigation }: any) => {
           <View style={styles.docInfo}>
             <View style={styles.nameRow}>
               <Text style={styles.docName}>{name}</Text>
-              {verified && <Icon name="verified" size={16} color={COLORS.accent} style={{ marginLeft: 5 }} />}
+              {verified && <Icon name="verified" size={16} color={COLORS.medical} style={{ marginLeft: 5 }} />}
             </View>
             <Text style={styles.docSpec}>{specialty}</Text>
             <View style={styles.statsRow}>
-              <Icon name="star" size={14} color={COLORS.accent} />
+              <Icon name="star" size={14} color={COLORS.gold} />
               <Text style={styles.statText}>{rating} ({reviews} Reviews)</Text>
             </View>
           </View>
@@ -133,7 +129,7 @@ const DoctorBookingScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color={COLORS.primary} />
@@ -156,17 +152,17 @@ const DoctorBookingScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.background },
   headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   promoBox: { backgroundColor: COLORS.primary, padding: 20, borderRadius: 20, marginBottom: 25 },
-  promoTitle: { color: 'white', fontSize: 18, fontWeight: '900', fontFamily: FONT_SERIF },
-  promoSub: { color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 5 },
+  promoTitle: { color: COLORS.surface, fontSize: 18, fontWeight: '900', fontFamily: FONT_SERIF },
+  promoSub: { color: COLORS.secondary, fontSize: 12, marginTop: 5 },
   grid: { gap: 20 },
-  docCard: { backgroundColor: 'white', borderRadius: 25, padding: 20, elevation: 3 },
-  featuredCard: { borderWidth: 2, borderColor: COLORS.accent },
-  featuredBadge: { position: 'absolute', top: -12, right: 20, backgroundColor: COLORS.accent, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, zIndex: 5 },
+  docCard: { backgroundColor: COLORS.surface, borderRadius: 25, padding: 20, elevation: 3, borderWidth: 1, borderColor: COLORS.border },
+  featuredCard: { borderWidth: 2, borderColor: COLORS.medical },
+  featuredBadge: { position: 'absolute', top: -12, right: 20, backgroundColor: COLORS.medical, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, zIndex: 5 },
   featuredText: { color: 'white', fontSize: 9, fontWeight: '900', marginLeft: 4 },
   cardHeader: { flexDirection: 'row', alignItems: 'center' },
   docImg: { width: 80, height: 80, borderRadius: 20 },
@@ -176,12 +172,12 @@ const styles = StyleSheet.create({
   docSpec: { fontSize: 13, color: COLORS.secondary, marginTop: 2, fontWeight: '600' },
   statsRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
   statText: { fontSize: 12, color: COLORS.secondary, marginLeft: 4, fontWeight: '700' },
-  divider: { height: 1, backgroundColor: '#F1F5F3', marginVertical: 15 },
+  divider: { height: 1, backgroundColor: COLORS.border, marginVertical: 15 },
   cardFooter: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   feeLabel: { fontSize: 10, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1 },
   feeValue: { fontSize: 20, fontWeight: '900', color: COLORS.primary, marginTop: 2 },
   bookBtn: { backgroundColor: COLORS.primary, paddingHorizontal: 25, paddingVertical: 12, borderRadius: 15 },
-  bookBtnText: { color: 'white', fontWeight: '900', fontSize: 12 }
+  bookBtnText: { color: COLORS.surface, fontWeight: '900', fontSize: 12 }
 });
 
 export default DoctorBookingScreen;

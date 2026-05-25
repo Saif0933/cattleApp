@@ -1,9 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Image,
-  Linking,
-  Modal,
   Platform,
   ScrollView,
   StatusBar,
@@ -13,489 +11,193 @@ import {
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MCOIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-  crimson: '#EF4444',
-  border: '#F1F5F3',
-};
-
-const formatPrice = (priceVal: any) => {
-  if (!priceVal) return '';
-  const str = String(priceVal);
-  if (str.startsWith('$') || str.startsWith('₹')) {
-    return str;
-  }
-  const num = parseFloat(str.replace(/,/g, ''));
-  if (!isNaN(num) && num < 1000) {
-    return `$${num.toFixed(2)}`;
-  }
-  return `₹${str}`;
-};
-
 const AnimalDetailsScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const { product } = route.params || {};
 
-  const [activeImageIndex, setActiveImageIndex] = React.useState(0);
-  const [viewerVisible, setViewerVisible] = React.useState(false);
-  const [viewerIndex, setViewerIndex] = React.useState(0);
-  const modalScrollRef = React.useRef<ScrollView>(null);
+  const name = product?.name || 'Gauri';
+  const id = product?.id || 'C001';
+  const breed = product?.breed || 'HF Cross';
+  const age = product?.age || '3 Years';
+  const gender = product?.gender || 'Female';
+  const image = product?.image || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=600';
 
-  // Fallback data for safety aligned to the DB schema
-  const details = {
-    title: product?.title || product?.name || 'Elite Specimen',
-    price: typeof product?.price === 'number' ? product.price.toLocaleString() : (product?.price || '85,000'),
-    breed: product?.breed || product?.brand || 'Holstein Friesian',
-    location: product?.address || product?.info || 'Karnal, Haryana',
-    image: (product?.images && product.images.length > 0) ? product.images[0] : (product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200'),
-    weight: typeof product?.weight === 'number' ? `${product.weight}kg` : (product?.weight || '450kg'),
-    yield: typeof product?.milkProduction === 'number' ? `${product.milkProduction}L/day` : (product?.yield || '12L/day'),
-    age: typeof product?.ageMonths === 'number' ? `${Math.floor(product.ageMonths / 12)} Years` : (product?.age || '3 Years'),
-    gender: product?.gender ? (product.gender === 'MALE' ? 'Male' : (product.gender === 'FEMALE' ? 'Female' : product.gender)) : 'Female',
-    description: product?.description || product?.desc || 'This premium specimen is from a verified lineage of high-yield producers. Excellent health records and high fat content. Currently in prime condition.',
-    phone: product?.phone || '9876543210',
-  };
+  const [activeTab, setActiveTab] = useState('Overview');
+  const tabs = ['Overview', 'Health', 'Breeding', 'Activity'];
 
-  // Ensure there are at least 3 banner images with sliding style
-  const getImagesList = (): string[] => {
-    if (product?.images && product.images.length > 0) {
-      if (product.images.length === 1) {
-        return [
-          product.images[0],
-          'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=1200',
-          'https://images.unsplash.com/photo-1527153857715-3908f2bac5e8?auto=format&fit=crop&q=80&w=1200'
-        ];
-      }
-      return product.images;
-    }
-    const mainImg = product?.image || 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?auto=format&fit=crop&q=80&w=1200';
-    return [
-      mainImg,
-      'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=1200',
-      'https://images.unsplash.com/photo-1527153857715-3908f2bac5e8?auto=format&fit=crop&q=80&w=1200'
-    ];
-  };
-
-  const images = getImagesList();
-
-  const handleCall = () => {
-    Linking.openURL(`tel:${details.phone}`);
-  };
-
-  const onScroll = (event: any) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const index = Math.round(offsetX / width);
-    setActiveImageIndex(index);
-  };
-
-  React.useEffect(() => {
-    if (viewerVisible) {
-      setTimeout(() => {
-        modalScrollRef.current?.scrollTo({
-          x: viewerIndex * width,
-          animated: false,
-        });
-      }, 50);
-    }
-  }, [viewerVisible]);
+  const overviewDetails = [
+    { label: 'Breed', value: breed },
+    { label: 'Date of Birth', value: '10 Mar 2021' },
+    { label: 'Weight', value: '450 kg' },
+    { label: 'Milk Yield', value: '12 L/day' },
+    { label: 'Owner', value: 'Rashi Farm' }
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
-      {/* Premium Header */}
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backCircle}>
-          <Icon name="arrow-back" size={24} color={COLORS.primary} />
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back-ios" size={20} color={COLORS.darkGreen} style={{ marginLeft: 6 }} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Animal Details</Text>
-        <TouchableOpacity style={styles.headerCircle}>
-          <Icon name="favorite-border" 
-          size={24} color={COLORS.primary} />
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>{name}</Text>
+          <Text style={styles.headerSubtitle}>Cow • {age}</Text>
+        </View>
+        <TouchableOpacity style={styles.shareBtn}>
+          <Icon name="ios-share" size={22} color={COLORS.darkGreen} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
-        {/* Immersive Image Gallery Slider */}
-        <View style={styles.heroWrapper}>
-          <ScrollView
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={onScroll}
-            scrollEventThrottle={16}
-            style={styles.heroScrollView}
-          >
-            {images.map((imgUri: string, index: number) => (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={0.9}
-                onPress={() => {
-                  setViewerIndex(index);
-                  setViewerVisible(true);
-                }}
-                style={{ width, height: '100%' }}
-              >
-                <Image
-                  source={{ uri: imgUri }}
-                  style={styles.heroImage}
-                  resizeMode="cover"
-                />
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          {/* Dots Pagination */}
-          <View style={styles.paginationDots}>
-            {images.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.dot,
-                  activeImageIndex === index ? styles.activeDot : styles.inactiveDot,
-                ]}
-              />
-            ))}
-          </View>
-
-          {/* Photos Badge */}
-          <View style={styles.galleryBadge}>
-            <Icon name="photo-library" size={14} color="white" />
-            <Text style={styles.galleryText}>{activeImageIndex + 1}/{images.length} Photos</Text>
-          </View>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Cow Image with absolute cover */}
+        <View style={styles.imageContainer}>
+          <Image source={{ uri: image }} style={styles.cowImage} resizeMode="cover" />
         </View>
 
-        <View style={styles.content}>
-          {/* Title & Price Section */}
-          <View style={styles.mainInfoCard}>
-            <View style={styles.row}>
-              <View style={styles.titleArea}>
-                <View style={styles.breedRow}>
-                  <Text style={styles.breedName}>{details.title}</Text>
-                  <View style={styles.verifiedBadge}>
-                    <Icon name="verified" size={12} color={COLORS.emerald} />
-                    <Text style={styles.verifiedText}>ELITE</Text>
-                  </View>
-                </View>
-                <View style={styles.locationRow}>
-                  <Icon name="location-on" size={14} color={COLORS.secondary} />
-                  <Text style={styles.locationText}>{details.location}</Text>
-                </View>
-              </View>
-              <View style={styles.priceArea}>
-                <Text style={styles.priceText}>{formatPrice(details.price)}</Text>
-                <Text style={styles.negText}>Negotiable</Text>
-              </View>
-            </View>
-
-            <View style={styles.divider} />
-
-            {/* Vital Stats Grid */}
-            <View style={styles.statsGrid}>
-              <StatItem icon="water-outline" label="Milk Yield" value={details.yield} />
-              <StatItem icon="calendar-clock" label="Age" value={details.age} />
-              <StatItem icon="weight-kilogram" label="Weight" value={details.weight} />
-              <StatItem icon="gender-female" label="Gender" value={details.gender} />
-            </View>
-          </View>
-
-          {/* Description Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Overview</Text>
-            <View style={styles.descCard}>
-              <Text style={styles.descText}>{details.description}</Text>
-            </View>
-          </View>
-
-          {/* Health Verification */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Health & Certification</Text>
-            <View style={styles.healthCard}>
-              <HealthRow icon="vaccines" label="Vaccination" value="Up to date" />
-              <View style={styles.hDivider} />
-              <HealthRow icon="verified-user" label="Vet Certified" value="Dr. Sharma (Verified)" />
-              <View style={styles.hDivider} />
-              <HealthRow icon="history-edu" label="Ancestry" value="Pure Breed" />
-            </View>
-          </View>
-
-          {/* Seller Profile */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Seller Information</Text>
-            <TouchableOpacity style={styles.sellerCard}>
-              <Image 
-                source={{ uri: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200' }}
-                style={styles.sellerAvatar}
-              />
-              <View style={styles.sellerDetails}>
-                <Text style={styles.sellerName}>Rajinder Singh</Text>
-                <View style={styles.ratingBox}>
-                  <Icon name="star" size={14} color={COLORS.accent} />
-                  <Text style={styles.ratingText}>4.9 (42 Trades)</Text>
-                </View>
-              </View>
-              <View style={styles.viewProfile}>
-                <Icon name="chevron-right" size={24} color={COLORS.secondary} />
-              </View>
+        {/* Tab Buttons */}
+        <View style={styles.tabBar}>
+          {tabs.map((tab, idx) => (
+            <TouchableOpacity 
+              key={idx}
+              style={[styles.tabBtn, activeTab === tab && styles.tabBtnActive]}
+              onPress={() => setActiveTab(tab)}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.tabText, activeTab === tab && styles.tabTextActive]}>
+                {tab}
+              </Text>
             </TouchableOpacity>
-          </View>
-
+          ))}
         </View>
+
+        {/* Tab Content */}
+        {activeTab === 'Overview' && (
+          <View style={styles.grid}>
+            {overviewDetails.map((detail, idx) => (
+              <View key={idx} style={styles.gridCell}>
+                <Text style={styles.cellLabel}>{detail.label}</Text>
+                <Text style={styles.cellValue}>{detail.value}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {activeTab === 'Health' && (
+          <View style={styles.tabPlaceholder}>
+            <Text style={styles.placeholderText}>Recent vaccine: FMD Vaccine (Administered May 25, 2024)</Text>
+          </View>
+        )}
+
+        {activeTab === 'Breeding' && (
+          <View style={styles.tabPlaceholder}>
+            <Text style={styles.placeholderText}>AI Schedule: May 25, 2024. Status: Confirmed.</Text>
+          </View>
+        )}
+
+        {activeTab === 'Activity' && (
+          <View style={styles.tabPlaceholder}>
+            <Text style={styles.placeholderText}>Activity level: Normal. No alerts.</Text>
+          </View>
+        )}
       </ScrollView>
 
-      {/* Action Footer */}
+      {/* Bottom Buttons matching style */}
       <View style={styles.footer}>
-        <TouchableOpacity 
-          style={styles.buyBtn} 
-          onPress={() => navigation.navigate('OrderSummary', { product: details })}
-        >
-          <Icon name="shopping-bag" size={20} color={COLORS.primary} />
-          <Text style={styles.buyText}>Inspect & Buy</Text>
+        <TouchableOpacity style={styles.editBtn} activeOpacity={0.8}>
+          <Text style={styles.editBtnText}>Buy</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.callBtn} onPress={handleCall}>
-          <Icon name="phone-in-talk" size={20} color="white" />
-          <Text style={styles.callText}>Call Seller</Text>
+        <TouchableOpacity 
+          style={styles.recordBtn} 
+          onPress={() => navigation.navigate('HealthRecord', { animalName: name, breed: breed })}
+          activeOpacity={0.85}
+        >
+          <Icon name="healing" size={20} color="#FFFFFF" style={{ marginRight: 6 }} />
+          <Text style={styles.recordBtnText}>Health Record</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Fullscreen Image Viewer Modal */}
-      <Modal
-        visible={viewerVisible}
-        transparent={true}
-        animationType="fade"
-        onRequestClose={() => setViewerVisible(false)}
-      >
-        <SafeAreaView style={styles.modalContainer}>
-          <StatusBar barStyle="light-content" backgroundColor="black" />
-          
-          {/* Modal Header */}
-          <View style={styles.modalHeader}>
-            <TouchableOpacity 
-              onPress={() => setViewerVisible(false)} 
-              style={styles.modalCloseBtn}
-            >
-              <Icon name="close" size={28} color="white" />
-            </TouchableOpacity>
-            <Text style={styles.modalTitle}>
-              {viewerIndex + 1} / {images.length}
-            </Text>
-            <View style={{ width: 40 }} />
-          </View>
-
-          {/* Modal Slider */}
-          <ScrollView
-            ref={modalScrollRef}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={(event) => {
-              const offsetX = event.nativeEvent.contentOffset.x;
-              const index = Math.round(offsetX / width);
-              setViewerIndex(index);
-            }}
-            scrollEventThrottle={16}
-            style={styles.modalScrollView}
-          >
-            {images.map((imgUri: string, index: number) => (
-              <ScrollView
-                key={index}
-                maximumZoomScale={3}
-                minimumZoomScale={1}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.modalImageContainer}
-              >
-                <Image
-                  source={{ uri: imgUri }}
-                  style={styles.modalImage}
-                  resizeMode="contain"
-                />
-              </ScrollView>
-            ))}
-          </ScrollView>
-        </SafeAreaView>
-      </Modal>
-
     </SafeAreaView>
   );
 };
 
-// Internal Components
-const StatItem = ({ icon, label, value }: any) => (
-  <View style={styles.statItem}>
-    <View style={styles.statIconBox}>
-      <MCOIcon name={icon} size={22} color={COLORS.primary} />
-    </View>
-    <Text style={styles.statLab}>{label}</Text>
-    <Text style={styles.statVal}>{value}</Text>
-  </View>
-);
-
-const HealthRow = ({ icon, label, value }: any) => (
-  <View style={styles.healthRow}>
-    <Icon name={icon} size={20} color={COLORS.emerald} />
-    <View style={styles.healthInfo}>
-      <Text style={styles.healthLab}>{label}</Text>
-      <Text style={styles.healthVal}>{value}</Text>
-    </View>
-    <Icon name="check-circle" size={16} color={COLORS.emerald} />
-  </View>
-);
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
-  header: { 
-    height: 60, 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
-    paddingHorizontal: 15,
-    backgroundColor: 'white',
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-    zIndex: 10,
-  },
-  backCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
-  headerCircle: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
-  headerTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-
-  scrollContent: { paddingBottom: 120 },
-  
-  heroWrapper: { width: '100%', height: 300, backgroundColor: '#E2E8F0' },
-  heroImage: { width: '100%', height: '100%' },
-  galleryBadge: { position: 'absolute', bottom: 20, right: 20, backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 12, paddingVertical: 6, borderRadius: 12, flexDirection: 'row', alignItems: 'center' },
-  galleryText: { color: 'white', fontSize: 10, fontWeight: '900', marginLeft: 6 },
-
-  heroScrollView: { width: '100%', height: '100%' },
-  paginationDots: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  dot: {
-    height: 8,
-    borderRadius: 4,
-    marginHorizontal: 4,
-  },
-  activeDot: {
-    width: 20,
-    backgroundColor: COLORS.accent,
-  },
-  inactiveDot: {
-    width: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-  },
-  modalContainer: {
-    flex: 1,
-    backgroundColor: '#000000',
-  },
-  modalHeader: {
-    width: '100%',
-    height: 60,
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  header: {
+    height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    position: 'absolute',
-    top: Platform.OS === 'ios' ? 50 : 10,
-    zIndex: 10,
+    paddingHorizontal: 24,
+    backgroundColor: '#FFFFFF'
   },
-  modalCloseBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    justifyContent: 'center',
-    alignItems: 'center',
+  backBtn: { 
+    width: 44, height: 44, borderRadius: 15, 
+    justifyContent: 'center', alignItems: 'flex-start'
   },
-  modalTitle: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  modalScrollView: {
-    flex: 1,
-    width: '100%',
-  },
-  modalImageContainer: {
-    width: width,
-    height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000000',
-  },
-  modalImage: {
-    width: '100%',
-    height: '100%',
-  },
+  headerTitleContainer: { alignItems: 'center' },
+  headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  headerSubtitle: { fontSize: 12, color: COLORS.secondary, fontFamily: FONT_SANS, marginTop: 2 },
+  shareBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'flex-end' },
 
-  content: { padding: 20 },
-  mainInfoCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, elevation: 10, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 20 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
-  titleArea: { flex: 1 },
-  breedRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
-  breedName: { fontSize: 22, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  verifiedBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: COLORS.emerald + '15', paddingHorizontal: 8, paddingVertical: 4, borderRadius: 8, marginLeft: 10 },
-  verifiedText: { color: COLORS.emerald, fontSize: 8, fontWeight: '900', marginLeft: 4 },
-  locationRow: { flexDirection: 'row', alignItems: 'center', marginTop: 5 },
-  locationText: { fontSize: 12, color: COLORS.secondary, marginLeft: 5, fontWeight: '600' },
+  scrollContent: { paddingHorizontal: 24, paddingTop: 10, paddingBottom: 110 },
   
-  priceArea: { alignItems: 'flex-end' },
-  priceText: { fontSize: 24, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SANS },
-  negText: { fontSize: 10, color: COLORS.emerald, fontWeight: '800', marginTop: 2 },
-  
-  divider: { height: 1, backgroundColor: COLORS.border, marginVertical: 20 },
-  
-  statsGrid: { flexDirection: 'row', justifyContent: 'space-between' },
-  statItem: { alignItems: 'center', flex: 1 },
-  statIconBox: { width: 44, height: 44, borderRadius: 14, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', marginBottom: 8 },
-  statLab: { fontSize: 8, fontWeight: '800', color: COLORS.secondary, letterSpacing: 0.5 },
-  statVal: { fontSize: 11, fontWeight: '900', color: COLORS.primary, marginTop: 2 },
+  imageContainer: { 
+    height: 220, borderRadius: 24, overflow: 'hidden', 
+    marginBottom: 20,
+    elevation: 3, shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.04, shadowRadius: 8
+  },
+  cowImage: { width: '100%', height: '100%' },
 
-  section: { marginTop: 30 },
-  sectionTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, marginBottom: 15 },
-  descCard: { backgroundColor: 'white', borderRadius: 25, padding: 20, borderLeftWidth: 4, borderLeftColor: COLORS.primary },
-  descText: { fontSize: 14, color: COLORS.secondary, lineHeight: 22, fontWeight: '500' },
+  tabBar: { 
+    flexDirection: 'row', borderBottomWidth: 1.5, borderBottomColor: '#E5E7EB', 
+    paddingBottom: 8, marginBottom: 20, justifyContent: 'space-between'
+  },
+  tabBtn: { paddingVertical: 8, paddingHorizontal: 4 },
+  tabBtnActive: { borderBottomWidth: 3, borderBottomColor: '#16A34A' },
+  tabText: { fontSize: 14, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SANS },
+  tabTextActive: { color: '#16A34A', fontWeight: '900' },
 
-  healthCard: { backgroundColor: 'white', borderRadius: 25, padding: 15, elevation: 4, shadowColor: '#000', shadowOpacity: 0.03 },
-  healthRow: { flexDirection: 'row', alignItems: 'center', padding: 10 },
-  healthInfo: { flex: 1, marginLeft: 15 },
-  healthLab: { fontSize: 10, color: COLORS.secondary, fontWeight: '700' },
-  healthVal: { fontSize: 14, color: COLORS.primary, fontWeight: '800', marginTop: 2 },
-  hDivider: { height: 1, backgroundColor: COLORS.border, marginHorizontal: 10 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 15 },
+  gridCell: { 
+    width: (width - 63) / 2, backgroundColor: '#FFFFFF', 
+    borderRadius: 20, padding: 16, borderWidth: 1.5, borderColor: COLORS.border,
+    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
+  },
+  cellLabel: { fontSize: 12, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SANS },
+  cellValue: { fontSize: 15, fontWeight: '900', color: COLORS.darkGreen, marginTop: 6, fontFamily: FONT_SERIF },
 
-  sellerCard: { backgroundColor: 'white', borderRadius: 25, padding: 15, flexDirection: 'row', alignItems: 'center', elevation: 4, shadowOpacity: 0.03 },
-  sellerAvatar: { width: 55, height: 55, borderRadius: 18, backgroundColor: COLORS.background },
-  sellerDetails: { flex: 1, marginLeft: 15 },
-  sellerName: { fontSize: 17, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  ratingBox: { flexDirection: 'row', alignItems: 'center', marginTop: 4 },
-  ratingText: { fontSize: 11, color: COLORS.secondary, fontWeight: '700', marginLeft: 5 },
-  viewProfile: { width: 40, height: 40, justifyContent: 'center', alignItems: 'center' },
+  tabPlaceholder: { 
+    backgroundColor: '#FFFFFF', borderRadius: 20, padding: 25, 
+    justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: COLORS.border
+  },
+  placeholderText: { fontSize: 13, color: COLORS.secondary, lineHeight: 20, textAlign: 'center', fontFamily: FONT_SANS },
 
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
-    backgroundColor: 'white', padding: 20, borderTopWidth: 1, borderTopColor: COLORS.border,
-    flexDirection: 'row', paddingBottom: Platform.OS === 'ios' ? 40 : 25,
-    zIndex: 10,
+    padding: 24, backgroundColor: '#FFFFFF', flexDirection: 'row', gap: 12
   },
-  buyBtn: { flex: 1.5, height: 60, borderRadius: 20, backgroundColor: COLORS.accent, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginRight: 15, elevation: 5, shadowColor: COLORS.accent, shadowOpacity: 0.3, shadowOffset: { width: 0, height: 4 }, shadowRadius: 5 },
-  buyText: { color: COLORS.primary, fontWeight: '900', marginLeft: 10, letterSpacing: 1 },
-  callBtn: { flex: 1, height: 60, borderRadius: 20, backgroundColor: COLORS.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 5, shadowColor: COLORS.primary, shadowOpacity: 0.3, shadowOffset: { width: 0, height: 4 }, shadowRadius: 5 },
-  callText: { color: 'white', fontWeight: '900', marginLeft: 10, letterSpacing: 1 }
+  editBtn: { 
+    flex: 1, height: 56, backgroundColor: '#FFFFFF', borderRadius: 28, 
+    justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#16A34A'
+  },
+  editBtnText: { fontSize: 15, fontWeight: '900', color: '#16A34A', fontFamily: FONT_SANS },
+  recordBtn: { 
+    flex: 2.2, height: 56, backgroundColor: '#16A34A', borderRadius: 28, 
+    flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
+    elevation: 3, shadowColor: '#16A34A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.15, shadowRadius: 8
+  },
+  recordBtnText: { fontSize: 15, fontWeight: '900', color: '#FFFFFF', fontFamily: FONT_SANS }
 });
 
 export default AnimalDetailsScreen;

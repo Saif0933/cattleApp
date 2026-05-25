@@ -11,22 +11,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  border: '#EEEEEE',
-  sky: '#0EA5E9',
-  gold: '#FFB800',
-};
-
 const OrderHistoryScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const pastOrders = [
     {
       id: 'ELT-721092',
@@ -59,9 +52,10 @@ const OrderHistoryScreen = ({ navigation }: any) => {
 
   const StatusBadge = ({ status }: { status: string }) => {
     const isDelivered = status === 'Delivered';
+    const activeColor = isDelivered ? COLORS.emerald : (COLORS.medical || '#0EA5E9');
     return (
-      <View style={[styles.badge, { backgroundColor: isDelivered ? COLORS.accent + '15' : COLORS.sky + '15' }]}>
-        <Text style={[styles.badgeText, { color: isDelivered ? COLORS.accent : COLORS.sky }]}>{status.toUpperCase()}</Text>
+      <View style={[styles.badge, { backgroundColor: activeColor + '15' }]}>
+        <Text style={[styles.badgeText, { color: activeColor }]}>{status.toUpperCase()}</Text>
       </View>
     );
   };
@@ -95,7 +89,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.surface} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -123,7 +117,7 @@ const OrderHistoryScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
     height: 60, 
@@ -131,7 +125,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
     elevation: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5
   },
@@ -142,12 +138,14 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingBottom: 50 },
 
   orderCard: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 25, 
     padding: 20, 
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 4,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.05, shadowRadius: 15
+    shadowColor: '#000', shadowOffset: { width: 0, height: 5 }, shadowOpacity: COLORS.isDark ? 0.2 : 0.05, shadowRadius: 15
   },
   orderHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
   orderId: { fontSize: 15, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SANS },

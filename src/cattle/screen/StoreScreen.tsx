@@ -13,20 +13,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFC',
-  surface: '#FFFFFF',
-};
-
 const StoreScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const [searchQuery, setSearchQuery] = useState('');
 
   const stores = [
@@ -118,28 +113,29 @@ const StoreScreen = ({ navigation }: any) => {
   );
 
   const getTagColors = (tag: string) => {
+    const isDark = COLORS.isDark;
     switch (tag) {
       case 'CANINE EXPERT':
       case 'LIVESTOCK BREEDER':
-        return { bg: '#E8F5E9', text: '#2E7D32' }; // Light Green / Dark Green
+        return { bg: isDark ? '#1C3322' : '#E8F5E9', text: isDark ? '#81C784' : '#2E7D32' };
       case 'AVIAN SPECIALIST':
       case 'FELINE EXPERT':
-        return { bg: '#E3F2FD', text: '#1565C0' }; // Light Blue / Dark Blue
+        return { bg: isDark ? '#1C2C3E' : '#E3F2FD', text: isDark ? '#64B5F6' : '#1565C0' };
       case 'AQUATIC EXPERT':
       case 'EXOTIC PETS':
-        return { bg: '#F3E5F5', text: '#6A1B9A' }; // Light Purple / Dark Purple
+        return { bg: isDark ? '#2E1E33' : '#F3E5F5', text: isDark ? '#BA68C8' : '#6A1B9A' };
       case 'EQUINE SPECIALIST':
       case 'PET SUPPLIES':
-        return { bg: '#FFF3E0', text: '#E65100' }; // Light Orange / Dark Orange
+        return { bg: isDark ? '#3D281D' : '#FFF3E0', text: isDark ? '#FFB74D' : '#E65100' };
       case 'POULTRY SPECIALIST':
       default:
-        return { bg: '#FFFDE7', text: '#F57F17' }; // Light Yellow / Dark Yellow
+        return { bg: isDark ? '#3C3B1E' : '#FFFDE7', text: isDark ? '#FFF59D' : '#F57F17' };
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Top Header */}
       <View style={styles.topHeader}>
@@ -150,24 +146,24 @@ const StoreScreen = ({ navigation }: any) => {
           activeOpacity={0.7}
           onPress={() => navigation.navigate('OrderSummary')}
         >
-          <Icon name="shopping-cart" size={24} color="#1E293B" />
+          <Icon name="shopping-cart" size={24} color={COLORS.primary} />
         </TouchableOpacity>
       </View>
 
       {/* Search Input Bar */}
       <View style={styles.searchBarContainer}>
         <View style={styles.searchInputWrapper}>
-          <Icon name="search" size={22} color="#64748B" />
+          <Icon name="search" size={22} color={COLORS.secondary} />
           <TextInput
             style={styles.searchInput}
             placeholder="Search livestock, feed, or stores..."
-            placeholderTextColor="#64748B"
+            placeholderTextColor={COLORS.secondary + '80'}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
           {searchQuery !== '' && (
             <TouchableOpacity onPress={() => setSearchQuery('')} activeOpacity={0.7}>
-              <Icon name="close" size={18} color="#64748B" />
+              <Icon name="close" size={18} color={COLORS.secondary} />
             </TouchableOpacity>
           )}
         </View>
@@ -208,7 +204,7 @@ const StoreScreen = ({ navigation }: any) => {
                   </View>
                 </View>
 
-                <Icon name="chevron-right" size={24} color="#94A3B8" style={styles.chevronIcon} />
+                <Icon name="chevron-right" size={24} color={COLORS.secondary} style={styles.chevronIcon} />
               </TouchableOpacity>
             );
           })}
@@ -220,8 +216,8 @@ const StoreScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
   
   topHeader: {
     height: 60,
@@ -229,22 +225,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  locationText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#475569',
-    marginLeft: 4,
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
   brandTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SERIF,
   },
   cartBtn: {
@@ -254,27 +242,28 @@ const styles = StyleSheet.create({
   searchBarContainer: {
     paddingHorizontal: 20,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: COLORS.border,
   },
   searchInputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 48,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: COLORS.background,
     borderRadius: 12,
     paddingHorizontal: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: COLORS.border,
   },
   searchInput: {
     flex: 1,
     height: '100%',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontSize: 14,
     marginLeft: 10,
     fontFamily: FONT_SANS,
+    paddingVertical: 0,
   },
 
   scrollContent: {
@@ -285,7 +274,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#0F291E',
+    color: COLORS.primary,
     marginBottom: 16,
     fontFamily: FONT_SANS,
   },
@@ -295,23 +284,23 @@ const styles = StyleSheet.create({
   storeCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     padding: 12,
     marginBottom: 16,
-    shadowColor: '#0F291E',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.04,
     shadowRadius: 10,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: COLORS.border,
   },
   imageWrapper: {
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: COLORS.border,
     overflow: 'hidden',
   },
   storeImage: {
@@ -332,7 +321,7 @@ const styles = StyleSheet.create({
   storeName: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SANS,
     flex: 1,
     marginRight: 8,
@@ -344,12 +333,12 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#475569',
+    color: COLORS.secondary,
     marginLeft: 4,
   },
   storeDesc: {
     fontSize: 12,
-    color: '#64748B',
+    color: COLORS.secondary,
     lineHeight: 18,
     marginTop: 4,
     fontWeight: '500',

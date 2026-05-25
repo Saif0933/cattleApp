@@ -11,21 +11,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-  sky: '#0EA5E9',
-};
-
 const OrderTrackingScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { orderId = 'ELT-492102' } = route.params || {};
 
   const steps = [
@@ -52,7 +45,7 @@ const OrderTrackingScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.surface} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -128,7 +121,7 @@ const OrderTrackingScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
     height: 60, 
@@ -136,7 +129,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    backgroundColor: 'white'
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
   headerTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   backBtn: { width: 40, height: 40, justifyContent: 'center' },
@@ -153,7 +148,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     shadowColor: COLORS.primary,
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.2,
+    shadowOpacity: COLORS.isDark ? 0.3 : 0.2,
     shadowRadius: 15,
     marginBottom: 25
   },
@@ -163,35 +158,35 @@ const styles = StyleSheet.create({
   heroSubtitle: { color: 'rgba(255,255,255,0.8)', fontSize: 12, marginTop: 4, fontWeight: '500' },
   heroIconBox: { width: 64, height: 64, borderRadius: 20, backgroundColor: 'rgba(255,255,255,0.1)', justifyContent: 'center', alignItems: 'center' },
 
-  trackerCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, elevation: 3 },
+  trackerCard: { backgroundColor: COLORS.surface, borderRadius: 30, padding: 25, elevation: 3, borderWidth: 1, borderColor: COLORS.border },
   sectionTitle: { fontSize: 16, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   
   stepContainer: { flexDirection: 'row', height: 80 },
   leftCol: { alignItems: 'center', width: 40 },
-  stepIcon: { width: 36, height: 36, borderRadius: 12, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', zIndex: 2 },
-  stepIconDone: { backgroundColor: COLORS.emerald },
-  stepIconActive: { backgroundColor: COLORS.sky },
-  connector: { width: 2, flex: 1, backgroundColor: COLORS.background, marginVertical: 4 },
+  stepIcon: { width: 36, height: 36, borderRadius: 12, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', zIndex: 2, borderWidth: 1, borderColor: COLORS.border },
+  stepIconDone: { backgroundColor: COLORS.emerald, borderColor: COLORS.emerald },
+  stepIconActive: { backgroundColor: COLORS.medical || '#0EA5E9', borderColor: COLORS.medical || '#0EA5E9' },
+  connector: { width: 2, flex: 1, backgroundColor: COLORS.border, marginVertical: 4 },
   connectorDone: { backgroundColor: COLORS.emerald },
   
   stepInfo: { marginLeft: 15, paddingTop: 5 },
-  stepTitle: { fontSize: 15, fontWeight: '800', color: COLORS.secondary },
-  activeText: { color: COLORS.sky, fontWeight: '900' },
+  stepTitle: { fontSize: 15, fontWeight: '800', color: COLORS.primary },
+  activeText: { color: COLORS.medical || '#0EA5E9', fontWeight: '900' },
   stepTime: { fontSize: 12, color: COLORS.secondary, opacity: 0.6, marginTop: 2, fontWeight: '600' },
 
-  detailsCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, marginTop: 20, elevation: 3 },
+  detailsCard: { backgroundColor: COLORS.surface, borderRadius: 30, padding: 25, marginTop: 20, elevation: 3, borderWidth: 1, borderColor: COLORS.border },
   detailItem: { flexDirection: 'row', alignItems: 'center', marginTop: 15 },
   detailText: { fontSize: 13, color: COLORS.primary, fontWeight: '700', marginLeft: 12, flex: 1 },
 
   supportBanner: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    backgroundColor: COLORS.background, 
+    backgroundColor: COLORS.surface, 
     borderRadius: 20, 
     padding: 20, 
     marginTop: 20,
     borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.03)'
+    borderColor: COLORS.border,
   },
   supportTitle: { fontSize: 14, fontWeight: '900', color: COLORS.primary },
   supportSub: { fontSize: 11, color: COLORS.secondary, marginTop: 2, fontWeight: '600' },
@@ -201,8 +196,10 @@ const styles = StyleSheet.create({
     bottom: 0, 
     left: 0, 
     right: 0, 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     padding: 20, 
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
     paddingBottom: Platform.OS === 'ios' ? 40 : 20
   },
   doneBtn: { 
@@ -212,7 +209,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'center'
   },
-  doneBtnText: { color: 'white', fontWeight: '900', fontSize: 14, letterSpacing: 1 }
+  doneBtnText: { color: COLORS.surface, fontWeight: '900', fontSize: 14, letterSpacing: 1 }
 });
 
 export default OrderTrackingScreen;

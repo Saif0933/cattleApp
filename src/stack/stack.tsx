@@ -6,9 +6,14 @@ import BottomTabNavigator from '../cattle/screen/navigation/BottomTab';
 import DoctorBottomTab from '../doctor/screen/navigation/DoctorBottomTab';
 
 // Auth Screens
+import SplashScreen from '../auth/SplashScreen';
+import OnboardingScreen from '../auth/OnboardingScreen';
 import LoginScreen from '../auth/LoginScreen';
 import OTPScreen from '../auth/OTPScreen';
 import SelectRoleScreen from '../auth/SelectRoleScreen';
+import SelectLocationScreen from '../auth/SelectLocationScreen';
+
+// Cattle Screens
 import AddCattle from '../cattle/screen/AddCattle';
 import DoctorBookingScreen from '../cattle/screen/DoctorBookingScreen';
 import BreedingScreen from '../cattle/screen/BreedingScreen';
@@ -26,17 +31,26 @@ import HealthRecordScreen from '../cattle/screen/HealthRecordScreen';
 import AnimalDetailsScreen from '../cattle/screen/AnimalDetailsScreen';
 import CommunityScreen from '../cattle/screen/CommunityScreen';
 import ProductDetailsScreen from '../cattle/screen/ProductDetailsScreen';
+import ReportsScreen from '../cattle/screen/ReportsScreen';
+import MilkProductionReportScreen from '../cattle/screen/MilkProductionReportScreen';
+import FarmProfileScreen from '../cattle/screen/FarmProfileScreen';
+import RemindersScreen from '../cattle/screen/RemindersScreen';
+import SettingsScreen from '../cattle/screen/SettingsScreen';
+import HelpSupportScreen from '../cattle/screen/HelpSupportScreen';
 
 const Stack = createNativeStackNavigator();
 
 const AppStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
       
-      {/* Auth Flow */}
+      {/* App Branding & Auth Flow */}
+      <Stack.Screen name="Splash" component={SplashScreen} />
+      <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       <Stack.Screen name="SelectRole" component={SelectRoleScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="OTP" component={OTPScreen} />
+      <Stack.Screen name="SelectLocation" component={SelectLocationScreen} />
 
       {/* Main App Redirections */}
       <Stack.Screen name="MainApp" component={BottomTabNavigator} />
@@ -58,6 +72,12 @@ const AppStack = () => {
       <Stack.Screen name="AnimalDetails" component={AnimalDetailsScreen} />
       <Stack.Screen name="ProductDetails" component={ProductDetailsScreen} />
       <Stack.Screen name="Community" component={CommunityScreen} />
+      <Stack.Screen name="Reports" component={ReportsScreen} />
+      <Stack.Screen name="MilkProductionReport" component={MilkProductionReportScreen} />
+      <Stack.Screen name="FarmProfile" component={FarmProfileScreen} />
+      <Stack.Screen name="Reminders" component={RemindersScreen} />
+      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
 
     </Stack.Navigator>
   );

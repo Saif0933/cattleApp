@@ -12,27 +12,20 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  gold: '#FFB800',
-  sky: '#0EA5E9',
-};
-
 const StoreStockScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { category = 'Dogs' } = route.params || {};
 
   const stockData: any = {
     'Dogs': [
-      { id: 1, title: 'German Shepherd Puppy', price: '450', info: 'Vaccinated | 3 Months | Male', desc: 'High-pedigree German Shepherd pup with excellent health records and guard-dog potential.', image: 'https://images.unsplash.com/photo-1589944172368-c241f3facc28?auto=format&fit=crop&q=80&w=600' },
+      { id: 1, title: 'German Shepherd Puppy', price: '450', info: 'Vaccinated | 3 Months | Male', desc: 'High-pedigree German Shepherd pup with excellent health records and guard-dog potential.', image: 'https://images.unsplash.com/photo-1589944173175-400144838d05?auto=format&fit=crop&q=80&w=600' },
       { id: 2, title: 'Golden Retriever', price: '580', info: 'Show Quality | 4 Months', desc: 'Friendly and energetic retriever, perfect for families. Fully dewormed.', image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=600' },
     ],
     'Birds': [
@@ -60,7 +53,6 @@ const StoreStockScreen = ({ route, navigation }: any) => {
       { id: 20, title: 'Dumbo Rat (Double Rex)', price: '25.00', info: 'Hand Tamed | 2 Months | Female', desc: 'Highly intelligent and extremely social Dumbo Rat with soft curly Rex fur. Friendly, dewormed, and fully acclimated to handling.', image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&q=80&w=600' },
       { id: 21, title: 'Fancy Rat (Agouti Husky)', price: '18.00', info: 'Active | 3 Months | Male', desc: 'Sleek Agouti Husky pattern Fancy Rat. Playful, alert, and very active. Raised on premium rodent grains and organic greens.', image: 'https://images.unsplash.com/photo-1548767791-514684d06bb8?auto=format&fit=crop&q=80&w=600' },
     ],
-    // Fallback data for other categories
   };
 
   const currentStock = stockData[category] || [
@@ -85,7 +77,7 @@ const StoreStockScreen = ({ route, navigation }: any) => {
           onPress={() => navigation.navigate('OrderSummary', { product: { ...item, brand: category } })}
         >
           <Text style={styles.buyBtnText}>INSPECT & BUY</Text>
-          <Icon name="chevron-right" size={18} color="white" />
+          <Icon name="chevron-right" size={18} color={COLORS.surface} />
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
@@ -93,7 +85,7 @@ const StoreStockScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -119,7 +111,7 @@ const StoreStockScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
     height: 80, 
@@ -128,33 +120,33 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
     backgroundColor: COLORS.background,
-    // elevation: 2,
-    // shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5
   },
   headerTitleContainer: { flex: 1, marginLeft: 15 },
   headerSub: { fontSize: 10, fontWeight: '900', color: COLORS.accent, letterSpacing: 1.5 },
   headerTitle: { fontSize: 22, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, marginTop: 2 },
-  backBtn: { width: 44, height: 44, borderRadius: 15, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
+  backBtn: { width: 44, height: 44, borderRadius: 15, backgroundColor: COLORS.surface, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   
   countBadge: { backgroundColor: COLORS.primary, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 8 },
-  countText: { color: 'white', fontSize: 10, fontWeight: '900', fontFamily: FONT_SANS },
+  countText: { color: COLORS.surface, fontSize: 10, fontWeight: '900', fontFamily: FONT_SANS },
 
   scrollContent: { padding: 20, paddingBottom: 50 },
 
   card: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 30, 
     marginBottom: 25,
     overflow: 'hidden',
     elevation: 5,
-    shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.08, shadowRadius: 15
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: COLORS.isDark ? 0.2 : 0.08, shadowRadius: 15
   },
   cardImage: { width: '100%', height: 220 },
   cardContent: { padding: 20 },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   itemTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, flex: 1 },
   itemPrice: { fontSize: 20, fontWeight: '900', color: COLORS.accent, fontFamily: FONT_SANS },
-  itemInfo: { fontSize: 12, fontWeight: '700', color: COLORS.sky, marginTop: 5, letterSpacing: 0.5 },
+  itemInfo: { fontSize: 12, fontWeight: '700', color: COLORS.sky || '#0EA5E9', marginTop: 5, letterSpacing: 0.5 },
   itemDesc: { fontSize: 13, color: COLORS.secondary, marginTop: 10, lineHeight: 20, fontWeight: '500' },
 
   buyBtn: { 
@@ -168,7 +160,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.2, shadowRadius: 8
   },
-  buyBtnText: { color: 'white', fontSize: 13, fontWeight: '900', marginRight: 8, letterSpacing: 1 }
+  buyBtnText: { color: COLORS.surface, fontSize: 13, fontWeight: '900', marginRight: 8, letterSpacing: 1 }
 });
 
 export default StoreStockScreen;

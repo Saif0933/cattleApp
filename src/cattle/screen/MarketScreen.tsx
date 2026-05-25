@@ -12,21 +12,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width, height } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-  sky: '#0EA5E9',
-};
-
 const MarketplaceScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const [activeFilter, setActiveFilter] = useState('ALL');
   const filters = [
     { label: 'All', value: 'ALL' },
@@ -223,7 +216,7 @@ const MarketplaceScreen = ({ navigation }: any) => {
           <View style={styles.typeBadge}><Text style={styles.typeText}>{type}</Text></View>
           {verified && (
             <View style={styles.verifiedBadge}>
-              <Icon name="verified" size={14} color={COLORS.accent} />
+              <Icon name="verified" size={14} color={COLORS.gold} />
             </View>
           )}
         </View>
@@ -253,7 +246,7 @@ const MarketplaceScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Elite Marketplace</Text>
         <TouchableOpacity style={styles.cartBtn}>
@@ -289,25 +282,25 @@ const MarketplaceScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white' },
-  header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white' },
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
+  header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.surface, borderBottomWidth: 1, borderBottomColor: COLORS.border },
   headerTitle: { fontSize: 24, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
-  cartBtn: { width: 45, height: 45, borderRadius: 12, backgroundColor: '#F1F5F3', justifyContent: 'center', alignItems: 'center' },
-  filterSection: { paddingVertical: 15, backgroundColor: 'white' },
-  filterPill: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: 12, marginRight: 10, backgroundColor: '#F1F5F3' },
-  activePill: { backgroundColor: COLORS.primary },
+  cartBtn: { width: 45, height: 45, borderRadius: 12, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
+  filterSection: { paddingVertical: 15, backgroundColor: COLORS.surface, borderBottomWidth: 1, borderBottomColor: COLORS.border },
+  filterPill: { paddingHorizontal: 20, paddingVertical: 8, borderRadius: 12, marginRight: 10, backgroundColor: COLORS.background, borderWidth: 1, borderColor: COLORS.border },
+  activePill: { backgroundColor: COLORS.primary, borderColor: COLORS.primary },
   filterText: { fontSize: 13, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SERIF },
-  activeFilterText: { color: 'white' },
-  promoBanner: { backgroundColor: COLORS.emerald, padding: 15, borderRadius: 15, flexDirection: 'row', alignItems: 'center', marginHorizontal: 20, marginBottom: 20 },
+  activeFilterText: { color: COLORS.surface },
+  promoBanner: { backgroundColor: COLORS.emerald, padding: 15, borderRadius: 15, flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   promoText: { color: 'white', fontSize: 12, fontWeight: '700', marginLeft: 10, flex: 1, fontFamily: FONT_SERIF },
   grid: { gap: 20 },
-  modernCard: { backgroundColor: 'white', borderRadius: 25, overflow: 'hidden', elevation: 4 },
+  modernCard: { backgroundColor: COLORS.surface, borderRadius: 25, overflow: 'hidden', elevation: 4, borderWidth: 1, borderColor: COLORS.border },
   cardImg: { width: '100%', height: 180 },
   cardOverlay: { position: 'absolute', top: 15, left: 15, right: 15, flexDirection: 'row', justifyContent: 'space-between' },
   typeBadge: { backgroundColor: 'rgba(0,0,0,0.6)', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
   typeText: { color: 'white', fontSize: 9, fontWeight: '900' },
-  verifiedBadge: { backgroundColor: 'white', width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  verifiedBadge: { backgroundColor: COLORS.surface, width: 24, height: 24, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
   content: { padding: 20 },
   brandRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   brandName: { fontSize: 10, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1, fontFamily: FONT_SERIF },
@@ -318,7 +311,7 @@ const styles = StyleSheet.create({
   priceText: { fontSize: 22, fontWeight: '900', color: COLORS.primary },
   commissionText: { fontSize: 10, color: COLORS.emerald, fontWeight: '700', marginTop: 2 },
   buyBtn: { backgroundColor: COLORS.primary, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 12 },
-  buyBtnText: { color: 'white', fontWeight: '900', fontSize: 12 }
+  buyBtnText: { color: COLORS.surface, fontWeight: '900', fontSize: 12 }
 });
 
 export default MarketplaceScreen;

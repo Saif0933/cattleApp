@@ -12,22 +12,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFC',
-  surface: '#FFFFFF',
-  gold: '#FFB800',
-  border: '#E2E8F0',
-};
-
 const ProductDetailsScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { product } = route.params || {};
   const [qty, setQty] = useState(1);
 
@@ -55,7 +48,7 @@ const ProductDetailsScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.surface} />
       
       {/* Premium Header */}
       <View style={styles.header}>
@@ -133,12 +126,12 @@ const ProductDetailsScreen = ({ route, navigation }: any) => {
           <View style={styles.section}>
             <View style={styles.guaranteeCard}>
               <View style={styles.guaranteeRow}>
-                <Icon name="verified" size={20} color={COLORS.accent} />
+                <Icon name="verified" size={20} color={COLORS.emerald} />
                 <Text style={styles.guaranteeText}>100% Premium Quality Certified</Text>
               </View>
               <View style={styles.divider} />
               <View style={styles.guaranteeRow}>
-                <Icon name="local-shipping" size={20} color={COLORS.accent} />
+                <Icon name="local-shipping" size={20} color={COLORS.emerald} />
                 <Text style={styles.guaranteeText}>Safe and Sanitized Secure Transport</Text>
               </View>
             </View>
@@ -170,57 +163,51 @@ const ProductDetailsScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
-  
   header: {
     height: 60,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: COLORS.border,
   },
-  
   backCircle: { 
     width: 40, 
     height: 40, 
     borderRadius: 20, 
-    backgroundColor: '#F8FAFC', 
+    backgroundColor: COLORS.background, 
     justifyContent: 'center', 
-    alignItems: 'center' 
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  
   cartCircle: { 
     width: 40, 
     height: 40, 
     justifyContent: 'center', 
     alignItems: 'center' 
   },
-  
   headerTitle: { 
     fontSize: 18, 
     fontWeight: '900', 
     color: COLORS.primary, 
     fontFamily: FONT_SERIF 
   },
-  
   scrollContent: { paddingBottom: 130 },
-  
   imageWrapper: { 
     width: '100%', 
     height: 320, 
-    backgroundColor: '#E2E8F0',
+    backgroundColor: COLORS.border,
     position: 'relative',
   },
-  
   productImage: { 
     width: '100%', 
     height: '100%' 
   },
-  
   categoryBadge: { 
     position: 'absolute', 
     top: 20, 
@@ -230,28 +217,26 @@ const styles = StyleSheet.create({
     paddingVertical: 6, 
     borderRadius: 8 
   },
-  
   categoryText: { 
-    color: '#FFFFFF', 
+    color: COLORS.surface, 
     fontSize: 10, 
     fontWeight: '900', 
     letterSpacing: 1,
     fontFamily: FONT_SANS 
   },
-  
   content: { padding: 20 },
-  
   detailsCard: { 
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 24, 
     padding: 20, 
     elevation: 4, 
-    shadowColor: '#0F291E', 
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 6 }, 
-    shadowOpacity: 0.05, 
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.05, 
     shadowRadius: 12,
   },
-  
   titleText: { 
     fontSize: 22, 
     fontWeight: '900', 
@@ -259,64 +244,57 @@ const styles = StyleSheet.create({
     fontFamily: FONT_SERIF,
     lineHeight: 28,
   },
-  
   priceRow: { 
     flexDirection: 'row', 
     justifyContent: 'space-between', 
     alignItems: 'center', 
     marginTop: 12 
   },
-  
   priceText: { 
     fontSize: 26, 
     fontWeight: '900', 
-    color: COLORS.accent, 
+    color: COLORS.emerald, 
     fontFamily: FONT_SANS 
   },
-  
   ratingBadge: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    backgroundColor: '#FFFBEB', 
+    backgroundColor: COLORS.isDark ? '#2E2214' : '#FFFBEB', 
     paddingHorizontal: 10, 
     paddingVertical: 5, 
     borderRadius: 8 
   },
-  
   ratingText: { 
     fontSize: 11, 
     fontWeight: '700', 
-    color: '#B45309', 
+    color: COLORS.gold, 
     marginLeft: 4,
     fontFamily: FONT_SANS 
   },
-  
   specsContainer: { 
     flexDirection: 'row', 
     flexWrap: 'wrap', 
     gap: 8, 
     marginTop: 16,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: COLORS.border,
     paddingTop: 16,
   },
-  
   specPill: { 
-    backgroundColor: '#F1F5F9', 
+    backgroundColor: COLORS.background, 
     paddingHorizontal: 12, 
     paddingVertical: 6, 
-    borderRadius: 8 
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  
   specText: { 
     fontSize: 11, 
     fontWeight: '700', 
     color: COLORS.secondary,
     fontFamily: FONT_SANS 
   },
-  
   section: { marginTop: 24 },
-  
   sectionTitle: { 
     fontSize: 16, 
     fontWeight: '900', 
@@ -325,43 +303,44 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingLeft: 4,
   },
-  
   descBox: { 
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 18, 
     padding: 16,
     borderLeftWidth: 4,
     borderLeftColor: COLORS.primary,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  
   descText: { 
     fontSize: 13, 
     color: COLORS.secondary, 
     lineHeight: 20, 
     fontWeight: '500' 
   },
-  
   qtyContainer: { 
     flexDirection: 'row', 
     alignItems: 'center', 
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: COLORS.surface, 
     alignSelf: 'flex-start',
     borderRadius: 14,
     padding: 6,
     elevation: 2,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     shadowColor: '#000',
     shadowOpacity: 0.02,
   },
-  
   qtyBtn: { 
     width: 38, 
     height: 38, 
     borderRadius: 10, 
-    backgroundColor: '#F1F5F9', 
+    backgroundColor: COLORS.background, 
     alignItems: 'center', 
-    justifyContent: 'center' 
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  
   qtyVal: { 
     fontSize: 16, 
     fontWeight: '900', 
@@ -369,18 +348,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     fontFamily: FONT_SANS 
   },
-  
   guaranteeCard: { 
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 20, 
     padding: 16,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  
   guaranteeRow: { 
     flexDirection: 'row', 
     alignItems: 'center' 
   },
-  
   guaranteeText: { 
     fontSize: 12, 
     fontWeight: '700', 
@@ -388,34 +366,30 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontFamily: FONT_SANS 
   },
-  
   divider: { 
     height: 1, 
-    backgroundColor: '#F1F5F9', 
+    backgroundColor: COLORS.border, 
     marginVertical: 12 
   },
-  
   footer: { 
     position: 'absolute', 
     bottom: 0, 
     left: 0, 
     right: 0, 
-    backgroundColor: '#FFFFFF', 
+    backgroundColor: COLORS.surface, 
     paddingHorizontal: 20, 
     paddingTop: 16,
     paddingBottom: Platform.OS === 'ios' ? 36 : 20,
     borderTopWidth: 1, 
-    borderTopColor: '#F1F5F9',
+    borderTopColor: COLORS.border,
     flexDirection: 'row', 
     alignItems: 'center',
     justifyContent: 'space-between',
     zIndex: 10,
   },
-  
   priceCalculationBox: {
     justifyContent: 'center',
   },
-  
   totalLabel: {
     fontSize: 10,
     color: COLORS.secondary,
@@ -423,7 +397,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     fontFamily: FONT_SANS,
   },
-  
   totalPriceText: {
     fontSize: 22,
     fontWeight: '900',
@@ -431,7 +404,6 @@ const styles = StyleSheet.create({
     fontFamily: FONT_SANS,
     marginTop: 2,
   },
-  
   buyBtn: { 
     backgroundColor: COLORS.primary, 
     height: 54, 
@@ -446,9 +418,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2, 
     shadowRadius: 8
   },
-  
   buyBtnText: { 
-    color: '#FFFFFF', 
+    color: COLORS.surface, 
     fontSize: 13, 
     fontWeight: '900', 
     marginLeft: 8, 

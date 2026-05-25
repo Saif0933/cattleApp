@@ -3,6 +3,7 @@ import React from 'react';
 import { Alert, PermissionsAndroid, StyleSheet, TouchableOpacity, View, Platform } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../../context/useTheme';
 
 // Import Doctor screens
 import DoctorHome from '../DoctorHome';
@@ -11,20 +12,14 @@ import DoctorMarket from '../PharmacyScreen';
 import RecordeScreen from '../RecordeScreen';
 
 const Tab = createBottomTabNavigator();
-
-const COLORS = {
-  primary: '#0F291E',
-  medical: '#0EA5E9',
-  secondary: '#635d5a',
-  background: '#ffffff',
-  accent: '#FFB800',
-};
-
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
 const PrescribePlaceholder = () => null;
 
 const DoctorBottomTab = () => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const openCamera = async () => {
     try {
       const granted = await PermissionsAndroid.request(
@@ -76,7 +71,9 @@ const DoctorBottomTab = () => {
         tabBarStyle: {
           height: 70,
           paddingBottom: 12,
-          backgroundColor: COLORS.background,
+          backgroundColor: COLORS.surface,
+          borderTopWidth: 1,
+          borderTopColor: COLORS.border,
         },
         tabBarLabelStyle: {
           fontSize: 10,
@@ -113,7 +110,7 @@ const DoctorBottomTab = () => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   cameraButtonContainer: { top: -20, justifyContent: 'center', alignItems: 'center' },
   cameraButton: {
     width: 60, height: 60, borderRadius: 30, backgroundColor: COLORS.medical,

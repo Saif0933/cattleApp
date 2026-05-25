@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Alert,
   Dimensions,
-  Image,
   Modal,
   Platform,
   ScrollView,
@@ -15,402 +14,207 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  border: '#E2E8F0',
-  sky: '#0EA5E9',
-  gold: '#FFB800',
-  crimson: '#EF4444',
-};
-
 const HealthRecordScreen = ({ route, navigation }: any) => {
-  const { animalName = 'Oliver', breed = 'Persian Cat' } = route.params || {};
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+  
+  const [modalVisible, setModalVisible] = useState(false);
 
-  // Dynamically resolve avatar and vitals based on params
-  const avatarImage = animalName === 'Billy'
-    ? 'https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400'
-    : 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400';
+  // Form Fields
+  const [selectedCattle, setSelectedCattle] = useState('Gauri (Cow)');
+  const [recordType, setRecordType] = useState('Vaccination');
+  const [medicine, setMedicine] = useState('FMD Vaccine');
+  const [date, setDate] = useState('May 25, 2024');
+  const [dueDate, setDueDate] = useState('Jun 25, 2024');
+  const [notes, setNotes] = useState('');
 
-  const animalWeight = animalName === 'Billy' ? '65.0 kg' : '4.5 kg';
-  const animalAge = animalName === 'Billy' ? '2 Years' : '1 Year';
+  const stats = [
+    { value: '12', label: 'Due for Checkup', color: '#F59E0B', bg: '#FEF3C7' },
+    { value: '8', label: 'Sick Animals', color: '#EF4444', bg: '#FEE2E2' },
+    { value: '128', label: 'Total Records', color: '#16A34A', bg: '#DCFCE7' }
+  ];
 
-  // React State for medical history records
-  const [medicalRecords, setMedicalRecords] = useState([
-    {
-      id: "rec-1",
-      animalProfileId: "profile-1",
-      recordType: "VACCINATION",
-      title: "Rabies Booster",
-      diagnosis: "Routine rabies vaccination",
-      treatment: "Administered 1ml Rabisin booster dose",
-      date: "2026-10-12T00:00:00Z",
-      veterinarian: "Dr. Sarah Mitchell",
-      attachments: ["https://images.unsplash.com/photo-1587854692152-cbe660dbbb88?auto=format&fit=crop&q=80&w=400"],
-
-      // legacy compat
-      type: 'Vaccination',
-      doctor: 'Dr. Sarah Wilson',
-      status: 'Completed',
-      icon: 'vaccines',
-      color: COLORS.accent,
-    },
-    {
-      id: "rec-2",
-      animalProfileId: "profile-1",
-      recordType: "GENERAL_CHECKUP",
-      title: "General Wellness Exam",
-      diagnosis: "Healthy condition, no anomalies found",
-      treatment: "Regular deworming tablet given",
-      date: "2026-09-05T00:00:00Z",
-      veterinarian: "Dr. Sarah Mitchell",
-      attachments: [],
-
-      // legacy compat
-      type: 'Checkup',
-      doctor: 'Dr. Sarah Wilson',
-      status: 'Completed',
-      icon: 'medical-services',
-      color: COLORS.sky,
-    },
-    {
-      id: "rec-3",
-      animalProfileId: "profile-1",
-      recordType: "SURGERY",
-      title: "Dental Cleaning",
-      diagnosis: "Mild plaque buildup",
-      treatment: "Ultrasonic scaling and polishing",
-      date: "2026-08-15T00:00:00Z",
-      veterinarian: "Elite Vet Clinic",
-      attachments: [],
-
-      // legacy compat
-      type: 'Surgery',
-      doctor: 'Elite Vet Clinic',
-      status: 'Completed',
-      icon: 'content-cut',
-      color: COLORS.gold,
-    },
-    {
-      id: "rec-4",
-      animalProfileId: "profile-1",
-      recordType: "DIAGNOSTIC_TEST",
-      title: "Blood Work (Full Panel)",
-      diagnosis: "Normal blood chemistry",
-      treatment: "No clinical action required",
-      date: "2026-07-20T00:00:00Z",
-      veterinarian: "LabCentral Laboratories",
-      attachments: ["https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?auto=format&fit=crop&q=80&w=400"],
-
-      // legacy compat
-      type: 'Laboratory',
-      doctor: 'LabCentral',
-      status: 'Completed',
-      icon: 'biotech',
-      color: COLORS.primary,
-    }
+  const [upcomingTasks, setUpcomingTasks] = useState([
+    { title: 'Vaccination - FMD', date: 'May 25, 2024', desc: '5 Cattle', icon: 'vaccines', iconColor: '#16A34A', iconBg: '#DCFCE7' },
+    { title: 'Deworming', date: 'May 25, 2024', desc: '8 Cattle', icon: 'bug-report', iconColor: '#A855F7', iconBg: '#F3E8FF' },
+    { title: 'Health Checkup', date: 'May 25, 2024', desc: '6 Cattle', icon: 'healing', iconColor: '#3B82F6', iconBg: '#DBEAFE' }
   ]);
 
-  // Form State
-  const [modalVisible, setModalVisible] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
-  const [newVet, setNewVet] = useState('');
-  const [newDiagnosis, setNewDiagnosis] = useState('');
-  const [newTreatment, setNewTreatment] = useState('');
-  const [newType, setNewType] = useState('VACCINATION');
-
-  const getRecordBadgeConfig = (type: string) => {
-    switch (type.toUpperCase()) {
-      case 'VACCINATION':
-        return { bg: '#ECFDF5', text: '#10B981', label: 'Vaccination' };
-      case 'GENERAL_CHECKUP':
-      case 'CHECKUP':
-        return { bg: '#E0F2FE', text: '#0EA5E9', label: 'Checkup' };
-      case 'SURGERY':
-        return { bg: '#FEF2F2', text: '#EF4444', label: 'Surgery' };
-      default:
-        return { bg: '#F3E8FF', text: '#8B5CF6', label: 'Diagnostic' };
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!newTitle.trim()) {
-      Alert.alert('Required Field', 'Please enter a title for the health record.');
+  const handleSaveRecord = () => {
+    if (!medicine.trim()) {
+      Alert.alert('Incomplete Form', 'Please enter the Vaccine/Medicine name.');
       return;
     }
 
-    const typeLabel = newType === 'VACCINATION' ? 'Vaccination' : newType === 'GENERAL_CHECKUP' ? 'Checkup' : newType === 'SURGERY' ? 'Surgery' : 'Diagnostic';
-    const typeIcon = newType === 'VACCINATION' ? 'vaccines' : newType === 'GENERAL_CHECKUP' ? 'medical-services' : newType === 'SURGERY' ? 'content-cut' : 'biotech';
-    const typeColor = newType === 'VACCINATION' ? COLORS.accent : newType === 'GENERAL_CHECKUP' ? COLORS.sky : newType === 'SURGERY' ? COLORS.crimson : COLORS.primary;
+    setUpcomingTasks([
+      { 
+        title: `${recordType} - ${medicine}`, 
+        date: date, 
+        desc: selectedCattle, 
+        icon: recordType === 'Vaccination' ? 'vaccines' : 'healing', 
+        iconColor: '#16A34A', 
+        iconBg: '#DCFCE7' 
+      },
+      ...upcomingTasks
+    ]);
 
-    const newRecord = {
-      id: `rec-${Date.now()}`,
-      animalProfileId: "profile-1",
-      recordType: newType,
-      title: newTitle.trim(),
-      diagnosis: newDiagnosis.trim() || 'No diagnostic notes added.',
-      treatment: newTreatment.trim() || 'No treatments recorded.',
-      date: new Date().toISOString(),
-      veterinarian: newVet.trim() || 'Dr. Self / Owner',
-      attachments: [],
-
-      // legacy compat
-      type: typeLabel,
-      doctor: newVet.trim() || 'Dr. Self / Owner',
-      status: 'Completed',
-      icon: typeIcon,
-      color: typeColor,
-    };
-
-    setMedicalRecords([newRecord, ...medicalRecords]);
-
-    // Reset fields & Close modal
-    setNewTitle('');
-    setNewVet('');
-    setNewDiagnosis('');
-    setNewTreatment('');
-    setNewType('VACCINATION');
     setModalVisible(false);
-  };
-
-  const RecordItem = ({ record, isLast }: { record: any; isLast: boolean }) => {
-    const type = record.recordType || record.type;
-    const title = record.title;
-    
-    const dateVal = record.date ? new Date(record.date).toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    }) : record.date;
-
-    const doctor = record.veterinarian || record.doctor;
-    const color = record.color || (record.recordType === 'VACCINATION' ? COLORS.accent : record.recordType === 'GENERAL_CHECKUP' ? COLORS.sky : COLORS.gold);
-    const icon = record.icon || (record.recordType === 'VACCINATION' ? 'vaccines' : record.recordType === 'GENERAL_CHECKUP' ? 'medical-services' : 'biotech');
-
-    const badge = getRecordBadgeConfig(type);
-
-    return (
-      <View style={styles.timelineItem}>
-        {!isLast && <View style={styles.timelineLine} />}
-        <View style={[styles.typeIconBox, { borderColor: color }]}>
-          <Icon name={icon} size={18} color={color} />
-        </View>
-        <View style={styles.recordCard}>
-          <View style={styles.recordHeader}>
-            <View style={[styles.badgeContainer, { backgroundColor: badge.bg }]}>
-              <Text style={[styles.badgeText, { color: badge.text }]}>{badge.label.toUpperCase()}</Text>
-            </View>
-            <Text style={styles.recordDate}>{dateVal}</Text>
-          </View>
-          <Text style={styles.recordTitle}>{title}</Text>
-          
-          <Text style={styles.diagnosisText}>{record.diagnosis}</Text>
-          
-          <View style={styles.doctorRow}>
-            <Icon name="person" size={14} color="#64748B" />
-            <Text style={styles.doctorName}>{doctor}</Text>
-          </View>
-          
-          <TouchableOpacity style={styles.viewDocBtn} activeOpacity={0.7}>
-            <Icon name="description" size={14} color="#64748B" style={{ marginRight: 6 }} />
-            <Text style={styles.viewDocText}>View Report Details</Text>
-            <Icon name="chevron-right" size={16} color={COLORS.accent} style={{ marginLeft: 'auto' }} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
+    Alert.alert('Success', 'Health record saved successfully!');
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
-      {/* Premium Header */}
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          onPress={() => navigation.goBack()} 
-          style={styles.circleButton}
-          activeOpacity={0.7}
-        >
-          <Icon name="arrow-back" size={20} color={COLORS.primary} />
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back-ios" size={20} color={COLORS.darkGreen} style={{ marginLeft: 6 }} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Health Records</Text>
-        <TouchableOpacity style={styles.circleButton} activeOpacity={0.7}>
-          <Icon name="share" size={20} color={COLORS.primary} />
+        <Text style={styles.headerTitle}>Health</Text>
+        <TouchableOpacity style={styles.bellBtn}>
+          <Icon name="notifications-none" size={24} color={COLORS.darkGreen} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
-        {/* Animal Profile Summary Card */}
-        <View style={styles.profileCard}>
-          <View style={styles.imageWrapper}>
-            <Image 
-              source={{ uri: avatarImage }} 
-              style={styles.avatar} 
-              resizeMode="cover"
-            />
-          </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.animalName}>{animalName}</Text>
-            <Text style={styles.breedText}>{breed}</Text>
-            <View style={styles.vitalRow}>
-              <View style={styles.vitalItem}>
-                <Icon name="monitor-weight" size={12} color="#64748B" />
-                <Text style={styles.vitalText}>{animalWeight}</Text>
-              </View>
-              <View style={styles.vitalItem}>
-                <Icon name="event" size={12} color="#64748B" />
-                <Text style={styles.vitalText}>{animalAge}</Text>
-              </View>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Horizontal Stats Row */}
+        <View style={styles.statsRow}>
+          {stats.map((stat, idx) => (
+            <View key={idx} style={[styles.statCell, { backgroundColor: stat.bg }]}>
+              <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
             </View>
-          </View>
+          ))}
         </View>
 
-        {/* Timeline Section */}
-        <View style={styles.historySection}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Medical History</Text>
-            <TouchableOpacity 
-              style={styles.addRecordBtn} 
-              activeOpacity={0.7}
-              onPress={() => setModalVisible(true)}
-            >
-              <Icon name="add" size={16} color="white" />
-              <Text style={styles.addRecordText}>Add Record</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.timelineContainer}>
-            {medicalRecords.map((record, index) => (
-              <RecordItem 
-                key={record.id} 
-                record={record} 
-                isLast={index === medicalRecords.length - 1} 
-              />
+        {/* Upcoming Tasks Section */}
+        <View style={styles.tasksSection}>
+          <Text style={styles.sectionTitle}>Upcoming Tasks</Text>
+          <View style={styles.tasksList}>
+            {upcomingTasks.map((task, idx) => (
+              <View key={idx} style={styles.taskCard}>
+                <View style={[styles.taskIconBox, { backgroundColor: task.iconBg }]}>
+                  <Icon name={task.icon} size={24} color={task.iconColor} />
+                </View>
+                <View style={styles.taskDetails}>
+                  <Text style={styles.taskTitle}>{task.title}</Text>
+                  <Text style={styles.taskSub}>{task.desc}</Text>
+                </View>
+                <Text style={styles.taskDate}>{task.date}</Text>
+              </View>
             ))}
           </View>
         </View>
-
       </ScrollView>
 
-      {/* Pop up form modal for adding record */}
+      {/* Add Health Record CTA Button */}
+      <TouchableOpacity 
+        style={styles.addBtn}
+        onPress={() => setModalVisible(true)}
+        activeOpacity={0.85}
+      >
+        <Icon name="add" size={24} color="#FFFFFF" />
+        <Text style={styles.addBtnText}>Add Health Record</Text>
+      </TouchableOpacity>
+
+      {/* Add Health Record Overlay Modal */}
       <Modal
         visible={modalVisible}
-        transparent={true}
         animationType="slide"
+        transparent={true}
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <View style={styles.modalFormHeader}>
-              <Text style={styles.modalTitle}>New Health Record</Text>
-              <TouchableOpacity 
-                onPress={() => setModalVisible(false)}
-                style={styles.modalCloseBtn}
-              >
-                <Icon name="close" size={20} color={COLORS.primary} />
+            
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Add Health Record</Text>
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Icon name="close" size={24} color={COLORS.darkGreen} />
               </TouchableOpacity>
             </View>
 
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.modalForm}>
-              {/* Record Type Selector */}
-              <Text style={styles.inputLabel}>Record Type</Text>
-              <View style={styles.typeSelectorRow}>
-                {[
-                  { key: 'VACCINATION', label: 'Vaccination', color: COLORS.accent },
-                  { key: 'GENERAL_CHECKUP', label: 'Checkup', color: COLORS.sky },
-                  { key: 'SURGERY', label: 'Surgery', color: COLORS.crimson },
-                  { key: 'DIAGNOSTIC_TEST', label: 'Diagnostic', color: '#8B5CF6' }
-                ].map((item) => {
-                  const isSelected = newType === item.key;
-                  return (
-                    <TouchableOpacity
-                      key={item.key}
-                      style={[
-                        styles.typeOptionChip,
-                        isSelected && { backgroundColor: item.color, borderColor: item.color }
-                      ]}
-                      onPress={() => setNewType(item.key)}
-                      activeOpacity={0.7}
-                    >
-                      <Text style={[styles.typeOptionText, isSelected && { color: '#FFFFFF' }]}>
-                        {item.label}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
+            <ScrollView contentContainerStyle={styles.modalForm} showsVerticalScrollIndicator={false}>
+              
+              <Text style={styles.label}>Cattle</Text>
+              <View style={styles.pickerBox}>
+                <TextInput 
+                  style={styles.pickerInput}
+                  value={selectedCattle}
+                  onChangeText={setSelectedCattle}
+                  placeholder="Gauri (Cow)"
+                  placeholderTextColor={COLORS.secondary + '60'}
+                />
+                <Icon name="arrow-drop-down" size={24} color={COLORS.secondary} />
               </View>
 
-              {/* Title Input */}
-              <Text style={styles.inputLabel}>Record Title *</Text>
-              <TextInput
-                placeholder="e.g. Rabies Booster Dose"
-                placeholderTextColor="#94A3B8"
-                style={styles.textInput}
-                value={newTitle}
-                onChangeText={setNewTitle}
-              />
-
-              {/* Vet Input */}
-              <Text style={styles.inputLabel}>Veterinarian / Clinic</Text>
-              <TextInput
-                placeholder="e.g. Dr. Sarah Mitchell"
-                placeholderTextColor="#94A3B8"
-                style={styles.textInput}
-                value={newVet}
-                onChangeText={setNewVet}
-              />
-
-              {/* Diagnosis Input */}
-              <Text style={styles.inputLabel}>Diagnosis / Observations</Text>
-              <TextInput
-                placeholder="e.g. Healthy condition, no anomalies found"
-                placeholderTextColor="#94A3B8"
-                style={[styles.textInput, styles.textArea]}
-                multiline={true}
-                numberOfLines={3}
-                value={newDiagnosis}
-                onChangeText={setNewDiagnosis}
-              />
-
-              {/* Treatment Input */}
-              <Text style={styles.inputLabel}>Treatment / Actions Administered</Text>
-              <TextInput
-                placeholder="e.g. Administered booster shot"
-                placeholderTextColor="#94A3B8"
-                style={[styles.textInput, styles.textArea]}
-                multiline={true}
-                numberOfLines={3}
-                value={newTreatment}
-                onChangeText={setNewTreatment}
-              />
-
-              {/* Action Buttons */}
-              <View style={styles.modalButtonsRow}>
-                <TouchableOpacity 
-                  style={styles.modalCancelBtn} 
-                  onPress={() => setModalVisible(false)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.modalCancelText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  style={styles.modalSaveBtn} 
-                  onPress={handleSubmit}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.modalSaveText}>Save Record</Text>
-                </TouchableOpacity>
+              <Text style={styles.label}>Record Type</Text>
+              <View style={styles.pickerBox}>
+                <TextInput 
+                  style={styles.pickerInput}
+                  value={recordType}
+                  onChangeText={setRecordType}
+                  placeholder="Vaccination"
+                  placeholderTextColor={COLORS.secondary + '60'}
+                />
+                <Icon name="arrow-drop-down" size={24} color={COLORS.secondary} />
               </View>
+
+              <Text style={styles.label}>Vaccine / Medicine</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput 
+                  style={styles.input}
+                  placeholder="FMD Vaccine"
+                  placeholderTextColor={COLORS.secondary + '60'}
+                  value={medicine}
+                  onChangeText={setMedicine}
+                />
+              </View>
+
+              <Text style={styles.label}>Date</Text>
+              <TouchableOpacity 
+                style={styles.datePickerBtn}
+                onPress={() => setDate('May 25, 2024')}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.dateText}>{date}</Text>
+                <Icon name="calendar-today" size={20} color={COLORS.secondary} />
+              </TouchableOpacity>
+
+              <Text style={styles.label}>Next Due Date</Text>
+              <TouchableOpacity 
+                style={styles.datePickerBtn}
+                onPress={() => setDueDate('Jun 25, 2024')}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.dateText}>{dueDate}</Text>
+                <Icon name="calendar-today" size={20} color={COLORS.secondary} />
+              </TouchableOpacity>
+
+              <Text style={styles.label}>Notes (Optional)</Text>
+              <View style={[styles.inputWrapper, styles.textAreaWrapper]}>
+                <TextInput 
+                  style={[styles.input, styles.textArea]}
+                  placeholder="Enter notes"
+                  placeholderTextColor={COLORS.secondary + '60'}
+                  multiline
+                  numberOfLines={3}
+                  value={notes}
+                  onChangeText={setNotes}
+                />
+              </View>
+
+              <TouchableOpacity style={styles.saveBtn} onPress={handleSaveRecord} activeOpacity={0.85}>
+                <Text style={styles.saveText}>Save Record</Text>
+              </TouchableOpacity>
 
             </ScrollView>
           </View>
@@ -421,359 +225,111 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
-  
-  header: { 
-    height: 60, 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    justifyContent: 'space-between', 
-    paddingHorizontal: 20,
-    backgroundColor: '#F8FAFC',
-  },
-  circleButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  header: {
+    height: 70,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    backgroundColor: '#FFFFFF'
   },
-  headerTitle: { 
-    fontSize: 18, 
-    fontWeight: '900', 
-    color: '#0F291E', 
-    fontFamily: FONT_SERIF 
+  backBtn: { 
+    width: 44, height: 44, borderRadius: 15, 
+    justifyContent: 'center', alignItems: 'flex-start'
   },
+  headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  bellBtn: { width: 44, height: 44, justifyContent: 'center', alignItems: 'flex-end' },
 
-  scrollContent: { 
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 50 
-  },
+  scrollContent: { paddingHorizontal: 24, paddingTop: 15, paddingBottom: 110 },
 
-  profileCard: { 
-    backgroundColor: '#FFFFFF', 
-    borderRadius: 24, 
-    padding: 16, 
-    flexDirection: 'row', 
-    alignItems: 'center',
-    marginBottom: 24,
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
-    shadowColor: '#0F291E',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.04,
-    shadowRadius: 12,
-    elevation: 2,
-  },
-  imageWrapper: {
-    width: 72,
-    height: 72,
-    borderRadius: 16,
-    overflow: 'hidden',
-    backgroundColor: '#E2E8F0',
-  },
-  avatar: { 
-    width: '100%', 
-    height: '100%' 
-  },
-  profileInfo: { 
-    marginLeft: 16, 
-    flex: 1 
-  },
-  animalName: { 
-    fontSize: 20, 
-    fontWeight: '900', 
-    color: '#0F291E', 
-    fontFamily: FONT_SERIF 
-  },
-  breedText: { 
-    fontSize: 12, 
-    color: '#64748B', 
-    marginTop: 2, 
-    fontWeight: '600',
-    fontFamily: FONT_SANS,
-  },
-  vitalRow: { 
-    flexDirection: 'row', 
-    marginTop: 8 
-  },
-  vitalItem: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginRight: 10, 
-    backgroundColor: '#F1F5F9', 
-    paddingHorizontal: 8, 
-    paddingVertical: 3, 
-    borderRadius: 8 
-  },
-  vitalText: { 
-    fontSize: 10, 
-    fontWeight: '800', 
-    color: '#334155', 
-    marginLeft: 4,
-    fontFamily: FONT_SANS,
-  },
-
-  historySection: { 
-    marginTop: 8 
-  },
-  sectionHeader: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: 20 
-  },
-  sectionTitle: { 
-    fontSize: 18, 
-    fontWeight: '800', 
-    color: '#0F291E', 
-    fontFamily: FONT_SANS 
-  },
-  addRecordBtn: { 
-    backgroundColor: '#0F291E', 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    paddingHorizontal: 12, 
-    paddingVertical: 8, 
-    borderRadius: 10 
-  },
-  addRecordText: { 
-    color: '#FFFFFF', 
-    fontSize: 11, 
-    fontWeight: '800', 
-    marginLeft: 4,
-    fontFamily: FONT_SANS,
-  },
-
-  timelineContainer: { 
-    paddingLeft: 6 
-  },
-  timelineItem: { 
-    flexDirection: 'row', 
-    marginBottom: 20 
-  },
-  timelineLine: { 
-    position: 'absolute', 
-    left: 17, 
-    top: 36, 
-    bottom: -20, 
-    width: 2, 
-    backgroundColor: '#E2E8F0' 
-  },
-  typeIconBox: { 
-    width: 36, 
-    height: 36, 
-    borderRadius: 18, 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    zIndex: 1, 
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-  },
-  recordCard: { 
+  statsRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 10 },
+  statCell: { 
     flex: 1, 
-    backgroundColor: '#FFFFFF', 
-    borderRadius: 20, 
-    padding: 16, 
-    marginLeft: 14, 
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
-    shadowColor: '#0F291E',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.03,
-    shadowRadius: 8,
-    elevation: 2 
+    borderRadius: 18, padding: 14, 
+    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
   },
-  recordHeader: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: 8 
-  },
-  badgeContainer: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  badgeText: {
-    fontSize: 9,
-    fontWeight: '800',
-    fontFamily: FONT_SANS,
-  },
-  recordDate: { 
-    fontSize: 11, 
-    color: '#94A3B8', 
-    fontWeight: '600',
-    fontFamily: FONT_SANS,
-  },
-  recordTitle: { 
-    fontSize: 16, 
-    fontWeight: '800', 
-    color: '#0F291E', 
-    fontFamily: FONT_SANS 
-  },
-  diagnosisText: {
-    fontSize: 12,
-    color: '#64748B',
-    marginTop: 4,
-    fontFamily: FONT_SANS,
-    lineHeight: 16,
-  },
-  doctorRow: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 8 
-  },
-  doctorName: { 
-    fontSize: 12, 
-    color: '#64748B', 
-    marginLeft: 4, 
-    fontWeight: '600',
-    fontFamily: FONT_SANS,
-  },
-  viewDocBtn: { 
-    flexDirection: 'row', 
-    alignItems: 'center', 
-    marginTop: 14, 
-    borderTopWidth: 1, 
-    borderTopColor: '#F1F5F9', 
-    paddingTop: 10 
-  },
-  viewDocText: { 
-    fontSize: 11, 
-    fontWeight: '800', 
-    color: '#10B981', 
-    marginRight: 4,
-    fontFamily: FONT_SANS,
-  },
+  statValue: { fontSize: 24, fontWeight: '900', fontFamily: FONT_SERIF },
+  statLabel: { fontSize: 10, fontWeight: '800', color: COLORS.secondary, marginTop: 4, fontFamily: FONT_SANS },
 
-  // Modal styles
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(15, 41, 30, 0.4)',
-    justifyContent: 'flex-end',
-  },
-  modalContent: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 24,
-    maxHeight: '90%',
-  },
-  modalFormHeader: {
+  tasksSection: { marginTop: 30 },
+  sectionTitle: { fontSize: 18, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginBottom: 15 },
+
+  tasksList: { gap: 15 },
+  taskCard: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  modalTitle: {
-    fontSize: 20,
-    fontWeight: '900',
-    color: '#0F291E',
-    fontFamily: FONT_SERIF,
-  },
-  modalCloseBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F1F5F9',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalForm: {
-    paddingBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#3D5447',
-    marginBottom: 8,
-    marginTop: 14,
-    fontFamily: FONT_SANS,
-  },
-  typeSelectorRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 4,
-  },
-  typeOptionChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    backgroundColor: '#FFFFFF',
-  },
-  typeOptionText: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: '#64748B',
-    fontFamily: FONT_SANS,
-  },
-  textInput: {
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    fontSize: 14,
-    color: '#0F291E',
-    fontFamily: FONT_SANS,
-    backgroundColor: '#F8FAFA',
-  },
-  textArea: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  modalButtonsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 30,
-    gap: 12,
-  },
-  modalCancelBtn: {
-    flex: 1,
-    height: 52,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
+    padding: 16,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
   },
-  modalCancelText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#64748B',
-    fontFamily: FONT_SANS,
-  },
-  modalSaveBtn: {
-    flex: 1.5,
-    height: 52,
-    borderRadius: 14,
-    backgroundColor: '#0F291E',
-    justifyContent: 'center',
+  taskIconBox: { width: 46, height: 46, borderRadius: 15, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
+  taskDetails: { flex: 1 },
+  taskTitle: { fontSize: 15, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  taskSub: { fontSize: 11, color: COLORS.secondary, marginTop: 3, fontWeight: '600', fontFamily: FONT_SANS },
+  taskDate: { fontSize: 12, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SANS },
+
+  addBtn: {
+    position: 'absolute',
+    bottom: 30,
+    left: 24,
+    right: 24,
+    height: 60,
+    backgroundColor: '#16A34A',
+    borderRadius: 28,
+    flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#0F291E',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
+    justifyContent: 'center',
     elevation: 4,
+    shadowColor: '#16A34A',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10
   },
-  modalSaveText: {
-    fontSize: 14,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    fontFamily: FONT_SANS,
+  addBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '900', marginLeft: 8, letterSpacing: 0.5, fontFamily: FONT_SANS },
+
+  // Modal Styles
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(15,41,30,0.5)', justifyContent: 'flex-end' },
+  modalContent: { 
+    height: '82%', backgroundColor: '#FFFFFF', 
+    borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24 
   },
+  modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
+  modalTitle: { fontSize: 20, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  
+  modalForm: { gap: 15, paddingBottom: 50 },
+  label: { fontSize: 13, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SANS, marginBottom: 2 },
+  inputWrapper: {
+    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    borderWidth: 1.5, borderColor: COLORS.border, paddingHorizontal: 16,
+    justifyContent: 'center'
+  },
+  input: { flex: 1, fontSize: 15, fontWeight: '600', color: COLORS.darkGreen, fontFamily: FONT_SANS },
+  textAreaWrapper: { height: 100, paddingVertical: 10 },
+  textArea: { height: '100%', textAlignVertical: 'top' },
+  pickerBox: { 
+    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18,
+    borderWidth: 1.5, borderColor: COLORS.border
+  },
+  pickerInput: { flex: 1, fontSize: 15, fontWeight: '600', color: COLORS.darkGreen, fontFamily: FONT_SANS },
+  datePickerBtn: { 
+    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18,
+    borderWidth: 1.5, borderColor: COLORS.border
+  },
+  dateText: { fontSize: 15, fontWeight: '600', color: COLORS.darkGreen, fontFamily: FONT_SANS },
+  
+  saveBtn: { 
+    height: 60, backgroundColor: '#16A34A', borderRadius: 28, 
+    justifyContent: 'center', alignItems: 'center', marginTop: 15,
+    elevation: 4, shadowColor: '#16A34A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10
+  },
+  saveText: { fontSize: 16, fontWeight: '900', color: '#FFFFFF', fontFamily: FONT_SANS }
 });
 
 export default HealthRecordScreen;

@@ -13,38 +13,15 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useUser } from '../../context/UserContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  border: '#E5E7EB',
-};
-
-const InputField = ({ label, value, onChangeText, placeholder, icon, keyboardType = 'default' }: any) => (
-  <View style={styles.inputContainer}>
-    <Text style={styles.label}>{label}</Text>
-    <View style={styles.inputWrapper}>
-      <Icon name={icon} size={20} color={COLORS.secondary} style={styles.inputIcon} />
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChangeText={onChangeText}
-        placeholder={placeholder}
-        placeholderTextColor="#9CA3AF"
-        keyboardType={keyboardType}
-      />
-    </View>
-  </View>
-);
-
 const UpdateAddressScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { address: globalAddress, updateAddress } = useUser();
   const [address, setAddress] = useState(globalAddress);
 
@@ -53,9 +30,26 @@ const UpdateAddressScreen = ({ navigation }: any) => {
     navigation.goBack();
   };
 
+  const InputField = ({ label, value, onChangeText, placeholder, icon, keyboardType = 'default' }: any) => (
+    <View style={styles.inputContainer}>
+      <Text style={styles.label}>{label}</Text>
+      <View style={styles.inputWrapper}>
+        <Icon name={icon} size={20} color={COLORS.secondary} style={styles.inputIcon} />
+        <TextInput
+          style={styles.input}
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          placeholderTextColor={COLORS.secondary + '70'}
+          keyboardType={keyboardType}
+        />
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -146,7 +140,7 @@ const UpdateAddressScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
     height: 60, 
@@ -154,7 +148,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
     elevation: 2,
     shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 5
   },
@@ -164,7 +160,7 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 24, paddingBottom: 120 },
   sectionSubtitle: { fontSize: 13, color: COLORS.secondary, lineHeight: 20, marginBottom: 25, fontWeight: '500' },
 
-  formCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, elevation: 5, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.05, shadowRadius: 15 },
+  formCard: { backgroundColor: COLORS.surface, borderRadius: 30, padding: 25, elevation: 5, borderWidth: 1, borderColor: COLORS.border, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: COLORS.isDark ? 0.2 : 0.05, shadowRadius: 15 },
   
   inputContainer: { marginBottom: 20 },
   label: { fontSize: 13, fontWeight: '800', color: COLORS.primary, marginBottom: 8, marginLeft: 2, fontFamily: FONT_SANS },
@@ -188,7 +184,7 @@ const styles = StyleSheet.create({
 
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
-    backgroundColor: 'white', padding: 20, borderTopWidth: 1, borderTopColor: COLORS.border,
+    backgroundColor: COLORS.surface, padding: 20, borderTopWidth: 1, borderTopColor: COLORS.border,
     paddingBottom: Platform.OS === 'ios' ? 40 : 25
   },
   saveBtn: { 
@@ -197,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
     elevation: 10, shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 5 }, shadowOpacity: 0.3, shadowRadius: 10
   },
-  saveBtnText: { color: 'white', fontSize: 15, fontWeight: '900', letterSpacing: 1 }
+  saveBtnText: { color: COLORS.surface, fontSize: 15, fontWeight: '900', letterSpacing: 1 }
 });
 
 export default UpdateAddressScreen;

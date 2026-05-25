@@ -1,562 +1,315 @@
 import React, { useState } from 'react';
 import {
-  Alert,
   Dimensions,
   Image,
+  Modal,
   Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  gold: '#FFB800',
-  sky: '#0EA5E9',
-};
-
 const BreedingScreen = ({ navigation }: any) => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
 
-  const breeders = [
-    {
-      id: "srv-1",
-      breederId: "breeder-1",
-      title: "Thunder",
-      breed: "Pure Arabian Horse",
-      category: "HORSE",
-      price: 1500.00,
-      images: ["https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Elite breeding services for purebred horses.",
-      tag: "EQUINE EXPERT",
-      breeder: {
-        businessName: "Elite Stables",
-        experienceYears: 10,
-        address: "Karnal, Haryana",
-        isVerified: true,
-        rating: 4.8
-      },
-      name: "Thunder",
-      owner: "Elite Stables",
-      fee: "1,500",
-      image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-2",
-      breederId: "breeder-2",
-      title: "Rex",
-      breed: "German Shepherd",
-      category: "DOG",
-      price: 500.00,
-      images: ["https://images.unsplash.com/photo-1589944173175-400144838d05?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "High agility German Shepherd for guard dog breeding.",
-      tag: "CANINE EXPERT",
-      breeder: {
-        businessName: "Apex K9 Studios",
-        experienceYears: 6,
-        address: "Chandigarh",
-        isVerified: true,
-        rating: 4.7
-      },
-      name: "Rex",
-      owner: "Apex K9",
-      fee: "500",
-      image: "https://images.unsplash.com/photo-1589944173175-400144838d05?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-3",
-      breederId: "breeder-3",
-      title: "Aero",
-      breed: "Trained Blue Macaw",
-      category: "BIRDS",
-      price: 350.00,
-      images: ["https://images.unsplash.com/photo-1452570053594-1b985d6ea890?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Hand-reared breeding service for high-color Macaws.",
-      tag: "AVIAN SPECIALIST",
-      breeder: {
-        businessName: "Skyline Aviaries",
-        experienceYears: 8,
-        address: "Jaipur, Rajasthan",
-        isVerified: true,
-        rating: 4.9
-      },
-      name: "Aero",
-      owner: "Skyline Aviaries",
-      fee: "350",
-      image: "https://images.unsplash.com/photo-1452570053594-1b985d6ea890?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-4",
-      breederId: "breeder-4",
-      title: "Neptune",
-      breed: "Butterfly Koi",
-      category: "FISH",
-      price: 120.00,
-      images: ["https://images.unsplash.com/photo-1512411311534-118847053556?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Premium Butterfly Koi genetics for ornamental ponds.",
-      tag: "AQUATIC EXPERT",
-      breeder: {
-        businessName: "AquaZen Koi Farms",
-        experienceYears: 12,
-        address: "Kochi, Kerala",
-        isVerified: true,
-        rating: 4.8
-      },
-      name: "Neptune",
-      owner: "AquaZen Koi Farms",
-      fee: "120",
-      image: "https://images.unsplash.com/photo-1512411311534-118847053556?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-5",
-      breederId: "breeder-5",
-      title: "Sultan",
-      breed: "Jamnapari Goat",
-      category: "GOATS",
-      price: 400.00,
-      images: ["https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Pure Jamnapari stud with excellent breeding records.",
-      tag: "LIVESTOCK BREEDER",
-      breeder: {
-        businessName: "Hindustan Livestock",
-        experienceYears: 15,
-        address: "Karnal, Haryana",
-        isVerified: true,
-        rating: 4.9
-      },
-      name: "Sultan",
-      owner: "Hindustan Livestock",
-      fee: "400",
-      image: "https://images.unsplash.com/photo-1524024973431-2ad916746881?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-6",
-      breederId: "breeder-6",
-      title: "Cleo",
-      breed: "Persian Cat",
-      category: "CATS",
-      price: 300.00,
-      images: ["https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Show-quality triple-coat Persian cat breeding.",
-      tag: "FELINE EXPERT",
-      breeder: {
-        businessName: "Royal Cattery",
-        experienceYears: 5,
-        address: "Mumbai, Maharashtra",
-        isVerified: true,
-        rating: 4.6
-      },
-      name: "Cleo",
-      owner: "Royal Cattery",
-      fee: "300",
-      image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-7",
-      breederId: "breeder-7",
-      title: "Pip",
-      breed: "Dumbo Rat",
-      category: "SMALL_ANIMALS",
-      price: 50.00,
-      images: ["https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Tame Dumbo Rat stud service for premium pet lines.",
-      tag: "EXOTIC PETS",
-      breeder: {
-        businessName: "Pocket Pets Studio",
-        experienceYears: 4,
-        address: "Delhi NCR",
-        isVerified: true,
-        rating: 4.7
-      },
-      name: "Pip",
-      owner: "Pocket Pets Studio",
-      fee: "50",
-      image: "https://images.unsplash.com/photo-1425082661705-1834bfd09dca?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    },
-    {
-      id: "srv-8",
-      breederId: "breeder-8",
-      title: "Goldy",
-      breed: "Aseel Rooster",
-      category: "HENS",
-      price: 150.00,
-      images: ["https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&q=80&w=400"],
-      availability: "Available Now",
-      description: "Purebred fighter-line Aseel Rooster stud service.",
-      tag: "POULTRY SPECIALIST",
-      breeder: {
-        businessName: "Desi Farms",
-        experienceYears: 7,
-        address: "Ludhiana, Punjab",
-        isVerified: true,
-        rating: 4.8
-      },
-      name: "Goldy",
-      owner: "Desi Farms",
-      fee: "150",
-      image: "https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?auto=format&fit=crop&q=80&w=400",
-      verified: true
-    }
+  const [detailModalVisible, setDetailModalVisible] = useState(false);
+  const [selectedCow, setSelectedCow] = useState<any>(null);
+  const [modalTab, setModalTab] = useState('Breeding');
+
+  const stats = [
+    { value: '15', label: 'Heat Animals', color: '#EC4899', bg: '#FCE7F3' },
+    { value: '5', label: 'Pregnant', color: '#16A34A', bg: '#DCFCE7' },
+    { value: '7', label: 'Due for AI', color: '#F59E0B', bg: '#FEF3C7' },
+    { value: '3', label: 'Due for Calving', color: '#8B5CF6', bg: '#EDE9FE' }
   ];
 
-  const handleConnect = (name: string, owner: string) => {
-    Alert.alert(
-      "Connect with Breeder",
-      `Would you like to connect with ${owner} for breeding service with ${name}?\n\nPlatform Service Fee applies.`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { text: "Connect", onPress: () => Alert.alert("Success", "Request Sent! Breeder will contact you shortly.") }
-      ]
-    );
-  };
+  const recentAnimals = [
+    { name: 'Gauri', status: 'In Heat', date: 'May 24, 2024', image: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400', statusColor: '#EC4899', statusBg: '#FCE7F3' },
+    { name: 'Laxmi', status: 'Due for AI', date: 'May 24, 2024', image: 'https://images.unsplash.com/photo-1527153857715-3908f2bac5e8?auto=format&fit=crop&q=80&w=400', statusColor: '#F59E0B', statusBg: '#FEF3C7' },
+    { name: 'Rani', status: 'Pregnant', date: 'May 24, 2024', image: 'https://images.unsplash.com/photo-1563865436874-9aef32095ffd?auto=format&fit=crop&q=80&w=400', statusColor: '#16A34A', statusBg: '#DCFCE7' }
+  ];
 
-  const getTagColors = (tag: string) => {
-    const t = tag.toUpperCase();
-    if (t.includes('AVAILABLE')) return { bg: '#E0F2FE', text: '#0369A1' };
-    if (t.includes('VERIFIED')) return { bg: '#DCFCE7', text: '#15803D' };
-    if (t.includes('HORSE') || t.includes('EQUINE')) return { bg: '#FEE2E2', text: '#B91C1C' };
-    if (t.includes('DOG') || t.includes('CANINE')) return { bg: '#FEF3C7', text: '#B45309' };
-    if (t.includes('BIRD') || t.includes('AVIAN')) return { bg: '#E0F2FE', text: '#0369A1' };
-    if (t.includes('FISH') || t.includes('AQUATIC')) return { bg: '#E0F2FE', text: '#0284C7' };
-    if (t.includes('GOAT') || t.includes('LIVESTOCK')) return { bg: '#F0FDF4', text: '#16A34A' };
-    if (t.includes('CAT') || t.includes('FELINE')) return { bg: '#FAF5FF', text: '#7E22CE' };
-    if (t.includes('POULTRY') || t.includes('HEN')) return { bg: '#FFF7ED', text: '#EA580C' };
-    return { bg: '#F3E8FF', text: '#6B21A8' };
+  const handleOpenDetails = (cowName: string) => {
+    setSelectedCow({
+      name: cowName,
+      breed: 'HF Cross',
+      age: '3 Years',
+      heatDate: 'May 24, 2024',
+      aiDate: 'May 25, 2024',
+      semenBull: 'Abhimanyu',
+      status: 'Confirmed',
+      dueDate: 'Mar 03, 2025',
+      daysLeft: '280 Days',
+      image: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400'
+    });
+    setDetailModalVisible(true);
   };
-
-  const filteredBreeders = breeders.filter(b => {
-    const q = searchQuery.toLowerCase();
-    const name = (b.title || b.name || '').toLowerCase();
-    const breed = (b.breed || '').toLowerCase();
-    const owner = (b.breeder?.businessName || b.owner || '').toLowerCase();
-    const category = (b.category || '').toLowerCase();
-    return name.includes(q) || breed.includes(q) || owner.includes(q) || category.includes(q);
-  });
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
-      {/* Top Header */}
-      <View style={styles.topHeader}>
-        <TouchableOpacity 
-          style={styles.backButton} 
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-back" size={20} color={COLORS.primary} />
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => navigation.goBack()}>
+          <Icon name="arrow-back-ios" size={20} color={COLORS.darkGreen} style={{ marginLeft: 6 }} />
         </TouchableOpacity>
-
-        <Text style={styles.logoTitle}>AgriBreeding</Text>
-
-        <TouchableOpacity 
-          style={styles.cartButton} 
-          activeOpacity={0.7}
-          onPress={() => navigation.navigate('OrderSummary')}
-        >
-          <Icon name="shopping-cart" size={20} color={COLORS.primary} />
-        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Breeding</Text>
+        <View style={{ width: 44 }} />
       </View>
 
-      {/* Search Input Bar */}
-      <View style={styles.searchSection}>
-        <View style={styles.searchContainer}>
-          <Icon name="search" size={22} color={COLORS.secondary} style={styles.searchIcon} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search breeders, species, or studs..."
-            placeholderTextColor="#94A3B8"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Icon name="close" size={20} color={COLORS.secondary} style={styles.clearIcon} />
-            </TouchableOpacity>
-          )}
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* 2x2 Stats Grid */}
+        <View style={styles.statsGrid}>
+          {stats.map((stat, idx) => (
+            <View key={idx} style={[styles.statCell, { backgroundColor: stat.bg }]}>
+              <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
+              <Text style={styles.statLabel}>{stat.label}</Text>
+            </View>
+          ))}
         </View>
-      </View>
 
-      {/* Breeders List */}
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        
-        <Text style={styles.sectionTitle}>Top Rated Breeders</Text>
-
-        <View style={styles.listContainer}>
-          {filteredBreeders.map((b) => {
-            const name = b.title || b.name;
-            const breed = b.breed;
-            const owner = b.breeder?.businessName || b.owner;
-            const priceVal = typeof b.price === 'number' ? b.price.toLocaleString() : b.fee;
-            const image = b.images?.[0] || b.image;
-            const rating = b.breeder?.rating || 4.8;
-            const tagColors = getTagColors(b.tag || 'VERIFIED BREEDER');
-
-            return (
-              <TouchableOpacity
-                key={b.id}
+        {/* Recent Animals Section */}
+        <View style={styles.listSection}>
+          <Text style={styles.sectionTitle}>Recent Animals</Text>
+          <View style={styles.cardList}>
+            {recentAnimals.map((item, idx) => (
+              <TouchableOpacity 
+                key={idx} 
                 style={styles.card}
-                activeOpacity={0.7}
-                onPress={() => handleConnect(name, owner)}
+                onPress={() => handleOpenDetails(item.name)}
+                activeOpacity={0.8}
               >
-                <View style={styles.imageWrapper}>
-                  <Image source={{ uri: image }} style={styles.cardImg} resizeMode="cover" />
-                </View>
-                
-                <View style={styles.cardInfo}>
-                  <View style={styles.nameRow}>
-                    <Text style={styles.animalName} numberOfLines={1}>{name}</Text>
-                    <View style={styles.ratingContainer}>
-                      <Icon name="star" size={14} color="#F59E0B" />
-                      <Text style={styles.ratingText}>{rating}</Text>
-                    </View>
-                  </View>
-
-                  <Text style={styles.breedText} numberOfLines={1}>{breed} • {owner}</Text>
-                  <Text style={styles.descText} numberOfLines={1}>{b.description}</Text>
-                  
-                  <View style={styles.footerRow}>
-                    <View style={[styles.tagBadge, { backgroundColor: tagColors.bg }]}>
-                      <Text style={[styles.tagBadgeText, { color: tagColors.text }]}>{b.tag}</Text>
-                    </View>
-                    <Text style={styles.priceText}>${priceVal}</Text>
+                <Image source={{ uri: item.image }} style={styles.cardImg} resizeMode="cover" />
+                <View style={styles.cardDetails}>
+                  <Text style={styles.cardTitle}>{item.name}</Text>
+                  <View style={[styles.statusBadge, { backgroundColor: item.statusBg, alignSelf: 'flex-start', marginTop: 4 }]}>
+                    <Text style={[styles.statusBadgeText, { color: item.statusColor }]}>{item.status}</Text>
                   </View>
                 </View>
-
-                <Icon name="chevron-right" size={24} color="#94A3B8" style={styles.chevronIcon} />
+                <Text style={styles.cardDate}>{item.date}</Text>
               </TouchableOpacity>
-            );
-          })}
+            ))}
+          </View>
         </View>
-
       </ScrollView>
+
+      {/* Add Breeding Record Button */}
+      <TouchableOpacity 
+        style={styles.addBtn}
+        onPress={() => handleOpenDetails('New Cow')}
+        activeOpacity={0.85}
+      >
+        <Icon name="add" size={24} color="#FFFFFF" />
+        <Text style={styles.addBtnText}>Add Breeding Record</Text>
+      </TouchableOpacity>
+
+      {/* Breeding Details Modal (Screen 14) */}
+      <Modal
+        visible={detailModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setDetailModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            
+            {/* Modal Header */}
+            <View style={styles.modalHeader}>
+              <TouchableOpacity onPress={() => setDetailModalVisible(false)}>
+                <Icon name="close" size={24} color={COLORS.darkGreen} />
+              </TouchableOpacity>
+              <View style={styles.modalHeaderTitleBox}>
+                <Text style={styles.modalTitle}>{selectedCow?.name}</Text>
+                <Text style={styles.modalSubTitle}>Cow • {selectedCow?.age}</Text>
+              </View>
+              <View style={{ width: 24 }} />
+            </View>
+
+            {selectedCow && (
+              <ScrollView contentContainerStyle={styles.modalForm} showsVerticalScrollIndicator={false}>
+                
+                {/* Modal Sub Tab Bar */}
+                <View style={styles.modalTabBar}>
+                  {['Breeding', 'History', 'Calving'].map((tab) => (
+                    <TouchableOpacity
+                      key={tab}
+                      style={[styles.modalTabBtn, modalTab === tab && styles.modalTabBtnActive]}
+                      onPress={() => setModalTab(tab)}
+                    >
+                      <Text style={[styles.modalTabText, modalTab === tab && styles.modalTabTextActive]}>{tab}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+
+                {modalTab === 'Breeding' ? (
+                  <>
+                    <Text style={styles.infoSectionTitle}>Breeding Info</Text>
+                    <View style={styles.breedingTable}>
+                      <View style={styles.tableRow}>
+                        <Text style={styles.tableCellLabel}>Heat Date</Text>
+                        <Text style={styles.tableCellValue}>{selectedCow.heatDate}</Text>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <Text style={styles.tableCellLabel}>AI Date</Text>
+                        <Text style={styles.tableCellValue}>{selectedCow.aiDate}</Text>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <Text style={styles.tableCellLabel}>Semen/Bull</Text>
+                        <Text style={styles.tableCellValue}>{selectedCow.semenBull}</Text>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <Text style={styles.tableCellLabel}>Pregnancy Status</Text>
+                        <View style={[styles.statusBadge, { backgroundColor: '#DCFCE7' }]}>
+                          <Text style={[styles.statusBadgeText, { color: '#16A34A' }]}>{selectedCow.status}</Text>
+                        </View>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <Text style={styles.tableCellLabel}>Due Date</Text>
+                        <Text style={styles.tableCellValue}>{selectedCow.dueDate}</Text>
+                      </View>
+                      <View style={styles.tableRow}>
+                        <Text style={styles.tableCellLabel}>Days Left</Text>
+                        <Text style={[styles.tableCellValue, { color: COLORS.darkGreen, fontWeight: '900' }]}>{selectedCow.daysLeft}</Text>
+                      </View>
+                    </View>
+                  </>
+                ) : (
+                  <View style={styles.placeholderTabContent}>
+                    <Text style={styles.placeholderTabText}>No records in {modalTab} yet.</Text>
+                  </View>
+                )}
+
+                <TouchableOpacity 
+                  style={styles.editRecordBtn}
+                  onPress={() => setDetailModalVisible(false)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.editRecordBtnText}>Edit Record</Text>
+                </TouchableOpacity>
+
+              </ScrollView>
+            )}
+          </View>
+        </View>
+      </Modal>
 
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
-  
-  topHeader: {
-    height: 60,
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  header: {
+    height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    backgroundColor: '#F8FAFC',
+    paddingHorizontal: 24,
+    backgroundColor: '#FFFFFF'
   },
-  backButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
+  backBtn: { 
+    width: 44, height: 44, borderRadius: 15, 
+    justifyContent: 'center', alignItems: 'flex-start'
   },
-  locationSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  locationText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#0F291E',
-    marginHorizontal: 4,
-    fontFamily: FONT_SANS,
-  },
-  logoTitle: {
-    fontSize: 20,
-    fontWeight: '900',
-    color: '#0F291E',
-    fontFamily: FONT_SERIF,
-  },
-  cartButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
+  headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
 
-  searchSection: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    paddingHorizontal: 12,
-    height: 48,
-  },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 14,
-    color: '#0F291E',
-    fontFamily: FONT_SANS,
-    paddingVertical: 0,
-  },
-  clearIcon: {
-    marginLeft: 8,
-  },
+  scrollContent: { paddingHorizontal: 24, paddingTop: 10, paddingBottom: 110 },
 
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 10,
-    paddingBottom: 50,
+  statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 15 },
+  statCell: { 
+    width: (width - 63) / 2, 
+    borderRadius: 22, padding: 18,
+    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
   },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#0F291E',
-    marginBottom: 16,
-    fontFamily: FONT_SANS,
-  },
-  listContainer: {
-    width: '100%',
-  },
+  statValue: { fontSize: 26, fontWeight: '900', fontFamily: FONT_SERIF },
+  statLabel: { fontSize: 11, fontWeight: '800', color: COLORS.secondary, marginTop: 4, fontFamily: FONT_SANS },
+
+  listSection: { marginTop: 30 },
+  sectionTitle: { fontSize: 18, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginBottom: 15 },
+
+  cardList: { gap: 15 },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 12,
-    marginBottom: 16,
-    shadowColor: '#0F291E',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
+    padding: 14,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
   },
-  imageWrapper: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    backgroundColor: '#E2E8F0',
-    overflow: 'hidden',
-  },
-  cardImg: {
-    width: '100%',
-    height: '100%',
-  },
-  cardInfo: {
-    flex: 1,
-    marginLeft: 16,
+  cardImg: { width: 52, height: 52, borderRadius: 12 },
+  cardDetails: { flex: 1, marginLeft: 16 },
+  cardTitle: { fontSize: 16, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  cardDate: { fontSize: 12, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SANS },
+
+  addBtn: {
+    position: 'absolute',
+    bottom: 30,
+    left: 24,
+    right: 24,
+    height: 60,
+    backgroundColor: '#16A34A',
+    borderRadius: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
+    elevation: 4, shadowColor: '#16A34A', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.15, shadowRadius: 10
   },
-  nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingRight: 8,
+  addBtnText: { color: '#FFFFFF', fontSize: 16, fontWeight: '900', marginLeft: 8, letterSpacing: 0.5, fontFamily: FONT_SANS },
+
+  // Modal Styles
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(15,41,30,0.5)', justifyContent: 'flex-end' },
+  modalContent: { 
+    height: '80%', backgroundColor: '#FFFFFF', 
+    borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24 
   },
-  animalName: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#0F291E',
-    fontFamily: FONT_SANS,
-    flex: 1,
-    marginRight: 8,
+  modalHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
+  modalHeaderTitleBox: { flex: 1, alignItems: 'center' },
+  modalTitle: { fontSize: 20, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
+  modalSubTitle: { fontSize: 12, color: COLORS.secondary, fontFamily: FONT_SANS, marginTop: 2 },
+  
+  modalForm: { gap: 15, paddingBottom: 40 },
+  modalTabBar: { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1.5, borderBottomColor: '#E5E7EB', marginBottom: 15 },
+  modalTabBtn: { paddingVertical: 10, paddingHorizontal: 10 },
+  modalTabBtnActive: { borderBottomWidth: 3, borderBottomColor: '#16A34A' },
+  modalTabText: { fontSize: 14, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SANS },
+  modalTabTextActive: { color: '#16A34A', fontWeight: '900' },
+
+  infoSectionTitle: { fontSize: 15, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginBottom: 5 },
+  breedingTable: { 
+    backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1.5, 
+    borderColor: COLORS.border, overflow: 'hidden' 
   },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  tableRow: { 
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', 
+    paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: COLORS.border 
   },
-  ratingText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#1E293B',
-    marginLeft: 2,
-    fontFamily: FONT_SANS,
+  tableCellLabel: { fontSize: 13, fontWeight: '800', color: COLORS.secondary, fontFamily: FONT_SANS },
+  tableCellValue: { fontSize: 13, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SANS },
+  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
+  statusBadgeText: { fontSize: 11, fontWeight: '900', fontFamily: FONT_SANS },
+
+  placeholderTabContent: { padding: 30, justifyContent: 'center', alignItems: 'center' },
+  placeholderTabText: { fontSize: 13, color: COLORS.secondary, fontFamily: FONT_SANS },
+
+  editRecordBtn: { 
+    height: 56, backgroundColor: '#FFFFFF', borderRadius: 28, 
+    justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#16A34A', marginTop: 15
   },
-  breedText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#475569',
-    marginTop: 2,
-    fontFamily: FONT_SANS,
-  },
-  descText: {
-    fontSize: 12,
-    color: '#94A3B8',
-    marginTop: 4,
-    fontFamily: FONT_SANS,
-  },
-  footerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 8,
-    paddingRight: 8,
-  },
-  tagBadge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  tagBadgeText: {
-    fontSize: 10,
-    fontWeight: '800',
-    letterSpacing: 0.5,
-    fontFamily: FONT_SANS,
-  },
-  priceText: {
-    fontSize: 14,
-    fontWeight: '900',
-    color: '#10B981',
-    fontFamily: FONT_SANS,
-  },
-  chevronIcon: {
-    marginLeft: 4,
-  },
+  editRecordBtnText: { fontSize: 15, fontWeight: '900', color: '#16A34A', fontFamily: FONT_SANS }
 });
 
 export default BreedingScreen;

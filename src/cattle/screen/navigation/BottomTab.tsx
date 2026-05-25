@@ -1,29 +1,25 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import React from 'react';
-import { Alert, PermissionsAndroid, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
-import * as ImagePicker from 'react-native-image-picker';
+import { Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../../context/useTheme';
 
-// Import your screens
-import HerdScreen from '../HerdScreen';
+// Import screens
+import HerdScreen from '../CattleScreen';
 import HomeScreen from '../Home';
-import MarketScreen from '../MarketScreen';
 import ProfileScreen from '../ProfileScreen';
+import ReportsScreen from '../ReportsScreen';
 
 const Tab = createBottomTabNavigator();
-
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#ffffff',
-};
-
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
+const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const CameraPlaceholder = () => null;
+const AddPlaceholder = () => null;
 
 const BottomTabNavigator = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -31,64 +27,65 @@ const BottomTabNavigator = ({ navigation }: any) => {
         tabBarIcon: ({ color, size }) => {
           let iconName = 'home';
           if (route.name === 'Home') iconName = 'dashboard';
-          else if (route.name === 'Market') iconName = 'storefront';
-          else if (route.name === 'Healthcare') iconName = 'health-and-safety';
-          else if (route.name === 'Profile') iconName = 'person';
-          else if (route.name === 'Community') iconName = 'forum';
-          else if (route.name === 'Camera') iconName = 'photo-camera';
+          else if (route.name === 'Cattle') iconName = 'pets';
+          else if (route.name === 'Reports') iconName = 'assessment';
+          else if (route.name === 'More') iconName = 'menu';
           return <Icon name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: COLORS.secondary,
+        tabBarActiveTintColor: '#16A34A',
+        tabBarInactiveTintColor: COLORS.secondary + '90',
         tabBarStyle: {
           height: 70,
           paddingBottom: 12,
-          backgroundColor: COLORS.background,
-          borderTopWidth: 0,
-          elevation: 10,
+          backgroundColor: '#FFFFFF',
+          borderTopWidth: 1.5,
+          borderTopColor: COLORS.border,
+          elevation: 4,
         },
         tabBarLabelStyle: {
           fontSize: 10,
-          fontWeight: '700',
-          fontFamily: FONT_SERIF,
+          fontWeight: '900',
+          fontFamily: FONT_SANS,
         },
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Market" component={MarketScreen} options={{ tabBarLabel: 'Marketplace' }} />
+      <Tab.Screen name="Cattle" component={HerdScreen} />
       
+      {/* Central Floating Add Button */}
       <Tab.Screen 
-        name="Community" 
-        component={CameraPlaceholder} 
+        name="Add" 
+        component={AddPlaceholder} 
         options={{
           tabBarLabel: '',
           tabBarButton: (props: any) => (
             <TouchableOpacity 
               {...props} 
               style={[props.style, styles.fabContainer]} 
-              onPress={() => navigation.navigate('Community')}
+              onPress={() => navigation.navigate('AddCattle')}
+              activeOpacity={0.8}
             >
               <View style={styles.fabCircle}>
-                <Icon name="forum" size={35} color="white" />
+                <Icon name="add" size={32} color="#FFFFFF" />
               </View>
             </TouchableOpacity>
           ),
         }}
       />
 
-      <Tab.Screen name="Healthcare" component={HerdScreen} options={{ tabBarLabel: 'My Herd' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Reports" component={ReportsScreen} />
+      <Tab.Screen name="More" component={ProfileScreen} />
     </Tab.Navigator>
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   fabContainer: { top: -20, justifyContent: 'center', alignItems: 'center' },
   fabCircle: {
-    width: 60, height: 60, borderRadius: 30, backgroundColor: COLORS.primary,
-    justifyContent: 'center', alignItems: 'center', elevation: 10,
-    shadowColor: COLORS.primary, shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3, shadowRadius: 10,
+    width: 56, height: 56, borderRadius: 28, backgroundColor: '#16A34A',
+    justifyContent: 'center', alignItems: 'center', elevation: 4,
+    shadowColor: '#16A34A', shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2, shadowRadius: 8,
   },
 });
 

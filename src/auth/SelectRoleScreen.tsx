@@ -1,6 +1,9 @@
 import React from 'react';
 import {
   Dimensions,
+  Image,
+  ImageBackground,
+  Platform,
   SafeAreaView,
   StatusBar,
   StyleSheet,
@@ -8,100 +11,237 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useThemeColors } from '../context/useTheme';
 
 const { width, height } = Dimensions.get('window');
-
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  medical: '#0EA5E9',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-};
+const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
+const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
 const SelectRoleScreen = ({ navigation }: any) => {
-  const RoleCard = ({ title, subtitle, icon, color, role }: any) => (
-    <TouchableOpacity 
-      style={styles.roleCard}
-      onPress={() => navigation.navigate('Login', { role })}
-    >
-      <View style={[styles.iconBox, { backgroundColor: color + '15' }]}>
-        <Icon name={icon} size={40} color={color} />
-      </View>
-      <View style={styles.roleText}>
-        <Text style={styles.roleTitle}>{title}</Text>
-        <Text style={styles.roleSubtitle}>{subtitle}</Text>
-      </View>
-      <View style={styles.arrowCircle}>
-        <Icon name="arrow-forward" size={20} color={COLORS.secondary} />
-      </View>
-    </TouchableOpacity>
-  );
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.header}>
-        <Text style={styles.welcome}>Welcome to</Text>
-        <Text style={styles.brand}>Cattle <Text style={{color: COLORS.accent}}>Elite</Text></Text>
-        <Text style={styles.instruction}>Please select your account type to continue</Text>
-      </View>
+    <ImageBackground
+      source={require('../../assets/cattle_farm.png')}
+      style={styles.backgroundImage}
+      imageStyle={styles.backgroundImageStyle}
+      resizeMode="cover"
+    >
+      {/* Light overlay to match the sky and green fields brightness in screenshot */}
+      <View style={styles.overlay}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+          
+          {/* Top Brand Logo Section */}
+          <View style={styles.header}>
+            {/* <Icon name="cow" size={64} color="#F59E0B" style={styles.brandLogo} /> */}
+            {/* <Text style={styles.brandTitle}>
+              Cattle<Text style={styles.brandGold}>Care</Text>
+            </Text>
+            <Text style={styles.brandSubtitle}>Smart Cattle Management</Text> */}
+          </View>
 
-      <View style={styles.cardContainer}>
-        <RoleCard 
-          title="Cattle Partner" 
-          subtitle="Manage your herd and explore the livestock marketplace" 
-          icon="pets" 
-          color={COLORS.emerald}
-          role="cattle"
-        />
-        
-        <View style={styles.spacer} />
+          {/* Select Your Role Instruction */}
+          <View style={styles.titleSection}>
+            <Text style={styles.title}>Select Your Role</Text>
+          </View>
 
-        <RoleCard 
-          title="Doctor Expert" 
-          subtitle="Provide veterinary care and manage your clinic" 
-          icon="local-hospital" 
-          color={COLORS.medical}
-          role="doctor"
-        />
-      </View>
+          {/* Role Cards List */}
+          <View style={styles.cardsContainer}>
+            {/* Farmer Card */}
+            <TouchableOpacity
+              style={styles.roleCard}
+              onPress={() => navigation.navigate('Login', { role: 'cattle' })}
+              activeOpacity={0.9}
+            >
+              {/* Left Avatar Illustration in Circle */}
+              <View style={[styles.avatarContainer, { backgroundColor: '#E2F0D9' }]}>
+                <Image 
+                  source={require('../../assets/image.png')}
+                  style={styles.avatarImg} 
+                />
+              </View>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>By continuing, you agree to our</Text>
-        <Text style={styles.terms}>Terms of Service & Privacy Policy</Text>
+              {/* Center Info Section */}
+              <View style={styles.roleInfo}>
+                <View style={styles.roleHeader}>
+                  <View style={[styles.badgeCircle, { backgroundColor: '#16A34A' }]}>
+                    <Icon name="account" size={14} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.roleName}>Cattle</Text>
+                </View>
+                <Text style={styles.roleDescription}>
+                  Manage your cattle, track health, breeding and productivity.
+                </Text>
+              </View>
+
+              {/* Arrow */}
+              <Icon name="chevron-right" size={26} color="#16A34A" style={styles.chevron} />
+            </TouchableOpacity>
+
+            {/* Veterinarian Card */}
+            <TouchableOpacity
+              style={styles.roleCard}
+              onPress={() => navigation.navigate('Login', { role: 'doctor' })}
+              activeOpacity={0.9}
+            >
+              {/* Left Avatar Illustration in Circle */}
+              <View style={[styles.avatarContainer, { backgroundColor: '#D9ECF0' }]}>
+                <Image 
+                  source={{ uri: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&q=80&w=200' }}
+                  style={styles.avatarImg} 
+                />
+              </View>
+
+              {/* Center Info Section */}
+              <View style={styles.roleInfo}>
+                <View style={styles.roleHeader}>
+                  <View style={[styles.badgeCircle, { backgroundColor: '#0284C7' }]}>
+                    <Icon name="stethoscope" size={14} color="#FFFFFF" />
+                  </View>
+                  <Text style={styles.roleName}>Doctor</Text>
+                </View>
+                <Text style={styles.roleDescription}>
+                  Provide better care by managing treatment and health records.
+                </Text>
+              </View>
+
+              {/* Arrow */}
+              <Icon name="chevron-right" size={26} color="#16A34A" style={styles.chevron} />
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
       </View>
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background, paddingHorizontal: 30 },
-  header: { marginTop: height * 0.1, marginBottom: 50 },
-  welcome: { fontSize: 18, fontWeight: '600', color: COLORS.secondary, letterSpacing: 1 },
-  brand: { fontSize: 42, fontWeight: '900', color: COLORS.primary, marginTop: 5, letterSpacing: -1 },
-  instruction: { fontSize: 14, color: COLORS.secondary, marginTop: 15, lineHeight: 22, opacity: 0.7 },
-  cardContainer: { flex: 1 },
-  roleCard: { 
-    backgroundColor: 'white', 
-    borderRadius: 35, 
-    padding: 25, 
-    flexDirection: 'row', 
-    alignItems: 'center',
-    elevation: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20
+const getStyles = (COLORS: any) => StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
-  iconBox: { width: 80, height: 80, borderRadius: 28, justifyContent: 'center', alignItems: 'center' },
-  roleText: { flex: 1, marginLeft: 20 },
-  roleTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary },
-  roleSubtitle: { fontSize: 12, color: COLORS.secondary, marginTop: 4, lineHeight: 18 },
-  arrowCircle: { width: 40, height: 40, borderRadius: 20, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
-  spacer: { height: 24 },
-  footer: { marginBottom: 40, alignItems: 'center' },
-  footerText: { fontSize: 12, color: COLORS.secondary, opacity: 0.6 },
-  terms: { fontSize: 12, color: COLORS.primary, fontWeight: '800', marginTop: 4 }
+  backgroundImageStyle: {
+    transform: [{ scale: 1.22 }],
+  },
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', // light tint to make background and foreground coexist beautifully
+  },
+  container: { 
+    flex: 1, 
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+    paddingTop: Platform.OS === 'ios' ? 0 : 30
+  },
+  header: { 
+    alignItems: 'center', 
+    marginTop: height * 0.04 
+  },
+  brandLogo: {
+    marginBottom: 4,
+  },
+  brandTitle: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#0F291E',
+    fontFamily: FONT_SERIF,
+    letterSpacing: -0.5
+  },
+  brandGold: {
+    color: '#F59E0B'
+  },
+  brandSubtitle: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: '#4B5563',
+    fontFamily: FONT_SANS,
+    marginTop: 2
+  },
+
+  titleSection: {
+    alignItems: 'center',
+    marginBottom: 24
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#0F291E',
+    fontFamily: FONT_SERIF,
+    textAlign: 'center'
+  },
+
+
+  cardsContainer: {
+    gap: 16,
+    marginVertical: 10
+  },
+  roleCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.06,
+    shadowRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E6EAE0'
+  },
+  avatarContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E6EAE0'
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover'
+  },
+  roleInfo: {
+    flex: 1,
+    marginLeft: 16,
+    justifyContent: 'center'
+  },
+  roleHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6
+  },
+  badgeCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8
+  },
+  roleName: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: '#0F291E',
+    fontFamily: FONT_SERIF
+  },
+  roleDescription: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#6B7280',
+    fontFamily: FONT_SANS,
+    lineHeight: 18
+  },
+  chevron: {
+    marginLeft: 4
+  }
 });
 
 export default SelectRoleScreen;

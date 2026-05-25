@@ -14,23 +14,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
-
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F9FBFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-  text: '#1E293B',
-  muted: '#64748B',
-  border: '#E2E8F0',
-  bubbleSelf: '#0F291E',
-  bubbleOther: '#FFFFFF',
-};
 
 interface Message {
   id: string;
@@ -103,6 +90,9 @@ const INITIAL_MESSAGES: Message[] = [
 ];
 
 const CommunityScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState('');
   const flatListRef = useRef<FlatList>(null);
@@ -163,7 +153,7 @@ const CommunityScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -199,12 +189,12 @@ const CommunityScreen = ({ navigation }: any) => {
         <View style={styles.inputWrapper}>
           <View style={styles.inputContainer}>
             <TouchableOpacity style={styles.attachButton}>
-              <Icon name="add" size={24} color={COLORS.muted} />
+              <Icon name="add" size={24} color={COLORS.secondary} />
             </TouchableOpacity>
             <TextInput
               style={styles.input}
               placeholder="Share your thoughts..."
-              placeholderTextColor={COLORS.muted}
+              placeholderTextColor={COLORS.secondary + '80'}
               value={inputText}
               onChangeText={setInputText}
               multiline
@@ -214,7 +204,7 @@ const CommunityScreen = ({ navigation }: any) => {
               onPress={sendMessage}
               disabled={!inputText.trim()}
             >
-              <Icon name="send" size={20} color="white" />
+              <Icon name="send" size={20} color={COLORS.isDark ? '#0F291E' : 'white'} />
             </TouchableOpacity>
           </View>
         </View>
@@ -223,7 +213,7 @@ const CommunityScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -233,14 +223,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingVertical: 15,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
-    // elevation: 2,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.05,
-    // shadowRadius: 10,
   },
   backButton: {
     width: 40,
@@ -261,7 +246,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 12,
-    color: COLORS.muted,
+    color: COLORS.secondary,
     fontWeight: '600',
   },
   headerAction: {
@@ -300,18 +285,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   selfBubble: {
-    backgroundColor: COLORS.bubbleSelf,
+    backgroundColor: COLORS.primary,
     borderBottomRightRadius: 4,
   },
   otherBubble: {
-    backgroundColor: COLORS.bubbleOther,
+    backgroundColor: COLORS.surface,
     borderBottomLeftRadius: 4,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   otherBubbleShadow: {
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.1,
     shadowRadius: 5,
   },
   senderHeader: {
@@ -338,7 +325,7 @@ const styles = StyleSheet.create({
   senderName: {
     fontSize: 12,
     fontWeight: '800',
-    color: COLORS.accent,
+    color: COLORS.gold,
   },
   messageText: {
     fontSize: 15,
@@ -346,10 +333,10 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   selfText: {
-    color: 'white',
+    color: COLORS.isDark ? '#0F291E' : 'white',
   },
   otherText: {
-    color: COLORS.text,
+    color: COLORS.primary,
   },
   timeText: {
     fontSize: 10,
@@ -357,10 +344,10 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   selfTime: {
-    color: 'rgba(255,255,255,0.6)',
+    color: COLORS.isDark ? 'rgba(15, 41, 30, 0.6)' : 'rgba(255,255,255,0.6)',
   },
   otherTime: {
-    color: COLORS.muted,
+    color: COLORS.secondary,
   },
   inputWrapper: {
     padding: 20,
@@ -379,7 +366,7 @@ const styles = StyleSheet.create({
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.1,
     shadowRadius: 8,
   },
   attachButton: {
@@ -389,7 +376,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 10,
     fontSize: 15,
-    color: COLORS.text,
+    color: COLORS.primary,
     maxHeight: 100,
     paddingVertical: 5,
   },
@@ -402,7 +389,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   sendButtonDisabled: {
-    backgroundColor: COLORS.muted,
+    backgroundColor: COLORS.secondary,
     opacity: 0.5,
   },
 });

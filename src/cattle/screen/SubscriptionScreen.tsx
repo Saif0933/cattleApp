@@ -11,19 +11,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  emerald: '#10B981',
-};
-
 const SubscriptionScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const plans = [
     {
       name: "Free Tier",
@@ -47,7 +43,7 @@ const SubscriptionScreen = ({ navigation }: any) => {
       price: "49",
       period: "/ month",
       features: ["Unlimited Listings", "Gold Badge", "Priority Support", "1 Featured Listing/mo"],
-      color: COLORS.accent,
+      color: COLORS.gold,
       btn: "Go Gold",
       popular: true
     }
@@ -86,7 +82,7 @@ const SubscriptionScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="close" size={24} color={COLORS.primary} />
@@ -107,17 +103,17 @@ const SubscriptionScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: 'white' },
-  header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'white' },
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
+  header: { padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.background },
   headerTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   mainTitle: { fontSize: 28, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, textAlign: 'center', marginTop: 10 },
   mainSub: { fontSize: 14, color: COLORS.secondary, textAlign: 'center', marginTop: 10, paddingHorizontal: 20 },
   plansContainer: { marginTop: 30, gap: 25 },
-  planCard: { backgroundColor: 'white', borderRadius: 30, padding: 25, elevation: 5, overflow: 'hidden' },
-  popularCard: { borderWidth: 3, borderColor: COLORS.accent },
-  popularBadge: { position: 'absolute', top: 0, right: 0, backgroundColor: COLORS.accent, paddingHorizontal: 15, paddingVertical: 8, borderBottomLeftRadius: 20 },
-  popularText: { color: 'white', fontSize: 10, fontWeight: '900' },
+  planCard: { backgroundColor: COLORS.surface, borderRadius: 30, padding: 25, elevation: 5, overflow: 'hidden', borderWidth: 1, borderColor: COLORS.border },
+  popularCard: { borderWidth: 3, borderColor: COLORS.gold },
+  popularBadge: { position: 'absolute', top: 0, right: 0, backgroundColor: COLORS.gold, paddingHorizontal: 15, paddingVertical: 8, borderBottomLeftRadius: 20 },
+  popularText: { color: COLORS.primary, fontSize: 10, fontWeight: '900' },
   colorBar: { width: 100, height: 6, borderRadius: 3, marginBottom: 20 },
   planName: { fontSize: 22, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   priceRow: { flexDirection: 'row', alignItems: 'baseline', marginTop: 10 },

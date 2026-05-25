@@ -13,22 +13,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useUser } from '../../context/UserContext';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-  sky: '#0EA5E9',
-};
-
 const OrderSummaryScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { address } = useUser();
   // We'll fallback to a sample product if no params are passed (for testing)
   const { product } = route.params || {
@@ -57,7 +50,7 @@ const OrderSummaryScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.surface} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -148,7 +141,7 @@ const OrderSummaryScreen = ({ route, navigation }: any) => {
           onPress={() => navigation.navigate('Payment', { total: total })}
         >
           <Text style={styles.placeOrderBtnText}>PLACE ORDER</Text>
-          <Icon name="arrow-forward" size={20} color="white" />
+          <Icon name="arrow-forward" size={20} color={COLORS.surface} />
         </TouchableOpacity>
       </View>
 
@@ -156,7 +149,7 @@ const OrderSummaryScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
     height: 60, 
@@ -164,12 +157,9 @@ const styles = StyleSheet.create({
     alignItems: 'center', 
     justifyContent: 'space-between', 
     paddingHorizontal: 20,
-    backgroundColor: COLORS.background,
-    // elevation: 2,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.05,
-    // shadowRadius: 5
+    backgroundColor: COLORS.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
   },
   headerTitle: { fontSize: 18, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   backBtn: { width: 40, height: 40, justifyContent: 'center' },
@@ -179,13 +169,15 @@ const styles = StyleSheet.create({
   
   productCard: { 
     flexDirection: 'row', 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 20, 
     padding: 15,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.05,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.05,
     shadowRadius: 10
   },
   productImage: { width: 90, height: 90, borderRadius: 15 },
@@ -197,10 +189,12 @@ const styles = StyleSheet.create({
 
   addressCard: { 
     flexDirection: 'row', 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 20, 
     padding: 15, 
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 3
   },
   addressIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
@@ -208,25 +202,27 @@ const styles = StyleSheet.create({
   addressName: { fontSize: 14, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SANS },
   addressText: { fontSize: 12, color: COLORS.secondary, marginTop: 2, lineHeight: 18, fontFamily: FONT_SANS },
   addressPhone: { fontSize: 12, fontWeight: '700', color: COLORS.primary, marginTop: 4, fontFamily: FONT_SANS },
-  editText: { fontSize: 13, fontWeight: '800', color: COLORS.sky, fontFamily: FONT_SANS },
+  editText: { fontSize: 13, fontWeight: '800', color: COLORS.medical || '#0EA5E9', fontFamily: FONT_SANS },
 
   paymentCard: { 
     flexDirection: 'row', 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 20, 
     padding: 15, 
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 3
   },
   paymentIconBox: { width: 44, height: 44, borderRadius: 12, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center' },
   paymentInfo: { flex: 1, marginLeft: 15 },
   paymentText: { fontSize: 14, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SANS },
 
-  breakdownCard: { backgroundColor: 'white', borderRadius: 25, padding: 20, elevation: 3 },
+  breakdownCard: { backgroundColor: COLORS.surface, borderRadius: 25, padding: 20, elevation: 3, borderWidth: 1, borderColor: COLORS.border },
   detailRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 12 },
   detailLabel: { fontSize: 13, color: COLORS.secondary, fontWeight: '600', fontFamily: FONT_SANS, letterSpacing: 0.5 },
   detailValue: { fontSize: 14, color: COLORS.primary, fontWeight: '800', fontFamily: FONT_SANS },
-  divider: { height: 1, backgroundColor: COLORS.background, marginVertical: 10 },
+  divider: { height: 1, backgroundColor: COLORS.border, marginVertical: 10 },
   totalRow: { marginTop: 5 },
   totalText: { fontSize: 16, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   totalValue: { fontSize: 22, fontWeight: '900', color: COLORS.emerald, fontFamily: FONT_SANS },
@@ -239,13 +235,13 @@ const styles = StyleSheet.create({
     bottom: 0, 
     left: 0, 
     right: 0, 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     padding: 20, 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between',
     borderTopWidth: 1,
-    borderTopColor: COLORS.background,
+    borderTopColor: COLORS.border,
     paddingBottom: Platform.OS === 'ios' ? 40 : 20
   },
   footerTotalBox: { flex: 1 },
@@ -264,7 +260,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 10
   },
-  placeOrderBtnText: { color: 'white', fontWeight: '900', fontSize: 15, marginRight: 10 }
+  placeOrderBtnText: { color: COLORS.surface, fontWeight: '900', fontSize: 15, marginRight: 10 }
 });
 
 export default OrderSummaryScreen;

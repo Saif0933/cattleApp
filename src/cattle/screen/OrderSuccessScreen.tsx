@@ -9,21 +9,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#FFB800',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  emerald: '#10B981',
-  sky: '#0EA5E9',
-};
-
 const OrderSuccessScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { orderId } = route.params || { orderId: 'ELT-123456' };
 
   useEffect(() => {
@@ -36,7 +29,7 @@ const OrderSuccessScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       <View style={styles.content}>
         {/* Success Animation Area (Static for now) */}
@@ -72,7 +65,7 @@ const OrderSuccessScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   content: { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 30 },
   
@@ -85,21 +78,23 @@ const styles = StyleSheet.create({
   successSubtitle: { fontSize: 14, color: COLORS.secondary, textAlign: 'center', marginTop: 12, lineHeight: 22, fontWeight: '500' },
 
   orderIdCard: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     width: '100%', 
     borderRadius: 25, 
     padding: 25, 
     marginTop: 40,
     alignItems: 'center',
     elevation: 5,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.05,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.05,
     shadowRadius: 15
   },
   orderIdLabel: { fontSize: 10, fontWeight: '900', color: COLORS.secondary, letterSpacing: 2 },
   orderIdValue: { fontSize: 24, fontWeight: '900', color: COLORS.primary, marginTop: 8, letterSpacing: 1 },
-  dotLine: { width: '100%', height: 1, borderWidth: 1, borderColor: COLORS.background, borderStyle: 'dashed', marginVertical: 20, borderRadius: 1 },
+  dotLine: { width: '100%', height: 1, borderWidth: 1, borderColor: COLORS.border, borderStyle: 'dashed', marginVertical: 20, borderRadius: 1 },
   trackRow: { flexDirection: 'row', alignItems: 'center' },
   trackText: { fontSize: 12, fontWeight: '700', color: COLORS.emerald, marginLeft: 10 },
 
@@ -120,14 +115,14 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     marginBottom: 15
   },
-  trackBtnText: { color: 'white', fontWeight: '900', fontSize: 15, letterSpacing: 1 },
+  trackBtnText: { color: COLORS.surface, fontWeight: '900', fontSize: 15, letterSpacing: 1 },
   homeBtn: { 
     height: 56, 
     borderRadius: 18, 
     alignItems: 'center', 
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: COLORS.primary + '20'
+    borderColor: COLORS.border
   },
   homeBtnText: { color: COLORS.primary, fontWeight: '900', fontSize: 14, letterSpacing: 0.5 }
 });

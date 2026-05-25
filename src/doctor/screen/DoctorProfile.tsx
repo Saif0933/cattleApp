@@ -1,36 +1,22 @@
 import React from 'react';
 import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-  SafeAreaView,
-  StatusBar,
-  Dimensions,
-  Platform,
-  ImageBackground,
+    Dimensions,
+    Image,
+    ImageBackground,
+    Platform,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
-
-const COLORS = {
-  primary: '#0F172A',
-  secondary: '#64748B',
-  accent: '#3B82F6',
-  emerald: '#10B981',
-  gold: '#F59E0B',
-  rose: '#F43F5E',
-  violet: '#8B5CF6',
-  background: '#F8FAFC',
-  surface: '#FFFFFF',
-  glass: 'rgba(255, 255, 255, 0.8)',
-  textMain: '#1E293B',
-  textSub: '#64748B',
-};
 
 const GRADIENTS = {
   header: 'https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=1000',
@@ -38,6 +24,9 @@ const GRADIENTS = {
 };
 
 const DoctorProfile = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
+
   const doctor = {
     id: "doc-2",
     userId: "user-doc-2",
@@ -132,7 +121,7 @@ const DoctorProfile = ({ navigation }: any) => {
               <Text style={styles.userRole}>{doctor.specialization}</Text>
               <View style={styles.chipRow}>
                 <InfoChip icon="star" label={String(doctor.rating)} color={COLORS.gold} />
-                {doctor.isVerified && <InfoChip icon="verified" label="VETCORE PRO" color={COLORS.accent} />}
+                {doctor.isVerified && <InfoChip icon="verified" label="VETCORE PRO" color={COLORS.medical} />}
               </View>
             </View>
           </View>
@@ -140,9 +129,9 @@ const DoctorProfile = ({ navigation }: any) => {
 
         {/* Statistics Section */}
         <View style={styles.statsSection}>
-          <StatTile label="Total Patients" value={doctor.patientsCount.toLocaleString()} icon="people-alt" color={COLORS.accent} />
+          <StatTile label="Total Patients" value={doctor.patientsCount.toLocaleString()} icon="people-alt" color={COLORS.medical} />
           <StatTile label="Consultations" value="1.2k+" icon="medical-services" color={COLORS.emerald} />
-          <StatTile label="Experience" value={`${doctor.experienceYears}yrs`} icon="workspace-premium" color={COLORS.violet} />
+          <StatTile label="Experience" value={`${doctor.experienceYears}yrs`} icon="workspace-premium" color="#8B5CF6" />
         </View>
 
         {/* Action Dashboard */}
@@ -156,7 +145,7 @@ const DoctorProfile = ({ navigation }: any) => {
             title="Schedule & Appointments" 
             subtitle="8 visits pending for today" 
             icon="event-available" 
-            color={COLORS.accent}
+            color={COLORS.medical}
             count="8"
           />
           <ActionPill 
@@ -169,7 +158,7 @@ const DoctorProfile = ({ navigation }: any) => {
             title="Revenue & Analytics" 
             subtitle="Track performance metrics" 
             icon="insights" 
-            color={COLORS.violet}
+            color="#8B5CF6"
           />
         </View>
 
@@ -178,15 +167,15 @@ const DoctorProfile = ({ navigation }: any) => {
           <Text style={styles.sectionMainTitle}>App Settings</Text>
           <View style={styles.settingsCard}>
             <TouchableOpacity style={styles.settingsRow}>
-              <View style={[styles.settingIcon, { backgroundColor: '#EFF6FF' }]}>
-                <Icon name="notifications-none" size={22} color={COLORS.accent} />
+              <View style={[styles.settingIcon, { backgroundColor: COLORS.isDark ? '#1C3140' : '#EFF6FF' }]}>
+                <Icon name="notifications-none" size={22} color={COLORS.medical} />
               </View>
               <Text style={styles.settingLabel}>Notification Center</Text>
               <Icon name="chevron-right" size={20} color={COLORS.secondary} />
             </TouchableOpacity>
             <View style={styles.rowDivider} />
             <TouchableOpacity style={styles.settingsRow}>
-              <View style={[styles.settingIcon, { backgroundColor: '#F0FDF4' }]}>
+              <View style={[styles.settingIcon, { backgroundColor: COLORS.isDark ? '#1C3426' : '#F0FDF4' }]}>
                 <Icon name="security" size={22} color={COLORS.emerald} />
               </View>
               <Text style={styles.settingLabel}>Privacy & Credentials</Text>
@@ -203,7 +192,7 @@ const DoctorProfile = ({ navigation }: any) => {
         >
           <View style={styles.solidSwitchContent}>
             <View style={styles.solidIconCircle}>
-              <Icon name="sync" size={24} color={COLORS.accent} />
+              <Icon name="sync" size={24} color={COLORS.medical} />
             </View>
             <View style={styles.solidTextGroup}>
               <Text style={styles.solidMainLabel}>SWITCH TO OWNER MODE</Text>
@@ -226,7 +215,7 @@ const DoctorProfile = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   scrollBody: { paddingBottom: 60 },
   
@@ -248,28 +237,30 @@ const styles = StyleSheet.create({
 
   floatingCard: {
     marginHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: COLORS.surface,
     borderRadius: 35,
     marginTop: -80,
     padding: 24,
     elevation: 20,
-    shadowColor: COLORS.primary,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 15 },
-    shadowOpacity: 0.1,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.1,
     shadowRadius: 25,
   },
   profileHeader: { flexDirection: 'row', alignItems: 'center' },
   avatarOutline: { 
-    padding: 3, borderRadius: 28, borderWidth: 2, borderColor: COLORS.accent + '30', position: 'relative'
+    padding: 3, borderRadius: 28, borderWidth: 2, borderColor: COLORS.medical + '30', position: 'relative'
   },
   mainAvatar: { width: 85, height: 85, borderRadius: 24 },
   activeDot: { 
     position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, borderRadius: 11, 
-    backgroundColor: COLORS.emerald, borderWidth: 4, borderColor: 'white' 
+    backgroundColor: COLORS.emerald, borderWidth: 4, borderColor: COLORS.surface 
   },
   mainInfo: { marginLeft: 20, flex: 1 },
-  userName: { fontSize: 24, fontWeight: '900', color: COLORS.textMain, fontFamily: FONT_SERIF, letterSpacing: -0.5 },
-  userRole: { fontSize: 13, fontWeight: '600', color: COLORS.textSub, marginTop: 4 },
+  userName: { fontSize: 24, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF, letterSpacing: -0.5 },
+  userRole: { fontSize: 13, fontWeight: '600', color: COLORS.secondary, marginTop: 4 },
   chipRow: { flexDirection: 'row', marginTop: 12 },
   chip: { 
     flexDirection: 'row', alignItems: 'center', paddingHorizontal: 10, paddingVertical: 5, 
@@ -286,54 +277,58 @@ const styles = StyleSheet.create({
   },
   statTile: { 
     width: (width - 55) / 2, 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 24, 
     padding: 15, 
     flexDirection: 'row', 
     alignItems: 'center',
     marginBottom: 15,
+    borderWidth: 1,
+    borderColor: COLORS.border,
     elevation: 4, shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 10
   },
   statIconWrapper: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
   statTextGroup: { marginLeft: 12, flex: 1 },
-  statValue: { fontSize: 17, fontWeight: '900', color: COLORS.textMain, fontFamily: FONT_SERIF },
-  statLabel: { fontSize: 9, fontWeight: '700', color: COLORS.textSub, marginTop: 2 },
+  statValue: { fontSize: 17, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  statLabel: { fontSize: 9, fontWeight: '700', color: COLORS.secondary, marginTop: 2 },
 
   dashBody: { marginTop: 20, paddingHorizontal: 20 },
   sectionHeading: { marginBottom: 20 },
-  sectionMainTitle: { fontSize: 20, fontWeight: '900', color: COLORS.textMain, fontFamily: FONT_SERIF },
-  accentLine: { width: 40, height: 4, backgroundColor: COLORS.accent, borderRadius: 2, marginTop: 8 },
+  sectionMainTitle: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
+  accentLine: { width: 40, height: 4, backgroundColor: COLORS.medical, borderRadius: 2, marginTop: 8 },
 
   actionPill: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 28, 
     padding: 15, 
     flexDirection: 'row', 
     alignItems: 'center', 
     marginBottom: 15,
-    elevation: 8, shadowColor: COLORS.primary, shadowOpacity: 0.03, shadowRadius: 15
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    elevation: 8, shadowColor: '#000', shadowOpacity: 0.03, shadowRadius: 15
   },
   pillIconBox: { width: 56, height: 56, borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   pillContent: { flex: 1, marginLeft: 16 },
-  pillTitle: { fontSize: 16, fontWeight: '800', color: COLORS.textMain, fontFamily: FONT_SERIF },
-  pillSubtitle: { fontSize: 12, fontWeight: '600', color: COLORS.textSub, marginTop: 2 },
-  pillBadge: { backgroundColor: COLORS.rose, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, marginRight: 10 },
+  pillTitle: { fontSize: 16, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SERIF },
+  pillSubtitle: { fontSize: 12, fontWeight: '600', color: COLORS.secondary, marginTop: 2 },
+  pillBadge: { backgroundColor: COLORS.crimson, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 10, marginRight: 10 },
   pillBadgeText: { color: 'white', fontSize: 11, fontWeight: '900' },
 
   settingsSection: { marginTop: 30, paddingHorizontal: 20 },
-  settingsCard: { backgroundColor: 'white', borderRadius: 30, padding: 10, elevation: 4 },
+  settingsCard: { backgroundColor: COLORS.surface, borderRadius: 30, padding: 10, elevation: 4, borderWidth: 1, borderColor: COLORS.border },
   settingsRow: { flexDirection: 'row', alignItems: 'center', padding: 15 },
   settingIcon: { width: 44, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
-  settingLabel: { flex: 1, marginLeft: 15, fontSize: 15, fontWeight: '700', color: COLORS.textMain },
-  rowDivider: { height: 1, backgroundColor: '#F1F5F9', marginHorizontal: 20 },
+  settingLabel: { flex: 1, marginLeft: 15, fontSize: 15, fontWeight: '700', color: COLORS.primary },
+  rowDivider: { height: 1, backgroundColor: COLORS.border, marginHorizontal: 20 },
 
   solidSwitchCapsule: { 
     marginHorizontal: 20, 
     marginTop: 45, 
     borderRadius: 30,
-    backgroundColor: COLORS.accent,
+    backgroundColor: COLORS.medical,
     elevation: 20,
-    shadowColor: COLORS.accent,
+    shadowColor: COLORS.medical,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.4,
     shadowRadius: 20,
@@ -381,7 +376,7 @@ const styles = StyleSheet.create({
   },
 
   footer: { marginTop: 50, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' },
-  footerText: { fontSize: 10, fontWeight: '900', color: COLORS.textSub, letterSpacing: 1.5, opacity: 0.4 },
+  footerText: { fontSize: 10, fontWeight: '900', color: COLORS.secondary, letterSpacing: 1.5, opacity: 0.4 },
   footerDot: { width: 4, height: 4, borderRadius: 2, backgroundColor: COLORS.secondary, marginHorizontal: 10, opacity: 0.3 }
 });
 

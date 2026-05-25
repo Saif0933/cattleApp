@@ -14,23 +14,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E',
-  secondary: '#3D5447',
-  accent: '#10B981',
-  background: '#F8FAFA',
-  surface: '#FFFFFF',
-  gold: '#FFB800',
-  sky: '#0EA5E9',
-  crimson: '#EF4444',
-};
-
 const PetCareScreen = ({ navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const [searchQuery, setSearchQuery] = useState('');
 
   const careItems = [
@@ -59,42 +51,32 @@ const PetCareScreen = ({ navigation }: any) => {
       id: "vax-3",
       name: "FVRCP Premium Vaccine",
       pet: "Cats",
-      price: "55",
-      duration: "1 Year",
+      price: "50",
+      duration: "3 Years",
       type: "VACCINE",
-      image: "https://images.unsplash.com/photo-1618961734760-466979cb35b0?auto=format&fit=crop&q=80&w=400",
-      description: "Immunizes felines from Rhinotracheitis, Calicivirus, and Panleukopenia."
-    },
-    {
-      id: "vax-4",
-      name: "FMD Cattle Vaccine",
-      pet: "Cattle & Goats",
-      price: "30",
-      duration: "6 Months",
-      type: "VACCINE",
-      image: "https://images.unsplash.com/photo-1618961369757-b2f293b6e82c?auto=format&fit=crop&q=80&w=400",
-      description: "High-protection vaccine shielding livestock from Foot-and-Mouth disease."
+      image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400",
+      description: "Provides robust immunity against Feline Rhinotracheitis, Calicivirus, and Panleukopenia."
     },
     // Medicines
     {
       id: "med-1",
-      name: "Broad Spectrum Dewormer",
-      pet: "All Animals",
-      price: "15",
-      duration: "Single Dose",
+      name: "Heartgard Chewable",
+      pet: "Dogs",
+      price: "30",
+      duration: "6 Months",
       type: "MEDICINE",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&q=80&w=400",
-      description: "Fast-acting oral tablet to eliminate internal roundworms and tapeworms."
+      image: "https://images.unsplash.com/photo-1550572017-edd951b55104?auto=format&fit=crop&q=80&w=400",
+      description: "Monthly beef-flavored chewable guarding dogs against fatal heartworm disease."
     },
     {
       id: "med-2",
-      name: "Multi-Vitamin Booster",
-      pet: "Dogs, Cats & Cattle",
-      price: "25",
-      duration: "Daily Dose",
+      name: "Broad Spectrum Dewormer",
+      pet: "Cats",
+      price: "18",
+      duration: "Single Dose",
       type: "MEDICINE",
-      image: "https://images.unsplash.com/photo-1611078489935-0cb964de46d6?auto=format&fit=crop&q=80&w=400",
-      description: "Growth booster syrup promoting bone health and a shiny coat."
+      image: "https://images.unsplash.com/photo-1631549916768-4119cb8e20ca?auto=format&fit=crop&q=80&w=400",
+      description: "Highly effective formulation eliminating tapeworms, hookworms, and roundworms."
     },
     {
       id: "med-3",
@@ -131,9 +113,10 @@ const PetCareScreen = ({ navigation }: any) => {
 
   const getTagColors = (type: string) => {
     const t = type.toUpperCase();
-    if (t.includes('VACCINE')) return { bg: '#E0F2FE', text: '#0369A1' };
-    if (t.includes('MEDICINE')) return { bg: '#DCFCE7', text: '#15803D' };
-    return { bg: '#F3E8FF', text: '#6B21A8' };
+    const isDark = COLORS.isDark;
+    if (t.includes('VACCINE')) return { bg: isDark ? '#1C3140' : '#E0F2FE', text: isDark ? '#64B5F6' : '#0369A1' };
+    if (t.includes('MEDICINE')) return { bg: isDark ? '#1C3426' : '#DCFCE7', text: isDark ? '#81C784' : '#15803D' };
+    return { bg: isDark ? '#2E1E3D' : '#F3E8FF', text: isDark ? '#BA68C8' : '#6B21A8' };
   };
 
   const filteredCareItems = careItems.filter(item => {
@@ -147,7 +130,7 @@ const PetCareScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F8FAFC" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Top Header */}
       <View style={styles.topHeader}>
@@ -177,7 +160,7 @@ const PetCareScreen = ({ navigation }: any) => {
           <TextInput
             style={styles.searchInput}
             placeholder="Search vaccines, medicines, or pets..."
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={COLORS.secondary + '70'}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
@@ -228,7 +211,7 @@ const PetCareScreen = ({ navigation }: any) => {
                   </View>
                 </View>
 
-                <Icon name="chevron-right" size={24} color="#94A3B8" style={styles.chevronIcon} />
+                <Icon name="chevron-right" size={24} color={COLORS.secondary} style={styles.chevronIcon} />
               </TouchableOpacity>
             );
           })}
@@ -255,8 +238,8 @@ const PetCareScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8FAFC' },
+const getStyles = (COLORS: any) => StyleSheet.create({
+  container: { flex: 1, backgroundColor: COLORS.background },
   
   topHeader: {
     height: 60,
@@ -264,50 +247,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: COLORS.background,
   },
   backButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  locationSelector: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  locationText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#0F291E',
-    marginHorizontal: 4,
-    fontFamily: FONT_SANS,
+    borderColor: COLORS.border,
   },
   logoTitle: {
     fontSize: 20,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SERIF,
   },
   cartButton: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: COLORS.border,
   },
 
   searchSection: {
@@ -317,10 +283,10 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
+    borderColor: COLORS.border,
     paddingHorizontal: 12,
     height: 48,
   },
@@ -330,7 +296,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontSize: 14,
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SANS,
     paddingVertical: 0,
   },
@@ -346,7 +312,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: '800',
-    color: '#0F291E',
+    color: COLORS.primary,
     marginBottom: 16,
     fontFamily: FONT_SANS,
   },
@@ -356,23 +322,23 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     padding: 12,
     marginBottom: 16,
-    shadowColor: '#0F291E',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.04,
     shadowRadius: 10,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: COLORS.border,
   },
   imageWrapper: {
     width: 80,
     height: 80,
     borderRadius: 12,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: COLORS.border,
     overflow: 'hidden',
   },
   cardImg: {
@@ -393,7 +359,7 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SANS,
     flex: 1,
     marginRight: 8,
@@ -405,20 +371,20 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#1E293B',
+    color: COLORS.primary,
     marginLeft: 2,
     fontFamily: FONT_SANS,
   },
   petText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#475569',
+    color: COLORS.secondary,
     marginTop: 2,
     fontFamily: FONT_SANS,
   },
   descText: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: COLORS.secondary,
     marginTop: 4,
     fontFamily: FONT_SANS,
   },
@@ -443,7 +409,7 @@ const styles = StyleSheet.create({
   priceText: {
     fontSize: 14,
     fontWeight: '900',
-    color: '#10B981',
+    color: COLORS.emerald,
     fontFamily: FONT_SANS,
   },
   chevronIcon: {
@@ -451,14 +417,14 @@ const styles = StyleSheet.create({
   },
 
   trackCard: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 16, 
     padding: 20, 
     flexDirection: 'row', 
     alignItems: 'center', 
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#F1F5F9',
+    borderColor: COLORS.border,
     marginBottom: 20,
   },
   trackTitle: { fontSize: 16, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SANS },

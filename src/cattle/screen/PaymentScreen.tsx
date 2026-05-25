@@ -11,21 +11,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
-const COLORS = {
-  primary: '#0F291E', 
-  accent: '#10B981', // Vibrant Emerald
-  background: '#F1F7F5', // Light Mint
-  surface: '#FFFFFF',
-  text: '#1A1A1A',
-  secondary: '#666666',
-};
-
 const PaymentScreen = ({ route, navigation }: any) => {
+  const COLORS = useThemeColors();
+  const styles = getStyles(COLORS);
   const { total = 0 } = route.params || {};
   const [selectedMethod, setSelectedMethod] = useState('upi');
 
@@ -35,7 +29,7 @@ const PaymentScreen = ({ route, navigation }: any) => {
       style={[styles.methodCard, selectedMethod === id && styles.selectedCard]}
       onPress={() => setSelectedMethod(id)}
     >
-      <View style={[styles.iconContainer, { backgroundColor: selectedMethod === id ? COLORS.accent : '#F5F5F5' }]}>
+      <View style={[styles.iconContainer, { backgroundColor: selectedMethod === id ? COLORS.emerald : COLORS.background }]}>
         <Icon name={icon} size={28} color={selectedMethod === id ? 'white' : COLORS.primary} />
       </View>
       <View style={styles.methodContent}>
@@ -50,7 +44,7 @@ const PaymentScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.surface} />
       
       {/* Top Header */}
       <View style={styles.header}>
@@ -68,7 +62,7 @@ const PaymentScreen = ({ route, navigation }: any) => {
           <Text style={styles.priceLabel}>Total Amount to Pay</Text>
           <Text style={styles.priceValue}>${total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</Text>
           <View style={styles.secureLine}>
-            <Icon name="verified-user" size={14} color={COLORS.accent} />
+            <Icon name="verified-user" size={14} color={COLORS.emerald} />
             <Text style={styles.secureText}>100% Secure Payment</Text>
           </View>
         </View>
@@ -122,44 +116,41 @@ const PaymentScreen = ({ route, navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const getStyles = (COLORS: any) => StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   header: { 
     height: 70, 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'space-between', 
     paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#EEEEEE'
+    borderBottomColor: COLORS.border
   },
-  backCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#F5F5F5', justifyContent: 'center', alignItems: 'center' },
+  backCircle: { width: 44, height: 44, borderRadius: 22, backgroundColor: COLORS.background, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   headerText: { fontSize: 20, fontWeight: '900', color: COLORS.primary, fontFamily: FONT_SERIF },
   
   scroll: { padding: 20, paddingBottom: 100 },
   
   priceCard: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 25, 
     padding: 20, 
     alignItems: 'center',
     marginBottom: 25,
-    // elevation: 4,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 3 },
-    // shadowOpacity: 0.08,
-    // shadowRadius: 8
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   priceLabel: { fontSize: 13, fontWeight: '700', color: COLORS.secondary, marginBottom: 2 },
-  priceValue: { fontSize: 36, fontWeight: '900', color: COLORS.accent, fontFamily: FONT_SANS },
-  secureLine: { flexDirection: 'row', alignItems: 'center', marginTop: 12, backgroundColor: COLORS.background, paddingHorizontal: 12, paddingVertical: 4, borderRadius: 15 },
-  secureText: { fontSize: 10, fontWeight: '800', color: COLORS.accent, marginLeft: 5 },
+  priceValue: { fontSize: 36, fontWeight: '900', color: COLORS.emerald, fontFamily: FONT_SANS },
+  secureLine: { flexDirection: 'row', alignItems: 'center', marginTop: 12, backgroundColor: COLORS.background, paddingHorizontal: 12, paddingVertical: 4, borderRadius: 15, borderWidth: 1, borderColor: COLORS.border },
+  secureText: { fontSize: 10, fontWeight: '800', color: COLORS.emerald, marginLeft: 5 },
 
   sectionHeading: { fontSize: 17, fontWeight: '900', color: COLORS.primary, marginBottom: 15, fontFamily: FONT_SERIF, marginLeft: 5 },
   
   methodCard: { 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     borderRadius: 20, 
     padding: 12, 
     flexDirection: 'row', 
@@ -170,18 +161,18 @@ const styles = StyleSheet.create({
     elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
+    shadowOpacity: COLORS.isDark ? 0.2 : 0.05,
     shadowRadius: 4
   },
-  selectedCard: { borderColor: COLORS.accent, backgroundColor: 'white' },
-  iconContainer: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  selectedCard: { borderColor: COLORS.emerald, backgroundColor: COLORS.surface },
+  iconContainer: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: COLORS.border },
   methodContent: { flex: 1, marginLeft: 12 },
   methodTitle: { fontSize: 15, fontWeight: '800', color: COLORS.primary, fontFamily: FONT_SANS },
-  selectedTitle: { color: COLORS.accent },
-  recommendedTag: { fontSize: 9, fontWeight: '900', color: COLORS.accent, marginTop: 2, textTransform: 'uppercase' },
+  selectedTitle: { color: COLORS.emerald },
+  recommendedTag: { fontSize: 9, fontWeight: '900', color: COLORS.emerald, marginTop: 2, textTransform: 'uppercase' },
   
-  checkbox: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: '#DDDDDD', justifyContent: 'center', alignItems: 'center' },
-  checked: { backgroundColor: COLORS.accent, borderColor: COLORS.accent },
+  checkbox: { width: 22, height: 22, borderRadius: 11, borderWidth: 2, borderColor: COLORS.border, justifyContent: 'center', alignItems: 'center' },
+  checked: { backgroundColor: COLORS.emerald, borderColor: COLORS.emerald },
 
   infoBox: { flexDirection: 'row', paddingHorizontal: 10, marginTop: 10, alignItems: 'center' },
   infoText: { flex: 1, fontSize: 11, color: COLORS.secondary, marginLeft: 10, fontWeight: '500', lineHeight: 16 },
@@ -191,21 +182,21 @@ const styles = StyleSheet.create({
     bottom: 0, 
     left: 0, 
     right: 0, 
-    backgroundColor: 'white', 
+    backgroundColor: COLORS.surface, 
     padding: 20, 
     borderTopWidth: 1,
-    borderTopColor: '#EEEEEE',
+    borderTopColor: COLORS.border,
     paddingBottom: Platform.OS === 'ios' ? 45 : 25
   },
   payButton: { 
-    backgroundColor: COLORS.accent, 
+    backgroundColor: COLORS.emerald, 
     height: 64, 
     borderRadius: 22, 
     flexDirection: 'row', 
     alignItems: 'center', 
     justifyContent: 'center',
     elevation: 10,
-    shadowColor: COLORS.accent,
+    shadowColor: COLORS.emerald,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.3,
     shadowRadius: 10
