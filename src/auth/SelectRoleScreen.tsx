@@ -32,7 +32,7 @@ const SelectRoleScreen = ({ navigation }: any) => {
       {/* Light overlay to match the sky and green fields brightness in screenshot */}
       <View style={styles.overlay}>
         <SafeAreaView style={styles.container}>
-          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+          <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" translucent />
           
           {/* Top Brand Logo Section */}
           <View style={styles.header}>
@@ -129,7 +129,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // light tint to make background and foreground coexist beautifully
+    backgroundColor: COLORS.isDark ? 'rgba(10, 30, 20, 0.75)' : 'rgba(255, 255, 255, 0.15)', // dynamic overlay based on dark mode
   },
   container: { 
     flex: 1, 
@@ -169,7 +169,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.isDark ? '#FFFFFF' : '#0F291E',
     fontFamily: FONT_SERIF,
     textAlign: 'center'
   },
@@ -180,7 +180,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     marginVertical: 10
   },
   roleCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 24,
     padding: 16,
     flexDirection: 'row',
@@ -191,7 +191,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 10,
     borderWidth: 1,
-    borderColor: '#E6EAE0'
+    borderColor: COLORS.border
   },
   avatarContainer: {
     width: 90,
@@ -201,7 +201,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E6EAE0'
+    borderColor: COLORS.border
   },
   avatarImg: {
     width: '100%',
@@ -229,13 +229,13 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   roleName: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SERIF
   },
   roleDescription: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#6B7280',
+    color: COLORS.secondary,
     fontFamily: FONT_SANS,
     lineHeight: 18
   },

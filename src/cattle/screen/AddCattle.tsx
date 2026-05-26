@@ -183,7 +183,7 @@ const AddCattleScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -439,14 +439,14 @@ const AddCattleScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.background
   },
   backBtn: { 
     width: 44, height: 44, borderRadius: 15, 
@@ -474,7 +474,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   label: { fontSize: 13, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SANS, marginBottom: 2 },
   
   inputWrapper: {
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 18, 
     borderWidth: 1.5, borderColor: COLORS.border, paddingHorizontal: 16,
     justifyContent: 'center'
   },
@@ -489,7 +489,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     paddingRight: 24,
   },
   segmentBtn: { 
-    paddingHorizontal: 20, height: 48, borderRadius: 12, backgroundColor: '#F3F4F6',
+    paddingHorizontal: 20, height: 48, borderRadius: 12, backgroundColor: COLORS.surface,
     justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: 'transparent'
   },
   segmentBtnActive: { backgroundColor: '#16A34A' },
@@ -497,14 +497,14 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   segmentTextActive: { color: '#FFFFFF' },
 
   dropdownBox: { 
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 18, 
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 16,
     borderWidth: 1.5, borderColor: COLORS.border
   },
   dropdownValue: { fontSize: 15, fontWeight: '600', color: COLORS.darkGreen, fontFamily: FONT_SANS },
 
   datePickerBtn: { 
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 18, 
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18,
     borderWidth: 1.5, borderColor: COLORS.border
   },
@@ -512,7 +512,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   
   genderRow: { flexDirection: 'row', gap: 12 },
   genderBtn: { 
-    flex: 1, height: 50, borderRadius: 16, backgroundColor: '#FFFFFF',
+    flex: 1, height: 50, borderRadius: 16, backgroundColor: COLORS.surface,
     justifyContent: 'center', alignItems: 'center', borderWidth: 1.5, borderColor: COLORS.border
   },
   genderBtnActive: { backgroundColor: '#16A34A', borderColor: '#16A34A' },
@@ -532,7 +532,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     justifyContent: 'flex-end',
   },
   calendarCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 24,
     width: '90%',
     padding: 20,
@@ -560,7 +560,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: COLORS.isDark ? '#1F2937' : '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -660,7 +660,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
 
   breedSheet: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     maxHeight: '60%',
@@ -693,7 +693,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: COLORS.border,
   },
   breedItemActive: {
     backgroundColor: 'rgba(22, 163, 74, 0.04)',
@@ -711,7 +711,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
 
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
-    padding: 24, backgroundColor: '#FFFFFF' 
+    padding: 24, backgroundColor: COLORS.surface 
   },
   saveBtn: { 
     height: 60, backgroundColor: '#16A34A', borderRadius: 28, 

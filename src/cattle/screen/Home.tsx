@@ -220,7 +220,7 @@ const HomeScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FAFAFA' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   topHeaderWrapper: {
     height: Platform.OS === 'ios' ? 340 : 310,
     position: 'relative',
@@ -354,7 +354,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   statsGrid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 15, marginTop: 25 },
   statCard: {
     width: (width - 55) / 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 22,
     padding: 16,
     flexDirection: 'row',
@@ -403,7 +403,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   recentCard: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     borderWidth: 1.5,
     borderColor: COLORS.border || '#E5E7EB',

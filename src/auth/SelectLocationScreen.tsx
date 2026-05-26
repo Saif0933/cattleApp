@@ -272,7 +272,7 @@ const SelectLocationScreen = ({
       <View style={styles.overlay}>
         <SafeAreaView style={styles.container}>
           <StatusBar
-            barStyle="dark-content"
+            barStyle={COLORS.isDark ? "light-content" : "dark-content"}
             backgroundColor="transparent"
             translucent
           />
@@ -473,8 +473,7 @@ const getStyles = (COLORS: any) =>
 
     overlay: {
       flex: 1,
-      backgroundColor:
-        'rgba(255,255,255,0.15)',
+      backgroundColor: COLORS.isDark ? 'rgba(10, 30, 20, 0.75)' : 'rgba(255,255,255,0.15)',
     },
 
     container: {
@@ -495,7 +494,7 @@ const getStyles = (COLORS: any) =>
     title: {
       fontSize: 32,
       fontWeight: '900',
-      color: '#0F291E',
+      color: COLORS.isDark ? '#FFFFFF' : '#0F291E',
       fontFamily: FONT_SERIF,
     },
 
@@ -504,7 +503,7 @@ const getStyles = (COLORS: any) =>
     },
 
     roleCard: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: COLORS.surface,
       borderRadius: 24,
       padding: 18,
       flexDirection: 'row',
@@ -527,14 +526,14 @@ const getStyles = (COLORS: any) =>
     roleName: {
       fontSize: 18,
       fontWeight: '900',
-      color: '#0F291E',
+      color: COLORS.primary,
       fontFamily: FONT_SERIF,
     },
 
     roleDescription: {
       fontSize: 12,
       fontWeight: '700',
-      color: '#6B7280',
+      color: COLORS.secondary,
       marginTop: 4,
     },
 
@@ -547,7 +546,7 @@ const getStyles = (COLORS: any) =>
     },
 
     modalCard: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: COLORS.surface,
       borderRadius: 24,
       padding: 24,
     },
@@ -561,23 +560,25 @@ const getStyles = (COLORS: any) =>
     modalTitle: {
       fontSize: 22,
       fontWeight: '900',
-      color: '#0F291E',
+      color: COLORS.primary,
     },
 
     searchWrapper: {
       height: 48,
       borderWidth: 1,
-      borderColor: '#E5E7EB',
+      borderColor: COLORS.border,
       borderRadius: 12,
       flexDirection: 'row',
       alignItems: 'center',
       paddingHorizontal: 12,
+      backgroundColor: COLORS.background,
       marginBottom: 16,
     },
 
     searchInput: {
       flex: 1,
       marginLeft: 8,
+      color: COLORS.primary,
     },
 
     stateItem: {
@@ -587,7 +588,7 @@ const getStyles = (COLORS: any) =>
     stateNameText: {
       fontSize: 15,
       fontWeight: '700',
-      color: '#1F2937',
+      color: COLORS.primary,
     },
   });
 

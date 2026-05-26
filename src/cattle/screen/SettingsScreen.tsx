@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useThemeColors } from '../../context/useTheme';
+import { useThemeColors, useTheme } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -23,7 +23,7 @@ const SettingsScreen = ({ navigation }: any) => {
   const styles = getStyles(COLORS);
 
   const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  const { isDark, setIsDark } = useTheme();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -77,9 +77,9 @@ const SettingsScreen = ({ navigation }: any) => {
             <Text style={styles.menuText}>Dark Mode</Text>
             <Switch
               trackColor={{ false: '#E5E7EB', true: '#16A34A' }}
-              thumbColor={darkMode ? '#FFFFFF' : '#F3F4F6'}
-              onValueChange={setDarkMode}
-              value={darkMode}
+              thumbColor={isDark ? '#FFFFFF' : '#F3F4F6'}
+              onValueChange={setIsDark}
+              value={isDark}
             />
           </View>
 
@@ -133,14 +133,14 @@ const SettingsScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.surface
   },
   backBtn: { 
     width: 44, height: 44, borderRadius: 15, 
@@ -159,7 +159,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     textTransform: 'uppercase'
   },
   menuCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 24,
     borderWidth: 1.5,
     borderColor: COLORS.border,
@@ -170,7 +170,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   iconBox: { width: 44, height: 44, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   menuText: { flex: 1, fontSize: 15, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
   valText: { fontSize: 13, color: COLORS.secondary, fontWeight: '700', marginRight: 8, fontFamily: FONT_SANS },
-  divider: { height: 1, backgroundColor: '#E5E7EB', marginHorizontal: 14 }
+  divider: { height: 1, backgroundColor: COLORS.border, marginHorizontal: 14 }
 });
 
 export default SettingsScreen;

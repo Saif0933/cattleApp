@@ -70,7 +70,7 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -87,7 +87,7 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
         {/* Horizontal Stats Row */}
         <View style={styles.statsRow}>
           {stats.map((stat, idx) => (
-            <View key={idx} style={[styles.statCell, { backgroundColor: stat.bg }]}>
+            <View key={idx} style={[styles.statCell, { backgroundColor: COLORS.isDark ? (stat.color + '15') : stat.bg }]}>
               <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
               <Text style={styles.statLabel}>{stat.label}</Text>
             </View>
@@ -100,7 +100,7 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
           <View style={styles.tasksList}>
             {upcomingTasks.map((task, idx) => (
               <View key={idx} style={styles.taskCard}>
-                <View style={[styles.taskIconBox, { backgroundColor: task.iconBg }]}>
+                <View style={[styles.taskIconBox, { backgroundColor: COLORS.isDark ? (task.iconColor + '15') : task.iconBg }]}>
                   <Icon name={task.icon} size={24} color={task.iconColor} />
                 </View>
                 <View style={styles.taskDetails}>
@@ -226,14 +226,14 @@ const HealthRecordScreen = ({ route, navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.background
   },
   backBtn: { 
     width: 44, height: 44, borderRadius: 15, 
@@ -260,7 +260,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   taskCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     padding: 16,
     borderRadius: 22,
     borderWidth: 1.5,
@@ -295,7 +295,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   // Modal Styles
   modalOverlay: { flex: 1, backgroundColor: 'rgba(15,41,30,0.5)', justifyContent: 'flex-end' },
   modalContent: { 
-    height: '82%', backgroundColor: '#FFFFFF', 
+    height: '82%', backgroundColor: COLORS.surface, 
     borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24 
   },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
@@ -304,7 +304,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   modalForm: { gap: 15, paddingBottom: 50 },
   label: { fontSize: 13, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SANS, marginBottom: 2 },
   inputWrapper: {
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 18, 
     borderWidth: 1.5, borderColor: COLORS.border, paddingHorizontal: 16,
     justifyContent: 'center'
   },
@@ -312,13 +312,13 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   textAreaWrapper: { height: 100, paddingVertical: 10 },
   textArea: { height: '100%', textAlignVertical: 'top' },
   pickerBox: { 
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 18, 
     flexDirection: 'row', alignItems: 'center', paddingHorizontal: 18,
     borderWidth: 1.5, borderColor: COLORS.border
   },
   pickerInput: { flex: 1, fontSize: 15, fontWeight: '600', color: COLORS.darkGreen, fontFamily: FONT_SANS },
   datePickerBtn: { 
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 18, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 18, 
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 18,
     borderWidth: 1.5, borderColor: COLORS.border
   },

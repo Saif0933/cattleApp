@@ -4,6 +4,7 @@ import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { UserProvider } from './src/context/UserContext';
+import { ThemeProvider } from './src/context/useTheme';
 import AppStack from './src/stack/stack';
 
 // Initialize QueryClient
@@ -14,10 +15,12 @@ function App() {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <UserProvider>
-          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-          <NavigationContainer>
-            <AppStack />
-          </NavigationContainer>
+          <ThemeProvider>
+            <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+            <NavigationContainer>
+              <AppStack />
+            </NavigationContainer>
+          </ThemeProvider>
         </UserProvider>
       </QueryClientProvider>
     </SafeAreaProvider>

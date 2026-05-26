@@ -22,8 +22,8 @@ const FarmProfileScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
 
-  const [farmName, setFarmName] = useState('Rashi Farm');
-  const [ownerName, setOwnerName] = useState('Rashi Sharma');
+  const [farmName, setFarmName] = useState('Rashid Farm');
+  const [ownerName, setOwnerName] = useState('Rashid Sharma');
   const [phone, setPhone] = useState('+91 98765 43210');
   const [address, setAddress] = useState('Village Rampur, Kota, Rajasthan - 324001');
   const [land, setLand] = useState('15 Acres');

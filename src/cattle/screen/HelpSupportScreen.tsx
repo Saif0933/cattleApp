@@ -34,7 +34,7 @@ const HelpSupportScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#F5F7F5" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -159,19 +159,19 @@ const HelpSupportScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F5F7F5' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#F5F7F5'
+    backgroundColor: COLORS.background
   },
   backBtn: { 
     width: 40, height: 40, borderRadius: 20, 
     justifyContent: 'center', alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border
   },
@@ -226,7 +226,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     marginBottom: 16,
   },
   gridCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 24,
     padding: 16,
     width: (width - 56) / 2,
@@ -261,7 +261,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
 
   rateCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 24,
     padding: 20,
     borderWidth: 1.2,
@@ -281,7 +281,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: COLORS.isDark ? '#2E2200' : '#FFFBEB',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -312,7 +312,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
     paddingHorizontal: 20, paddingVertical: 16,
-    backgroundColor: 'rgba(245, 247, 245, 0.95)',
+    backgroundColor: COLORS.surface,
     borderTopWidth: 1,
     borderTopColor: COLORS.border,
   },

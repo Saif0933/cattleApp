@@ -58,7 +58,7 @@ const BreedingScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -73,7 +73,7 @@ const BreedingScreen = ({ navigation }: any) => {
         {/* 2x2 Stats Grid */}
         <View style={styles.statsGrid}>
           {stats.map((stat, idx) => (
-            <View key={idx} style={[styles.statCell, { backgroundColor: stat.bg }]}>
+            <View key={idx} style={[styles.statCell, { backgroundColor: COLORS.isDark ? (stat.color + '15') : stat.bg }]}>
               <Text style={[styles.statValue, { color: stat.color }]}>{stat.value}</Text>
               <Text style={styles.statLabel}>{stat.label}</Text>
             </View>
@@ -94,7 +94,7 @@ const BreedingScreen = ({ navigation }: any) => {
                 <Image source={{ uri: item.image }} style={styles.cardImg} resizeMode="cover" />
                 <View style={styles.cardDetails}>
                   <Text style={styles.cardTitle}>{item.name}</Text>
-                  <View style={[styles.statusBadge, { backgroundColor: item.statusBg, alignSelf: 'flex-start', marginTop: 4 }]}>
+                  <View style={[styles.statusBadge, { backgroundColor: COLORS.isDark ? (item.statusColor + '15') : item.statusBg, alignSelf: 'flex-start', marginTop: 4 }]}>
                     <Text style={[styles.statusBadgeText, { color: item.statusColor }]}>{item.status}</Text>
                   </View>
                 </View>
@@ -171,7 +171,7 @@ const BreedingScreen = ({ navigation }: any) => {
                       </View>
                       <View style={styles.tableRow}>
                         <Text style={styles.tableCellLabel}>Pregnancy Status</Text>
-                        <View style={[styles.statusBadge, { backgroundColor: '#DCFCE7' }]}>
+                        <View style={[styles.statusBadge, { backgroundColor: COLORS.isDark ? 'rgba(22, 163, 74, 0.15)' : '#DCFCE7' }]}>
                           <Text style={[styles.statusBadgeText, { color: '#16A34A' }]}>{selectedCow.status}</Text>
                         </View>
                       </View>
@@ -210,14 +210,14 @@ const BreedingScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.background
   },
   backBtn: { 
     width: 44, height: 44, borderRadius: 15, 
@@ -243,7 +243,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     padding: 14,
     borderRadius: 22,
     borderWidth: 1.5,
@@ -273,7 +273,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   // Modal Styles
   modalOverlay: { flex: 1, backgroundColor: 'rgba(15,41,30,0.5)', justifyContent: 'flex-end' },
   modalContent: { 
-    height: '80%', backgroundColor: '#FFFFFF', 
+    height: '80%', backgroundColor: COLORS.surface, 
     borderTopLeftRadius: 30, borderTopRightRadius: 30, padding: 24 
   },
   modalHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
@@ -290,7 +290,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
 
   infoSectionTitle: { fontSize: 15, fontWeight: '800', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginBottom: 5 },
   breedingTable: { 
-    backgroundColor: '#FFFFFF', borderRadius: 20, borderWidth: 1.5, 
+    backgroundColor: COLORS.surface, borderRadius: 20, borderWidth: 1.5, 
     borderColor: COLORS.border, overflow: 'hidden' 
   },
   tableRow: { 
@@ -306,7 +306,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   placeholderTabText: { fontSize: 13, color: COLORS.secondary, fontFamily: FONT_SANS },
 
   editRecordBtn: { 
-    height: 56, backgroundColor: '#FFFFFF', borderRadius: 28, 
+    height: 56, backgroundColor: COLORS.surface, borderRadius: 28, 
     justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#16A34A', marginTop: 15
   },
   editRecordBtnText: { fontSize: 15, fontWeight: '900', color: '#16A34A', fontFamily: FONT_SANS }

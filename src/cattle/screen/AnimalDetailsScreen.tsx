@@ -51,7 +51,7 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -349,14 +349,14 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.background
   },
   backBtn: { 
     width: 44, height: 44, borderRadius: 15, 
@@ -377,7 +377,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   cowImage: { width: '100%', height: '100%' },
 
   tabBar: { 
-    flexDirection: 'row', borderBottomWidth: 1.5, borderBottomColor: '#E5E7EB', 
+    flexDirection: 'row', borderBottomWidth: 1.5, borderBottomColor: COLORS.border, 
     paddingBottom: 8, marginBottom: 20, justifyContent: 'space-between'
   },
   tabBtn: { paddingVertical: 8, paddingHorizontal: 4 },
@@ -387,7 +387,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
 
   grid: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 15 },
   gridCell: { 
-    width: (width - 63) / 2, backgroundColor: '#FFFFFF', 
+    width: (width - 63) / 2, backgroundColor: COLORS.surface, 
     borderRadius: 20, padding: 16, borderWidth: 1.5, borderColor: COLORS.border,
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4
   },
@@ -398,7 +398,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     flex: 1,
   },
   descriptionCard: {
-    backgroundColor: '#F5F7F5',
+    backgroundColor: COLORS.background,
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
@@ -418,7 +418,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     fontFamily: FONT_SANS,
   },
   statusCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: 20,
     borderWidth: 1.5,
@@ -455,7 +455,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   listItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     padding: 12,
     borderWidth: 1,
@@ -522,7 +522,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     fontFamily: FONT_SANS,
   },
   dewormingCard: {
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.background,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
@@ -554,7 +554,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   statBox: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 16,
@@ -583,7 +583,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   activityStatBox: {
     width: (width - 60) / 2,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 16,
@@ -607,10 +607,10 @@ const getStyles = (COLORS: any) => StyleSheet.create({
 
   footer: { 
     position: 'absolute', bottom: 0, left: 0, right: 0, 
-    padding: 24, backgroundColor: '#FFFFFF', flexDirection: 'row', gap: 12
+    padding: 24, backgroundColor: COLORS.surface, flexDirection: 'row', gap: 12
   },
   editBtn: { 
-    flex: 1, height: 56, backgroundColor: '#FFFFFF', borderRadius: 28, 
+    flex: 1, height: 56, backgroundColor: COLORS.surface, borderRadius: 28, 
     justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderColor: '#16A34A'
   },
   editBtnText: { fontSize: 15, fontWeight: '900', color: '#16A34A', fontFamily: FONT_SANS },

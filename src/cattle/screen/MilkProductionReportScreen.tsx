@@ -36,7 +36,7 @@ const MilkProductionReportScreen = ({ navigation }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor={COLORS.background} />
       
       {/* Header */}
       <View style={styles.header}>
@@ -146,14 +146,14 @@ const MilkProductionReportScreen = ({ navigation }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.background
   },
   backBtn: { 
     width: 44, height: 44, borderRadius: 15, 
@@ -164,7 +164,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   scrollContent: { paddingHorizontal: 24, paddingTop: 15, paddingBottom: 50 },
 
   dateSelectorRow: { 
-    flexDirection: 'row', backgroundColor: '#FFFFFF', borderRadius: 18, 
+    flexDirection: 'row', backgroundColor: COLORS.surface, borderRadius: 18, 
     padding: 6, borderWidth: 1.5, borderColor: COLORS.border, marginBottom: 20
   },
   rangeBtn: { flex: 1, height: 44, borderRadius: 14, justifyContent: 'center', alignItems: 'center' },
@@ -177,7 +177,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   monthText: { fontSize: 18, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF },
 
   totalBanner: { 
-    backgroundColor: '#FFFFFF', borderRadius: 24, padding: 22, 
+    backgroundColor: COLORS.surface, borderRadius: 24, padding: 22, 
     alignItems: 'center', borderWidth: 1.5, borderColor: COLORS.border,
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4,
     marginBottom: 25
@@ -187,7 +187,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   totalSub: { fontSize: 12, fontWeight: '800', color: '#16A34A', marginTop: 4, fontFamily: FONT_SANS },
 
   chartCard: { 
-    backgroundColor: '#FFFFFF', borderRadius: 24, padding: 20, 
+    backgroundColor: COLORS.surface, borderRadius: 24, padding: 20, 
     borderWidth: 1.5, borderColor: COLORS.border,
     elevation: 2, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.02, shadowRadius: 4,
     marginBottom: 25
@@ -200,22 +200,22 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   gridLine: { height: 18, justifyContent: 'center' },
   gridText: { fontSize: 10, color: COLORS.secondary, fontWeight: '700', fontFamily: FONT_SANS },
   
-  barsArea: { flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', borderLeftWidth: 1, borderBottomWidth: 1, borderColor: '#E5E7EB', paddingLeft: 10 },
+  barsArea: { flex: 1, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', borderLeftWidth: 1, borderBottomWidth: 1, borderColor: COLORS.border, paddingLeft: 10 },
   barCol: { width: 22, height: '100%', justifyContent: 'flex-end', alignItems: 'center' },
-  barTrack: { flex: 1, width: 10, backgroundColor: '#E5E7EB', borderRadius: 5, justifyContent: 'flex-end' },
+  barTrack: { flex: 1, width: 10, backgroundColor: COLORS.isDark ? '#1F2937' : '#E5E7EB', borderRadius: 5, justifyContent: 'flex-end' },
   barFill: { width: '100%', borderRadius: 5 },
   barLabel: { fontSize: 10, color: COLORS.secondary, fontWeight: '800', marginTop: 8, fontFamily: FONT_SANS },
 
   analyticsSection: {},
   analyticsTitle: { fontSize: 18, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SERIF, marginBottom: 15 },
   breakdownCard: { 
-    backgroundColor: '#FFFFFF', borderRadius: 22, padding: 18, 
+    backgroundColor: COLORS.surface, borderRadius: 22, padding: 18, 
     borderWidth: 1.5, borderColor: COLORS.border
   },
   breakdownRow: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 10 },
   breakdownLabel: { fontSize: 13, fontWeight: '700', color: COLORS.secondary, fontFamily: FONT_SANS },
   breakdownVal: { fontSize: 14, fontWeight: '900', color: COLORS.darkGreen, fontFamily: FONT_SANS },
-  hDivider: { height: 1, backgroundColor: '#E5E7EB' }
+  hDivider: { height: 1, backgroundColor: COLORS.border }
 });
 
 export default MilkProductionReportScreen;

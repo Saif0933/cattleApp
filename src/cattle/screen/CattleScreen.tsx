@@ -559,16 +559,16 @@ const HerdScreen = ({ navigation, route }: any) => {
 };
 
 const getStyles = (COLORS: any) => StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FAFAFA' },
+  container: { flex: 1, backgroundColor: COLORS.background },
   header: {
     height: 70,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-    backgroundColor: '#FAFAFA',
+    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6'
+    borderBottomColor: COLORS.border
   },
   backBtn: { 
     width: 40, height: 40, borderRadius: 20, 
@@ -582,13 +582,13 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   headerTitle: { 
     fontSize: 18, 
     fontWeight: '900', 
-    color: '#0F291E', 
+    color: COLORS.text, 
     fontFamily: FONT_SERIF,
     textAlign: 'center'
   },
   headerSubtitle: {
     fontSize: 12,
-    color: '#6B7280',
+    color: COLORS.subText,
     fontFamily: FONT_SANS,
     marginTop: 2,
     textAlign: 'center'
@@ -626,11 +626,11 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 20,
     marginTop: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 14,
     padding: 4,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB'
+    borderColor: COLORS.border
   },
   marketTabBtn: {
     flex: 1,
@@ -639,7 +639,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.surface
   },
   activeMarketTabBtn: {
     backgroundColor: '#16A34A'
@@ -647,7 +647,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   marketTabBtnText: {
     fontSize: 14,
     fontWeight: '800',
-    color: '#4B5563',
+    color: COLORS.subText,
     fontFamily: FONT_SANS
   },
   activeMarketTabBtnText: {
@@ -665,47 +665,47 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   searchBox: {
     flex: 1,
     height: 44,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB'
+    borderColor: COLORS.border
   },
   searchInput: {
     flex: 1,
     marginLeft: 8,
     fontSize: 13,
     fontWeight: '600',
-    color: '#0F291E',
+    color: COLORS.text,
     fontFamily: FONT_SANS,
     padding: 0
   },
   dropdownBtn: {
     height: 44,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 12,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
     gap: 4
   },
   dropdownText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#4B5563',
+    color: COLORS.subText,
     fontFamily: FONT_SANS
   },
   filterIconBtn: {
     width: 44,
     height: 44,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -722,7 +722,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.text,
     fontFamily: FONT_SERIF
   },
   viewAllRow: {
@@ -744,11 +744,11 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   featuredCard: {
     width: 160,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     marginRight: 12,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
     overflow: 'hidden',
     elevation: 2,
     shadowColor: '#000',
@@ -787,7 +787,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   featuredName: {
     fontSize: 14,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.text,
     fontFamily: FONT_SERIF
   },
   metaRow: {
@@ -802,7 +802,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   metaText: {
     fontSize: 11,
-    color: '#6B7280',
+    color: COLORS.subText,
     fontWeight: '600',
     fontFamily: FONT_SANS
   },
@@ -833,9 +833,9 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 6,
@@ -858,7 +858,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   categoryLabel: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#4B5563',
+    color: COLORS.subText,
     fontFamily: FONT_SANS
   },
   activeCategoryLabel: {
@@ -873,10 +873,10 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   recentCard: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
     padding: 10,
     alignItems: 'center'
   },
@@ -899,7 +899,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   recentName: {
     fontSize: 14,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.text,
     fontFamily: FONT_SERIF
   },
   recentPrice: {
@@ -938,21 +938,21 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 40,
     paddingHorizontal: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
   },
   emptyStateTitle: {
     fontSize: 16,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.text,
     marginTop: 8,
     fontFamily: FONT_SERIF,
   },
   emptyStateSub: {
     fontSize: 13,
-    color: '#6B7280',
+    color: COLORS.subText,
     textAlign: 'center',
     marginTop: 6,
     lineHeight: 18,

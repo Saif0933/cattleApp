@@ -102,7 +102,7 @@ const OTPScreen = ({ navigation, route }: any) => {
     >
       <View style={styles.overlay}>
         <SafeAreaView style={styles.container}>
-          <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+          <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" translucent />
           
           <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -159,7 +159,7 @@ const OTPScreen = ({ navigation, route }: any) => {
 
                 {/* Verify Button */}
                 <TouchableOpacity
-                  style={[styles.loginBtn, { backgroundColor: isOtpValid && !isPending ? '#16A34A' : '#E5E7EB' }]}
+                  style={[styles.loginBtn, { backgroundColor: isOtpValid && !isPending ? '#16A34A' : (COLORS.isDark ? '#1F2937' : '#E5E7EB') }]}
                   onPress={handleVerify}
                   activeOpacity={0.85}
                   disabled={!isOtpValid || isPending}
@@ -167,7 +167,7 @@ const OTPScreen = ({ navigation, route }: any) => {
                   {isPending ? (
                     <ActivityIndicator size="small" color="#FFFFFF" />
                   ) : (
-                    <Text style={[styles.loginBtnText, { color: isOtpValid ? '#FFFFFF' : '#9CA3AF' }]}>
+                    <Text style={[styles.loginBtnText, { color: isOtpValid ? '#FFFFFF' : (COLORS.isDark ? '#4B5563' : '#9CA3AF') }]}>
                       Verify & Continue
                     </Text>
                   )}
@@ -195,7 +195,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: COLORS.isDark ? 'rgba(10, 30, 20, 0.75)' : 'rgba(255, 255, 255, 0.15)',
   },
   container: { 
     flex: 1,
@@ -209,7 +209,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
 
   loginCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
     borderRadius: 30,
     padding: 24,
     elevation: 10,
@@ -218,20 +218,20 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 16,
     borderWidth: 1,
-    borderColor: '#F0F2ED',
+    borderColor: COLORS.border,
     marginBottom: 24
   },
   cardTitle: {
     fontSize: 26,
     fontWeight: '900',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SERIF,
     textAlign: 'center'
   },
   cardSubtitle: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#6B7280',
+    color: COLORS.secondary,
     fontFamily: FONT_SANS,
     textAlign: 'center',
     marginTop: 6,
@@ -240,7 +240,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   phoneHighlight: {
     fontWeight: '900',
-    color: '#0F291E'
+    color: COLORS.primary
   },
 
   formGroup: {
@@ -249,7 +249,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: '800',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SANS,
     marginBottom: 8
   },
@@ -257,11 +257,11 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     height: 54,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: COLORS.border,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 14,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: COLORS.background
   },
   inputIcon: {
     marginRight: 10
@@ -269,14 +269,14 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   dividerV: {
     width: 1,
     height: 20,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: COLORS.border,
     marginRight: 12
   },
   input: {
     flex: 1,
     fontSize: 16,
     fontWeight: '800',
-    color: '#0F291E',
+    color: COLORS.primary,
     fontFamily: FONT_SANS,
     padding: 0,
     letterSpacing: 2
@@ -290,7 +290,7 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   timerText: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#6B7280',
+    color: COLORS.secondary,
     fontFamily: FONT_SANS
   },
   timerBold: {

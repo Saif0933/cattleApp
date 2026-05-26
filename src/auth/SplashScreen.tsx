@@ -36,11 +36,7 @@ const SplashScreen = ({ navigation }: any) => {
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
         <SafeAreaView style={styles.container}>
           
-          <View style={styles.logoContainer}>
-            <Icon name="cow" size={80} color="#F59E0B" style={styles.cowIcon} />
-            <Text style={styles.title}>Cattle<Text style={{ color: '#F59E0B' }}>Care</Text></Text>
-            <Text style={styles.subtitle}>Smart Cattle Management</Text>
-          </View>
+          <View style={styles.logoContainer} />
 
           <View style={styles.footer} />
 
@@ -58,7 +54,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(15, 41, 30, 0.55)', // Forest dark green overlay matching the CattleCare theme
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
