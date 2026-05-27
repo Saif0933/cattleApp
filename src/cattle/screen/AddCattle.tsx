@@ -94,9 +94,9 @@ const AddCattleScreen = ({ navigation }: any) => {
   const [step, setStep] = useState(1);
 
   // Form states
-  const [type, setType] = useState('Cow');
+  const [type, setType] = useState('');
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
-  const [breed, setBreed] = useState('HF Cross');
+  const [breed, setBreed] = useState('');
   const [selectedSubCategoryId, setSelectedSubCategoryId] = useState<string>('');
   const [name, setName] = useState('');
   const [dob, setDob] = useState('Select date');
@@ -121,23 +121,6 @@ const AddCattleScreen = ({ navigation }: any) => {
 
   const { data: subCategoriesResponse } = useGetAllSubCategories();
   const subCategories = subCategoriesResponse?.data || [];
-
-  // Synchronize dynamic category lists
-  useEffect(() => {
-    if (categories.length > 0 && !selectedCategoryId) {
-      // Find default category
-      const cowCat = categories.find(c => c.name.toLowerCase() === 'cow') || categories[0];
-      setSelectedCategoryId(cowCat.id);
-      setType(cowCat.name);
-
-      // Find default subcategory
-      const matchedSubs = subCategories.filter(s => s.categoryId === cowCat.id);
-      if (matchedSubs.length > 0) {
-        setBreed(matchedSubs[0].name);
-        setSelectedSubCategoryId(matchedSubs[0].id);
-      }
-    }
-  }, [categories, subCategories]);
 
   const { mutate: createListing, isPending: isSaving } = useCreateAnimalListing({
     onSuccess: (response) => {
