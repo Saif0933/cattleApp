@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dimensions,
   Image,
@@ -9,15 +9,52 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Geolocation from 'react-native-geolocation-service';
 import { useThemeColors } from '../../context/useTheme';
+import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
+import { useGetAllCategories } from '../../api/hook/animal/category';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
+
+const mapListingToProduct = (listing: any) => {
+  const primaryImage = listing.images && listing.images.length > 0
+    ? (listing.images[0].url?.secure_url || listing.images[0].url || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400')
+    : 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400';
+
+  const allImages = listing.images && listing.images.length > 0
+    ? listing.images.map((img: any) => img.url?.secure_url || img.url || primaryImage)
+    : [primaryImage];
+
+  const age = listing.animal?.ageMonths
+    ? `${Math.floor(listing.animal.ageMonths / 12)} Years`
+    : '3 Years';
+
+  return {
+    id: listing.id,
+    name: listing.animal?.name || listing.title,
+    category: listing.animal?.category || 'Cow',
+    breed: listing.animal?.breed || 'Other',
+    age: age,
+    location: listing.location?.city?.name || listing.location?.state?.name || 'Punjab',
+    price: `₹ ${parseInt(listing.price || '55000').toLocaleString('en-IN')}`,
+    isPremium: listing.status === 'PREMIUM' || listing.isPremium,
+    status: listing.status || 'For Sale',
+    image: primaryImage,
+    images: allImages,
+    description: listing.description || listing.animal?.description || '',
+    gender: listing.animal?.gender || 'Female',
+    weight: listing.animal?.weightKg ? `${listing.animal.weightKg} kg` : '450 kg',
+    milkYield: listing.animal?.dailyMilkProdLtr ? `${listing.animal.dailyMilkProdLtr} L/day` : undefined,
+    color: 'White',
+  };
+};
 
 const HerdScreen = ({ navigation, route }: any) => {
   const COLORS = useThemeColors();
@@ -188,8 +225,61 @@ const HerdScreen = ({ navigation, route }: any) => {
     }
   ];
 
+  const [coords, setCoords] = useState({ latitude: 28.6139, longitude: 77.2090 });
   const [recentList, setRecentList] = useState(initialRecentListings);
   const [sellList, setSellList] = useState<any[]>([]);
+
+  // Fetch coordinates on mount
+  useEffect(() => {
+    Geolocation.getCurrentPosition(
+      (position) => {
+        setCoords({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+      },
+      (error) => {
+        console.log("CattleScreen Geolocation Error:", error);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
+  }, []);
+
+  // Fetch categories from backend
+  const { data: categoriesResponse } = useGetAllCategories();
+  const backendCategories = categoriesResponse?.data || [];
+
+  // Fetch listings from backend
+  const { data: listingsResponse, isLoading: isListingsLoading } = useGetListedAnimalsByLocation({
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+    page: 1,
+    limit: 50
+  });
+
+  const backendListings = listingsResponse?.data?.listings || [];
+  const mappedListings = backendListings.map(mapListingToProduct);
+
+  // Dynamic Categories list
+  const displayedCategoriesList = backendCategories.length > 0
+    ? [
+        { name: 'All Cattle', image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=150' },
+        ...backendCategories.map(cat => ({
+          name: cat.name,
+          image: cat.imageUrl?.secure_url || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=150'
+        }))
+      ]
+    : categories;
+
+  // Dynamic Featured Listings
+  const finalFeaturedListings = mappedListings.length > 0
+    ? mappedListings.filter(item => item.isPremium)
+    : featuredListings;
+
+  // Dynamic Recent Listings
+  const finalRecentList = mappedListings.length > 0
+    ? mappedListings
+    : recentList;
 
   // Listen to new cattle additions
   React.useEffect(() => {
@@ -199,7 +289,7 @@ const HerdScreen = ({ navigation, route }: any) => {
       const formattedListing = {
         id: newAnimal.id || `R${Math.floor(100 + Math.random() * 900)}`,
         name: `${newAnimal.name} (${newAnimal.breed})`,
-        category: newAnimal.type || 'Cow',
+        category: newAnimal.type || newAnimal.category || 'Cow',
         age: newAnimal.age || '3 Years',
         location: newAnimal.location || 'Punjab',
         price: newAnimal.price || '₹ 55,000',
@@ -233,7 +323,7 @@ const HerdScreen = ({ navigation, route }: any) => {
     );
   };
 
-  const displayedFeatured = featuredListings.filter(item => {
+  const displayedFeatured = finalFeaturedListings.filter(item => {
     const query = searchQuery.toLowerCase().trim();
     if (!query) return true;
     return (
@@ -243,7 +333,7 @@ const HerdScreen = ({ navigation, route }: any) => {
     );
   });
 
-  const displayedRecent = recentList.filter(item => {
+  const displayedRecent = finalRecentList.filter(item => {
     const query = searchQuery.toLowerCase().trim();
     if (query) {
       return (
@@ -408,7 +498,7 @@ const HerdScreen = ({ navigation, route }: any) => {
               showsHorizontalScrollIndicator={false} 
               contentContainerStyle={styles.categoryScroll}
             >
-              {categories.map((cat, idx) => {
+              {displayedCategoriesList.map((cat, idx) => {
                 const isActive = activeCategory === cat.name;
                 return (
                   <TouchableOpacity 
