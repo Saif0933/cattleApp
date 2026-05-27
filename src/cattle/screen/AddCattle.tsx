@@ -42,7 +42,7 @@ const AddCattleScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
 
-  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageUris, setImageUris] = useState<string[]>([]);
   const [name, setName] = useState('');
   const [type, setType] = useState('Cow');
   const [breed, setBreed] = useState('HF Cross');
@@ -59,25 +59,39 @@ const AddCattleScreen = ({ navigation }: any) => {
   const [selectedDay, setSelectedDay] = useState<number | null>(new Date().getDate());
 
   const handleImagePick = () => {
+    if (imageUris.length >= 5) {
+      Alert.alert('Limit Reached', 'You can select a maximum of 5 photos.');
+      return;
+    }
+
     Alert.alert('Upload Photo', 'Choose a source to add your animal photo', [
       {
         text: 'Camera',
         onPress: () => ImagePicker.launchCamera({ mediaType: 'photo' }, (res) => {
           if (res.assets && res.assets[0].uri) {
-            setImageUri(res.assets[0].uri);
+            const uri = res.assets[0].uri;
+            setImageUris(prev => [...prev, uri].slice(0, 5));
           }
         })
       },
       {
         text: 'Gallery',
-        onPress: () => ImagePicker.launchImageLibrary({ mediaType: 'photo' }, (res) => {
-          if (res.assets && res.assets[0].uri) {
-            setImageUri(res.assets[0].uri);
+        onPress: () => ImagePicker.launchImageLibrary({
+          mediaType: 'photo',
+          selectionLimit: 5 - imageUris.length,
+        }, (res) => {
+          if (res.assets) {
+            const newUris = res.assets.map(asset => asset.uri).filter((uri): uri is string => !!uri);
+            setImageUris(prev => [...prev, ...newUris].slice(0, 5));
           }
         })
       },
       { text: 'Cancel', style: 'cancel' }
     ]);
+  };
+
+  const handleDeletePhoto = (index: number) => {
+    setImageUris(prev => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = () => {
@@ -95,7 +109,8 @@ const AddCattleScreen = ({ navigation }: any) => {
       gender: gender,
       price: price ? `₹ ${parseInt(price).toLocaleString('en-IN')}` : '₹ 55,000',
       location: location.trim() || 'Punjab',
-      image: imageUri || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400',
+      image: imageUris[0] || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400',
+      images: imageUris.length > 0 ? imageUris : ['https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400'],
       id: `C${Math.floor(100 + Math.random() * 900)}`
     };
 
@@ -198,21 +213,44 @@ const AddCattleScreen = ({ navigation }: any) => {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
-        {/* Photo Upload Circle */}
-        <TouchableOpacity style={styles.photoContainer} onPress={handleImagePick} activeOpacity={0.8}>
-          {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.photo} resizeMode="cover" />
-          ) : (
-            <Image 
-              source={{ uri: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=200' }} 
-              style={styles.photo} 
-              resizeMode="cover"
-            />
-          )}
-          <View style={styles.cameraOverlay}>
-            <Icon name="photo-camera" size={24} color="#FFFFFF" />
-          </View>
-        </TouchableOpacity>
+        {/* Photos Selection Section */}
+        <View style={styles.photoSection}>
+          <Text style={styles.label}>Photos ({imageUris.length}/5)</Text>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={styles.photoListContent}
+          >
+            {imageUris.map((uri, index) => (
+              <View key={index} style={styles.photoWrapper}>
+                <Image source={{ uri }} style={styles.photoThumbnail} resizeMode="cover" />
+                <TouchableOpacity 
+                  style={styles.deletePhotoBtn} 
+                  onPress={() => handleDeletePhoto(index)}
+                  activeOpacity={0.8}
+                >
+                  <Icon name="close" size={14} color="#FFFFFF" />
+                </TouchableOpacity>
+                {index === 0 && (
+                  <View style={styles.coverBadge}>
+                    <Text style={styles.coverBadgeText}>Cover</Text>
+                  </View>
+                )}
+              </View>
+            ))}
+            
+            {imageUris.length < 5 && (
+              <TouchableOpacity 
+                style={styles.addPhotoCard} 
+                onPress={handleImagePick} 
+                activeOpacity={0.8}
+              >
+                <Icon name="add-a-photo" size={24} color={COLORS.secondary} />
+                <Text style={styles.addPhotoText}>Add Photo</Text>
+              </TouchableOpacity>
+            )}
+          </ScrollView>
+        </View>
 
         {/* Input Form */}
         <View style={styles.form}>
@@ -457,17 +495,84 @@ const getStyles = (COLORS: any) => StyleSheet.create({
 
   scrollContent: { paddingHorizontal: 24, paddingTop: 15, paddingBottom: 120 },
   
-  photoContainer: { 
-    width: 100, height: 100, borderRadius: 50, 
-    backgroundColor: '#E5E7EB', alignSelf: 'center', 
-    position: 'relative', marginBottom: 30
+  photoSection: {
+    marginBottom: 24,
   },
-  photo: { width: '100%', height: '100%', borderRadius: 50 },
-  cameraOverlay: { 
-    position: 'absolute', bottom: 0, right: 0, 
-    width: 36, height: 36, borderRadius: 18, 
-    backgroundColor: '#16A34A', justifyContent: 'center', alignItems: 'center',
-    borderWidth: 2, borderColor: '#FFFFFF'
+  photoListContent: {
+    gap: 12,
+    paddingVertical: 8,
+  },
+  photoWrapper: {
+    width: 90,
+    height: 90,
+    borderRadius: 16,
+    position: 'relative',
+    backgroundColor: '#E5E7EB',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  photoThumbnail: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 16,
+  },
+  deletePhotoBtn: {
+    position: 'absolute',
+    top: -6,
+    right: -6,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#EF4444',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    zIndex: 10,
+  },
+  coverBadge: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(22, 163, 74, 0.85)',
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    paddingVertical: 2,
+    alignItems: 'center',
+  },
+  coverBadgeText: {
+    fontSize: 9,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    fontFamily: FONT_SANS,
+    textTransform: 'uppercase',
+  },
+  addPhotoCard: {
+    width: 90,
+    height: 90,
+    borderRadius: 16,
+    backgroundColor: COLORS.surface,
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: COLORS.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 4,
+  },
+  addPhotoText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: COLORS.secondary,
+    fontFamily: FONT_SANS,
   },
 
   form: { gap: 16 },

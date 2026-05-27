@@ -72,8 +72,16 @@ const ZoomableImage = ({ uri, styles }: { uri: string; styles: any }) => {
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onMoveShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponder: (evt) => {
+        const touches = evt.nativeEvent.touches;
+        // @ts-ignore
+        return scale._value > 1 || touches.length >= 2;
+      },
+      onMoveShouldSetPanResponder: (evt) => {
+        const touches = evt.nativeEvent.touches;
+        // @ts-ignore
+        return scale._value > 1 || touches.length >= 2;
+      },
       onPanResponderGrant: (evt) => {
         const touches = evt.nativeEvent.touches;
         lastTouchesCount.current = touches.length;
@@ -184,7 +192,8 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isImageViewerVisible, setIsImageViewerVisible] = useState(false);
-  const [selectedImageUri, setSelectedImageUri] = useState('');
+  const [modalActiveIndex, setModalActiveIndex] = useState(0);
+  const modalScrollRef = useRef<ScrollView>(null);
   const tabs = ['Overview', 'Health', 'Breeding', 'Activity'];
 
   const getFallbackImages = (category: string, primaryImg: string) => {
@@ -242,6 +251,26 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
     setActiveImageIndex(index);
   };
 
+  const handleModalScroll = (event: any) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(contentOffsetX / width);
+    if (index >= 0 && index < images.length) {
+      setModalActiveIndex(index);
+    }
+  };
+
+  useEffect(() => {
+    if (isImageViewerVisible) {
+      const timer = setTimeout(() => {
+        modalScrollRef.current?.scrollTo({
+          x: modalActiveIndex * width,
+          animated: false,
+        });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isImageViewerVisible]);
+
   const animalDescription = product?.description || 'A healthy, highly productive dairy cow with an excellent feeding record. Known for consistent milk yield and calm behavior on the farm.';
   const color = product?.color || 'Black & White';
 
@@ -287,7 +316,7 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
                 key={index}
                 activeOpacity={0.9}
                 onPress={() => {
-                  setSelectedImageUri(imgUri);
+                  setModalActiveIndex(index);
                   setIsImageViewerVisible(true);
                 }}
               >
@@ -649,8 +678,30 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
             <Icon name="close" size={26} color="#FFFFFF" />
           </TouchableOpacity>
           
-          {/* Main Zoomable Image */}
-          <ZoomableImage uri={selectedImageUri} styles={styles} />
+          {/* Horizontal Scrollable Slider of Zoomable Images */}
+          <ScrollView
+            ref={modalScrollRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleModalScroll}
+            scrollEventThrottle={16}
+            style={styles.modalSlider}
+            contentContainerStyle={styles.modalSliderContent}
+          >
+            {images.map((imgUri: string, index: number) => (
+              <View key={index} style={styles.modalSlide}>
+                <ZoomableImage uri={imgUri} styles={styles} />
+              </View>
+            ))}
+          </ScrollView>
+
+          {/* Page Counter Indicator at the bottom */}
+          <View style={styles.modalPageIndicator}>
+            <Text style={styles.modalPageIndicatorText}>
+              {modalActiveIndex + 1} / {images.length}
+            </Text>
+          </View>
         </View>
       </Modal>
     </SafeAreaView>
@@ -724,6 +775,34 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  modalSlider: {
+    flex: 1,
+    width: width,
+  },
+  modalSliderContent: {
+    alignItems: 'center',
+  },
+  modalSlide: {
+    width: width,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalPageIndicator: {
+    position: 'absolute',
+    bottom: 40,
+    alignSelf: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  modalPageIndicatorText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '800',
+    fontFamily: FONT_SANS,
   },
 
   floatingHeader: {
