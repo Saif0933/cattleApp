@@ -197,19 +197,8 @@ const AddCattleScreen = ({ navigation }: any) => {
   const handleTypeSelect = (selectedName: string, selectedId: string) => {
     setType(selectedName);
     setSelectedCategoryId(selectedId);
-    
-    // Find first breed belonging to this category
-    const matchedSubs = subCategories.filter(
-      s => s.categoryId === selectedId || s.category?.name.toLowerCase() === selectedName.toLowerCase()
-    );
-    if (matchedSubs.length > 0) {
-      setBreed(matchedSubs[0].name);
-      setSelectedSubCategoryId(matchedSubs[0].id);
-    } else {
-      const defaultBreeds = BREEDS_BY_TYPE[selectedName] || ['Other'];
-      setBreed(defaultBreeds[0]);
-      setSelectedSubCategoryId('');
-    }
+    setBreed('');
+    setSelectedSubCategoryId('');
   };
 
   const validateCurrentStep = () => {
@@ -478,14 +467,14 @@ const AddCattleScreen = ({ navigation }: any) => {
                       {cat.imageUrl?.secure_url ? (
                         <Image 
                           source={{ uri: cat.imageUrl.secure_url }} 
-                          style={{ width: 36, height: 36, borderRadius: 18 }} 
+                          style={{ width: 68, height: 68, borderRadius: 34 }} 
                           resizeMode="cover"
                         />
                       ) : (
                         <CommunityIcon 
                           name={getCategoryIconName(cat.name)} 
-                          size={32} 
-                          color={isSelected ? '#16A34A' : COLORS.primary} 
+                          size={48} 
+                          color={isSelected ? '#FFFFFF' : COLORS.primary} 
                         />
                       )}
                     </View>
@@ -877,26 +866,19 @@ const getStyles = (COLORS: any) => StyleSheet.create({
   },
   categoryCard: {
     width: (width - 60) / 2,
-    backgroundColor: COLORS.surface,
-    borderRadius: 20,
-    padding: 16,
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: COLORS.border,
-    marginBottom: 4,
+    marginBottom: 16,
+    paddingVertical: 8,
   },
-  categoryCardSelected: {
-    borderColor: '#16A34A',
-    backgroundColor: 'rgba(22, 163, 74, 0.05)',
-  },
+  categoryCardSelected: {},
   iconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 76,
+    height: 76,
+    borderRadius: 38,
     backgroundColor: 'rgba(22, 163, 74, 0.08)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   iconCircleSelected: {
     backgroundColor: '#16A34A',
