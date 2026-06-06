@@ -1,5 +1,4 @@
 import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
-import apiClient from "../../apiClient";
 import type {
   ApiResponse,
   SendOtpRequest,
@@ -7,6 +6,7 @@ import type {
   VerifyOtpRequest,
   VerifyOtpResponseData,
 } from "../../../types/user";
+import apiClient from "../../apiClient";
 
 /**
  * Hook to send OTP to a mobile number.
@@ -63,4 +63,4 @@ export const useVerifyOtp = (
     },
     ...options,
   });
-};
+}; 
