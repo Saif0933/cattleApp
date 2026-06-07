@@ -16,8 +16,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useGetAllCategories } from '../../api/hook/animal/category';
 import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
-import { useThemeColors } from '../../context/useTheme';
 import { useUser } from '../../context/UserContext';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -576,8 +576,6 @@ const HerdScreen = ({ navigation, route }: any) => {
                 </View>
               )}
             </View>
-
-
           </>
         ) : (
           <>
