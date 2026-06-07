@@ -9,9 +9,22 @@ type Address = {
   zip: string;
 };
 
+type AuthUser = {
+  id: string;
+  phone: string;
+  role: string;
+  status: string;
+  name: string | null;
+  email: string | null;
+};
+
 type UserContextType = {
   address: Address;
   updateAddress: (newAddress: Address) => void;
+  user: AuthUser | null;
+  setUser: (user: AuthUser | null) => void;
+  token: string | null;
+  setToken: (token: string | null) => void;
 };
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -26,12 +39,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     zip: '78701',
   });
 
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
   const updateAddress = (newAddress: Address) => {
     setAddress(newAddress);
   };
 
   return (
-    <UserContext.Provider value={{ address, updateAddress }}>
+    <UserContext.Provider value={{ address, updateAddress, user, setUser, token, setToken }}>
       {children}
     </UserContext.Provider>
   );

@@ -1,23 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Animated,
-  Dimensions,
-  Image,
-  Modal,
-  PanResponder,
-  Platform,
-  ScrollView,
-  Share,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    Animated,
+    Dimensions,
+    Image,
+    Modal,
+    PanResponder,
+    Platform,
+    ScrollView,
+    Share,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MCIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useThemeColors } from '../../context/useTheme';
+import { useGetAnimalListingById } from '../../api/hook/animal/listing';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -168,18 +169,63 @@ const ZoomableImage = ({ uri, styles }: { uri: string; styles: any }) => {
   );
 };
 
+const mapListingToProduct = (listing: any) => {
+  if (!listing) return null;
+  const primaryImage = listing.images && listing.images.length > 0
+    ? (listing.images[0].url?.secure_url || listing.images[0].url || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400')
+    : 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400';
+
+  const allImages = listing.images && listing.images.length > 0
+    ? listing.images.map((img: any) => img.url?.secure_url || img.url || primaryImage)
+    : [primaryImage];
+
+  const age = listing.animal?.ageMonths
+    ? `${Math.floor(listing.animal.ageMonths / 12)} Years`
+    : '3 Years';
+
+  return {
+    id: listing.id,
+    name: listing.animal?.name || listing.title,
+    category: listing.animal?.category || 'Cow',
+    breed: listing.animal?.breed || 'Other',
+    age: age,
+    location: listing.location?.city?.name || listing.location?.state?.name || 'Punjab',
+    price: `₹ ${parseInt(listing.price || '55000').toLocaleString('en-IN')}`,
+    isPremium: listing.status === 'PREMIUM' || listing.isPremium,
+    status: listing.status || 'For Sale',
+    image: primaryImage,
+    images: allImages,
+    description: listing.description || listing.animal?.description || '',
+    gender: listing.animal?.gender || 'Female',
+    weight: listing.animal?.weightKg ? `${listing.animal.weightKg} kg` : '450 kg',
+    milkYield: listing.animal?.dailyMilkProdLtr ? `${listing.animal.dailyMilkProdLtr} L/day` : undefined,
+    color: 'White',
+    ownerName: listing.owner?.name || 'Rashi Farm'
+  };
+};
+
 const AnimalDetailsScreen = ({ route, navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
 
   const { product } = route.params || {};
 
-  const name = product?.name || 'Gauri';
-  const id = product?.id || 'C001';
-  const breed = product?.breed || 'HF Cross';
-  const age = product?.age || '3 Years';
-  const gender = product?.gender || 'Female';
-  const image = product?.image || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=600';
+  const { data: listingResponse } = useGetAnimalListingById(product?.id);
+  const backendProduct = mapListingToProduct(listingResponse?.data);
+  const activeProduct = backendProduct || product;
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const handleToggleFavorite = () => {
+    setIsFavorite(prev => !prev);
+  };
+
+  const name = activeProduct?.name || 'Gauri';
+  const id = activeProduct?.id || 'C001';
+  const breed = activeProduct?.breed || 'HF Cross';
+  const age = activeProduct?.age || '3 Years';
+  const gender = activeProduct?.gender || 'Female';
+  const image = activeProduct?.image || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=600';
 
   const [activeTab, setActiveTab] = useState('Overview');
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -232,9 +278,9 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
     return cowImages;
   };
 
-  const images = product?.images && Array.isArray(product.images) && product.images.length > 0
-    ? product.images.slice(0, 5)
-    : getFallbackImages(product?.category || 'Cow', image);
+  const images = activeProduct?.images && Array.isArray(activeProduct.images) && activeProduct.images.length > 0
+    ? activeProduct.images.slice(0, 5)
+    : getFallbackImages(activeProduct?.category || 'Cow', image);
 
   const handleScroll = (event: any) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -242,8 +288,8 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
     setActiveImageIndex(index);
   };
 
-  const animalDescription = product?.description || 'A healthy, highly productive dairy cow with an excellent feeding record. Known for consistent milk yield and calm behavior on the farm.';
-  const color = product?.color || 'Black & White';
+  const animalDescription = activeProduct?.description || 'A healthy, highly productive dairy cow with an excellent feeding record. Known for consistent milk yield and calm behavior on the farm.';
+  const color = activeProduct?.color || 'Black & White';
 
   const overviewDetails = [
     { label: 'Animal Name', value: name, icon: 'pets' },
@@ -251,10 +297,10 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
     { label: 'Color', value: color, icon: 'palette' },
     { label: 'Gender', value: gender, icon: 'wc' },
     { label: 'Age', value: age, icon: 'cake' },
-    { label: 'Weight', value: product?.weight || '450 kg', icon: 'fitness-center' },
-    { label: 'Milk Yield', value: product?.milkYield || '12 L/day', icon: 'opacity' },
+    { label: 'Weight', value: activeProduct?.weight || '450 kg', icon: 'fitness-center' },
+    { label: 'Milk Yield', value: activeProduct?.milkYield || '12 L/day', icon: 'opacity' },
     { label: 'Date of Birth', value: '10 Mar 2021', icon: 'calendar-today' },
-    { label: 'Owner', value: 'Rashi Farm', icon: 'account-circle' }
+    { label: 'Owner', value: activeProduct?.ownerName || 'Rashi Farm', icon: 'account-circle' }
   ];
 
   const handleShare = async () => {
@@ -315,9 +361,14 @@ const AnimalDetailsScreen = ({ route, navigation }: any) => {
             <TouchableOpacity style={styles.floatingBackBtn} onPress={() => navigation.goBack()} activeOpacity={0.8}>
               <Icon name="arrow-back-ios" size={18} color="#FFFFFF" style={{ marginLeft: 6 }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.floatingShareBtn} onPress={handleShare} activeOpacity={0.8}>
-              <Icon name="share" size={20} color="#FFFFFF" />
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', gap: 10 }}>
+              <TouchableOpacity style={styles.floatingShareBtn} onPress={handleShare} activeOpacity={0.8}>
+                <Icon name="share" size={20} color="#FFFFFF" />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.floatingShareBtn} onPress={handleToggleFavorite} activeOpacity={0.8}>
+                <MCIcon name={isFavorite ? "heart" : "heart-outline"} size={20} color={isFavorite ? "#EF4444" : "#FFFFFF"} />
+              </TouchableOpacity>
+            </View>
           </SafeAreaView>
 
         </View>

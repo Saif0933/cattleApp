@@ -1,14 +1,14 @@
 import {
-    useMutation,
-    UseMutationOptions,
-    useQuery,
-    UseQueryOptions
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions
 } from "@tanstack/react-query";
 import type {
-    CastVoteRequest,
-    CastVoteResponseData,
-    VoteStatusParams,
-    VoteStatusResponseData
+  CastVoteRequest,
+  CastVoteResponseData,
+  VoteStatusParams,
+  VoteStatusResponseData
 } from "../../../types/forum.types";
 import type { ApiResponse } from "../../../types/user";
 import { showError, successMesssage } from "../../../utils/message";

@@ -18,6 +18,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSendOtp, useVerifyOtp } from '../api/hook/user/auth';
 import { useThemeColors } from '../context/useTheme';
+import { useUser } from '../context/UserContext';
+import apiClient from '../api/apiClient';
 
 const { width, height } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -26,6 +28,7 @@ const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium'
 const OTPScreen = ({ navigation, route }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
+  const { setUser, setToken } = useUser();
   const phone = route.params?.phone || '';
   const role = route.params?.role || 'user';
   const [otp, setOtp] = useState('');
@@ -41,6 +44,13 @@ const OTPScreen = ({ navigation, route }: any) => {
   const { mutate: verifyOtp, isPending } = useVerifyOtp({
     onSuccess: (response) => {
       if (response.success) {
+        // Set authorization token in apiClient
+        apiClient.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        
+        // Save to context
+        setToken(response.data.token);
+        setUser(response.data.user);
+
         navigation.reset({
           index: 0,
           routes: [{ name: 'SelectLocation', params: { role } }],

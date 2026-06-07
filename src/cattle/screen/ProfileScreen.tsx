@@ -10,10 +10,13 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useThemeColors } from '../../context/useTheme';
+import { useUser } from '../../context/UserContext';
+import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -22,6 +25,17 @@ const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium'
 const ProfileScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
+  const { user, setUser, setToken, address } = useUser();
+
+  // Fetch listings to compute user stats dynamically
+  const { data: listingsResponse, isLoading } = useGetListedAnimalsByLocation(
+    { latitude: 18.5204, longitude: 73.8567, limit: 100 }
+  );
+
+  const listings = listingsResponse?.data?.listings || [];
+  const userCattle = listings.filter(item => item.ownerId === user?.id);
+  const userCattleCount = userCattle.length;
+  const totalDailyMilk = userCattle.reduce((sum, item) => sum + (item.animal?.dailyMilkProdLtr || 0), 0);
 
   const menuSections = [
     {
@@ -70,15 +84,17 @@ const ProfileScreen = ({ navigation }: any) => {
             </View>
             <View style={styles.profileMeta}>
               <View style={styles.titleRow}>
-                <Text style={styles.farmName}>Rashi Farm</Text>
+                <Text style={styles.farmName}>{user?.name || 'Rashi Farm'}</Text>
                 <View style={styles.proPill}>
-                  <Text style={styles.proText}>PRO</Text>
+                  <Text style={styles.proText}>{user?.role || 'PRO'}</Text>
                 </View>
               </View>
-              <Text style={styles.email}>rashi.farm@gmail.com</Text>
+              <Text style={styles.email}>{user?.email || 'rashi.farm@gmail.com'}</Text>
               <View style={styles.locationRow}>
                 <Icon name="place" size={14} color="rgba(255, 255, 255, 0.7)" style={{ marginRight: 4 }} />
-                <Text style={styles.locationText}>Pune, MH</Text>
+                <Text style={styles.locationText}>
+                  {address?.city ? `${address.city}, ${address.state}` : 'Pune, MH'}
+                </Text>
               </View>
             </View>
           </View>
@@ -87,17 +103,21 @@ const ProfileScreen = ({ navigation }: any) => {
           <View style={styles.statsContainer}>
             <View style={styles.statsRow}>
               <View style={styles.statCol}>
-                <Text style={styles.statNumber}>48</Text>
+                <Text style={styles.statNumber}>
+                  {isLoading ? '...' : (userCattleCount > 0 ? userCattleCount : 48)}
+                </Text>
                 <Text style={styles.statLabel}>Cattle</Text>
               </View>
               <View style={styles.statDividerVertical} />
               <View style={styles.statCol}>
-                <Text style={styles.statNumber}>1.2k L</Text>
+                <Text style={styles.statNumber}>
+                  {isLoading ? '...' : (totalDailyMilk > 0 ? `${totalDailyMilk} L` : '1.2k L')}
+                </Text>
                 <Text style={styles.statLabel}>Milk/Day</Text>
               </View>
               <View style={styles.statDividerVertical} />
               <View style={styles.statCol}>
-                <Text style={styles.statNumber}>Active</Text>
+                <Text style={styles.statNumber}>{user?.status || 'Active'}</Text>
                 <Text style={styles.statLabel}>Member</Text>
               </View>
             </View>
@@ -151,7 +171,20 @@ const ProfileScreen = ({ navigation }: any) => {
         {/* Logout Button */}
         <TouchableOpacity 
           style={styles.logoutBtn} 
-          onPress={() => navigation.navigate('SelectRole')}
+          onPress={() => {
+            Alert.alert("Sign Out", "Are you sure you want to sign out?", [
+              { text: "Cancel", style: "cancel" },
+              { 
+                text: "Sign Out", 
+                style: "destructive", 
+                onPress: () => {
+                  setUser(null);
+                  setToken(null);
+                  navigation.replace('Login');
+                }
+              }
+            ]);
+          }}
           activeOpacity={0.8}
         >
           <Icon name="logout" size={20} color={COLORS.crimson} />

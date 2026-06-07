@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -13,20 +13,109 @@ import {
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useThemeColors } from '../../context/useTheme';
+import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
+import { useUser } from '../../context/UserContext';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
 
+const mapListingToProduct = (listing: any) => {
+  const primaryImage = listing.images && listing.images.length > 0
+    ? (listing.images[0].url?.secure_url || listing.images[0].url || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400')
+    : 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400';
+
+  const allImages = listing.images && listing.images.length > 0
+    ? listing.images.map((img: any) => img.url?.secure_url || img.url || primaryImage)
+    : [primaryImage];
+
+  const age = listing.animal?.ageMonths
+    ? `${Math.floor(listing.animal.ageMonths / 12)} Years`
+    : '3 Years';
+
+  return {
+    id: listing.id,
+    ownerId: listing.ownerId,
+    name: listing.animal?.name || listing.title,
+    category: listing.animal?.category || 'Cow',
+    breed: listing.animal?.breed || 'Other',
+    age: age,
+    location: listing.location?.city?.name || listing.location?.state?.name || 'Punjab',
+    price: `₹ ${parseInt(listing.price || '55000').toLocaleString('en-IN')}`,
+    isPremium: listing.status === 'PREMIUM' || listing.isPremium,
+    status: listing.status || 'For Sale',
+    image: primaryImage,
+    images: allImages,
+    description: listing.description || listing.animal?.description || '',
+    gender: listing.animal?.gender || 'Female',
+    weight: listing.animal?.weightKg ? `${listing.animal.weightKg} kg` : '450 kg',
+    milkYield: listing.animal?.dailyMilkProdLtr ? `${listing.animal.dailyMilkProdLtr} L/day` : undefined,
+    color: 'White',
+  };
+};
+
 const HomeScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
+  const { user } = useUser();
+  const [likedItems, setLikedItems] = useState<string[]>([]);
+
+  const toggleLike = (id: string) => {
+    setLikedItems(prev => 
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  // Fetch coordinates on mount or default to Pune
+  const [coords, setCoords] = useState({ latitude: 18.5204, longitude: 73.8567 });
+
+  // Fetch listings from backend
+  const { data: listingsResponse } = useGetListedAnimalsByLocation({
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+    page: 1,
+    limit: 50
+  });
+
+  const backendListings = listingsResponse?.data?.listings || [];
+  const userCattle = backendListings.filter(item => item.ownerId === user?.id);
+  const userCattleCount = userCattle.length;
+  const totalDailyMilk = userCattle.reduce((sum, item) => sum + (item.animal?.dailyMilkProdLtr || 0), 0);
+  const sickAnimalsCount = userCattle.filter(item => (item.animal as any)?.healthStatus?.toLowerCase() === 'sick').length;
 
   const stats = [
-    { label: 'Total Cattle', value: '128', sub: '+12 this month', icon: 'cow', color: '#16A34A', bg: '#DCFCE7' },
-    { label: 'Sick Animals', value: '12', sub: 'Need treatment', icon: 'heart-pulse', color: '#EF4444', bg: '#FEE2E2' },
-    { label: 'Due for Checkup', value: '8', sub: 'Scheduled soon', icon: 'calendar-check', color: '#F59E0B', bg: '#FEF3C7' },
-    { label: 'Milk Today', value: '320 L', sub: '+8% vs yesterday', icon: 'bottle-wine-outline', color: '#3B82F6', bg: '#DBEAFE' }
+    { 
+      label: 'Total Cattle', 
+      value: userCattleCount > 0 ? String(userCattleCount) : '128', 
+      sub: userCattleCount > 0 ? 'My Active Herd' : '+12 this month', 
+      icon: 'cow', 
+      color: '#16A34A', 
+      bg: '#DCFCE7' 
+    },
+    { 
+      label: 'Sick Animals', 
+      value: sickAnimalsCount > 0 ? String(sickAnimalsCount) : '12', 
+      sub: sickAnimalsCount > 0 ? 'Requires isolation' : 'Need treatment', 
+      icon: 'heart-pulse', 
+      color: '#EF4444', 
+      bg: '#FEE2E2' 
+    },
+    { 
+      label: 'Due for Checkup', 
+      value: '8', 
+      sub: 'Scheduled soon', 
+      icon: 'calendar-check', 
+      color: '#F59E0B', 
+      bg: '#FEF3C7' 
+    },
+    { 
+      label: 'Milk Today', 
+      value: totalDailyMilk > 0 ? `${totalDailyMilk} L` : '320 L', 
+      sub: totalDailyMilk > 0 ? 'Daily total' : '+8% vs yesterday', 
+      icon: 'bottle-wine-outline', 
+      color: '#3B82F6', 
+      bg: '#DBEAFE' 
+    }
   ];
 
   const quickActions = [
@@ -36,7 +125,7 @@ const HomeScreen = ({ navigation }: any) => {
     { name: 'Reports', icon: 'chart-bar', route: 'Reports', color: '#3B82F6', bg: '#DBEAFE' }
   ];
 
-  const [recentList, setRecentList] = React.useState([
+  const initialRecentListings = [
     {
       id: 'R001',
       name: 'Jersey Cow',
@@ -77,14 +166,11 @@ const HomeScreen = ({ navigation }: any) => {
       status: 'For Sale',
       image: 'https://images.unsplash.com/photo-1610444983050-8b6b0a1d6361?auto=format&fit=crop&q=80&w=400'
     }
-  ]);
+  ];
 
-  const [likedItems, setLikedItems] = React.useState<string[]>([]);
-  const toggleLike = (id: string) => {
-    setLikedItems(prev => 
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
+  const recentList = backendListings.length > 0
+    ? backendListings.slice(0, 4).map(mapListingToProduct)
+    : initialRecentListings;
 
   return (
     <View style={styles.container}>
@@ -108,7 +194,7 @@ const HomeScreen = ({ navigation }: any) => {
                 <Icon name="menu" size={24} color="#0F291E" />
               </TouchableOpacity>
               <View style={styles.headerGreeting}>
-                <Text style={styles.greetingText}>Hello, Rashid 👋</Text>
+                <Text style={styles.greetingText}>Hello, {user?.name || 'Farmer'} 👋</Text>
                 <Text style={styles.welcomeText}>Good Morning</Text>
               </View>
             </View>

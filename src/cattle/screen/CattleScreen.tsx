@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -9,15 +9,15 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-  ActivityIndicator
+  View
 } from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Geolocation from 'react-native-geolocation-service';
-import { useThemeColors } from '../../context/useTheme';
-import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
 import { useGetAllCategories } from '../../api/hook/animal/category';
+import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
+import { useThemeColors } from '../../context/useTheme';
+import { useUser } from '../../context/UserContext';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -38,6 +38,7 @@ const mapListingToProduct = (listing: any) => {
 
   return {
     id: listing.id,
+    ownerId: listing.ownerId,
     name: listing.animal?.name || listing.title,
     category: listing.animal?.category || 'Cow',
     breed: listing.animal?.breed || 'Other',
@@ -59,6 +60,7 @@ const mapListingToProduct = (listing: any) => {
 const HerdScreen = ({ navigation, route }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
+  const { user } = useUser();
 
   const [activeMarketTab, setActiveMarketTab] = useState('buy'); // 'buy' or 'sell'
   const [activeCategory, setActiveCategory] = useState('All Cattle');
@@ -345,7 +347,10 @@ const HerdScreen = ({ navigation, route }: any) => {
     return activeCategory === 'All Cattle' || item.category === activeCategory;
   });
 
-  const displayedSell = sellList.filter(item => {
+  const userOwnListings = mappedListings.filter(item => item.ownerId === user?.id);
+  const finalSellList = userOwnListings.length > 0 ? userOwnListings : sellList;
+
+  const displayedSell = finalSellList.filter(item => {
     const query = searchQuery.toLowerCase().trim();
     if (query) {
       return (

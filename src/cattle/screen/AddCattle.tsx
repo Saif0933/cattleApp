@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
-  Alert,
-  Dimensions,
-  Image,
-  Modal,
-  Platform,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  ActivityIndicator
+    ActivityIndicator,
+    Alert,
+    Dimensions,
+    Image,
+    Modal,
+    Platform,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useThemeColors } from '../../context/useTheme';
-import { useCreateAnimalListing } from '../../api/hook/animal/listing';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useGetAllCategories, useGetAllSubCategories } from '../../api/hook/animal/category';
+import { useCreateAnimalListing } from '../../api/hook/animal/listing';
+import { useThemeColors } from '../../context/useTheme';
 import type { CreateAnimalListingRequest } from '../../types/animal.types';
 
 const { width } = Dimensions.get('window');

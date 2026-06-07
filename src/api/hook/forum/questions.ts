@@ -1,15 +1,15 @@
 import {
-    useMutation,
-    UseMutationOptions,
-    useQuery,
-    UseQueryOptions
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions
 } from "@tanstack/react-query";
 import type {
-    CreateQuestionRequest,
-    ForumQuestion,
-    ListQuestionsParams,
-    ListQuestionsResponseData,
-    UpdateQuestionRequest
+  CreateQuestionRequest,
+  ForumQuestion,
+  ListQuestionsParams,
+  ListQuestionsResponseData,
+  UpdateQuestionRequest
 } from "../../../types/forum.types";
 import type { ApiResponse } from "../../../types/user";
 import { showError, successMesssage } from "../../../utils/message";
