@@ -18,6 +18,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CommunityIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useQueryClient } from '@tanstack/react-query';
 import { useGetAllCategories, useGetAllSubCategories } from '../../api/hook/animal/category';
 import { useCreateAnimalListing } from '../../api/hook/animal/listing';
 import { useThemeColors } from '../../context/useTheme';
@@ -89,6 +90,7 @@ const MONTH_NAMES = [
 const AddCattleScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
+  const queryClient = useQueryClient();
 
   // Stepper state
   const [step, setStep] = useState(1);
@@ -124,6 +126,7 @@ const AddCattleScreen = ({ navigation }: any) => {
 
   const { mutate: createListing, isPending: isSaving } = useCreateAnimalListing({
     onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["animalListings"] });
       const newProduct = mapListingToProduct(response.data);
       Alert.alert('Success', 'Cattle added to herd registry!', [
         { 

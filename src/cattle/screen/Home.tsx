@@ -125,52 +125,9 @@ const HomeScreen = ({ navigation }: any) => {
     { name: 'Reports', icon: 'chart-bar', route: 'Reports', color: '#3B82F6', bg: '#DBEAFE' }
   ];
 
-  const initialRecentListings = [
-    {
-      id: 'R001',
-      name: 'Jersey Cow',
-      category: 'Cow',
-      age: '2 Years',
-      location: 'Maharashtra',
-      price: '₹ 70,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R002',
-      name: 'Gir Calf',
-      category: 'Cow',
-      age: '6 Months',
-      location: 'Gujarat',
-      price: '₹ 25,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R003',
-      name: 'Murrah Buffalo',
-      category: 'Buffalo',
-      age: '3 Years',
-      location: 'Punjab',
-      price: '₹ 90,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R004',
-      name: 'Barbari Goat',
-      category: 'Goat',
-      age: '2 Years',
-      location: 'Uttar Pradesh',
-      price: '₹ 12,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1610444983050-8b6b0a1d6361?auto=format&fit=crop&q=80&w=400'
-    }
-  ];
-
   const recentList = backendListings.length > 0
     ? backendListings.slice(0, 4).map(mapListingToProduct)
-    : initialRecentListings;
+    : [];
 
   return (
     <View style={styles.container}>
@@ -259,44 +216,51 @@ const HomeScreen = ({ navigation }: any) => {
           </View>
 
           <View style={styles.recentContainer}>
-            {recentList.map((item) => (
-              <TouchableOpacity 
-                key={item.id} 
-                style={styles.recentCard}
-                onPress={() => navigation.navigate('AnimalDetails', { product: item })}
-                activeOpacity={0.9}
-              >
-                <Image source={{ uri: item.image }} style={styles.recentImg} />
-                <View style={styles.recentInfo}>
-                  <View style={styles.recentHeaderRow}>
-                    <Text style={styles.recentName}>{item.name}</Text>
-                    <Text style={styles.recentPrice}>{item.price}</Text>
-                  </View>
-                  <View style={styles.recentMetaRow}>
-                    <View style={styles.metaItem}>
-                      <MIcon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                      <Text style={styles.metaText}>{item.age}</Text>
+            {recentList.length > 0 ? (
+              recentList.map((item) => (
+                <TouchableOpacity 
+                  key={item.id} 
+                  style={styles.recentCard}
+                  onPress={() => navigation.navigate('AnimalDetails', { product: item })}
+                  activeOpacity={0.9}
+                >
+                  <Image source={{ uri: item.image }} style={styles.recentImg} />
+                  <View style={styles.recentInfo}>
+                    <View style={styles.recentHeaderRow}>
+                      <Text style={styles.recentName}>{item.name}</Text>
+                      <Text style={styles.recentPrice}>{item.price}</Text>
                     </View>
-                    <View style={styles.metaItem}>
-                      <MIcon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
-                      <Text style={styles.metaText}>{item.location}</Text>
+                    <View style={styles.recentMetaRow}>
+                      <View style={styles.metaItem}>
+                        <MIcon name="account-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                        <Text style={styles.metaText}>{item.age}</Text>
+                      </View>
+                      <View style={styles.metaItem}>
+                        <MIcon name="map-marker-outline" size={14} color="#6B7280" style={{ marginRight: 4 }} />
+                        <Text style={styles.metaText}>{item.location}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.recentFooterRow}>
+                      <View style={styles.statusBadge}>
+                        <Text style={styles.statusBadgeText}>{item.status}</Text>
+                      </View>
+                      <TouchableOpacity onPress={() => toggleLike(item.id)}>
+                        <MIcon 
+                          name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
+                          size={20} 
+                          color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
+                        />
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  <View style={styles.recentFooterRow}>
-                    <View style={styles.statusBadge}>
-                      <Text style={styles.statusBadgeText}>{item.status}</Text>
-                    </View>
-                    <TouchableOpacity onPress={() => toggleLike(item.id)}>
-                      <MIcon 
-                        name={likedItems.includes(item.id) ? "heart" : "heart-outline"} 
-                        size={20} 
-                        color={likedItems.includes(item.id) ? "#EF4444" : "#9CA3AF"} 
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            ))}
+                </TouchableOpacity>
+              ))
+            ) : (
+              <View style={styles.emptyRecentContainer}>
+                <MIcon name="cow" size={40} color="#D1D5DB" />
+                <Text style={styles.emptyRecentText}>No recent listings found</Text>
+              </View>
+            )}
           </View>
         </View>
 
@@ -557,6 +521,23 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     fontFamily: FONT_SANS
+  },
+  emptyRecentContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 30,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#E5E7EB',
+    borderStyle: 'dashed',
+  },
+  emptyRecentText: {
+    fontSize: 13,
+    color: '#9CA3AF',
+    marginTop: 8,
+    fontFamily: FONT_SANS,
+    fontWeight: '600'
   }
 });
 

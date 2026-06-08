@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
   Dimensions,
   Image,
   Platform,
+  RefreshControl,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -67,168 +69,8 @@ const HerdScreen = ({ navigation, route }: any) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [likedItems, setLikedItems] = useState<string[]>([]);
 
-  // Featured listings data
-  const featuredListings = [
-    {
-      id: 'F001',
-      name: 'HF Cross Cow',
-      category: 'Cow',
-      age: '3 Years',
-      location: 'Punjab',
-      price: '₹ 85,000',
-      isPremium: true,
-      image: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'F002',
-      name: 'Sahiwal Cow',
-      category: 'Cow',
-      age: '5 Years',
-      location: 'Haryana',
-      price: '₹ 65,000',
-      isPremium: false,
-      image: 'https://images.unsplash.com/photo-1527153857715-3908f2bac5e8?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'F003',
-      name: 'Murrah Buffalo',
-      category: 'Buffalo',
-      age: '4 Years',
-      location: 'Uttar Pradesh',
-      price: '₹ 95,000',
-      isPremium: false,
-      image: 'https://images.unsplash.com/photo-1563865436874-9aef32095ffd?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'F004',
-      name: 'Sirohi Goat',
-      category: 'Goat',
-      age: '1.5 Years',
-      location: 'Rajasthan',
-      price: '₹ 15,000',
-      isPremium: true,
-      image: 'https://images.unsplash.com/photo-1524443169398-9aa1ceab67d5?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'F005',
-      name: 'Persian Cat',
-      category: 'Cat',
-      age: '1 Year',
-      location: 'Delhi',
-      price: '₹ 20,000',
-      isPremium: false,
-      image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'F006',
-      name: 'German Shepherd',
-      category: 'Dog',
-      age: '2 Years',
-      location: 'Punjab',
-      price: '₹ 25,000',
-      isPremium: true,
-      image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=400'
-    }
-  ];
-
-  // Category list with real images
-  const categories = [
-    { name: 'All Cattle', image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Cow', image: 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Buffalo', image: 'https://images.unsplash.com/photo-1563865436874-9aef32095ffd?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Goat', image: 'https://images.unsplash.com/photo-1524443169398-9aa1ceab67d5?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Fish', image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Birds', image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Cat', image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&q=80&w=150' },
-    { name: 'Dog', image: 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?auto=format&fit=crop&q=80&w=150' }
-  ];
-
-  // Recent listings data
-  const initialRecentListings = [
-    {
-      id: 'R001',
-      name: 'Jersey Cow',
-      category: 'Cow',
-      age: '2 Years',
-      location: 'Maharashtra',
-      price: '₹ 70,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R002',
-      name: 'Gir Calf',
-      category: 'Cow',
-      age: '6 Months',
-      location: 'Gujarat',
-      price: '₹ 25,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R003',
-      name: 'Murrah Buffalo',
-      category: 'Buffalo',
-      age: '3 Years',
-      location: 'Punjab',
-      price: '₹ 90,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1596733430284-f7437764b1a9?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R004',
-      name: 'Barbari Goat',
-      category: 'Goat',
-      age: '2 Years',
-      location: 'Uttar Pradesh',
-      price: '₹ 12,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1610444983050-8b6b0a1d6361?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R005',
-      name: 'Siamese Cat',
-      category: 'Cat',
-      age: '6 Months',
-      location: 'Mumbai',
-      price: '₹ 18,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R006',
-      name: 'Labrador Retriever',
-      category: 'Dog',
-      age: '3 Months',
-      location: 'Karnataka',
-      price: '₹ 22,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R007',
-      name: 'Arowana Fish',
-      category: 'Fish',
-      age: '1 Year',
-      location: 'West Bengal',
-      price: '₹ 8,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?auto=format&fit=crop&q=80&w=400'
-    },
-    {
-      id: 'R008',
-      name: 'Macaw Parrot',
-      category: 'Birds',
-      age: '1.5 Years',
-      location: 'Kerala',
-      price: '₹ 35,000',
-      status: 'For Sale',
-      image: 'https://images.unsplash.com/photo-1444464666168-49d633b86797?auto=format&fit=crop&q=80&w=400'
-    }
-  ];
-
-  const [coords, setCoords] = useState({ latitude: 28.6139, longitude: 77.2090 });
-  const [recentList, setRecentList] = useState(initialRecentListings);
+  const [coords, setCoords] = useState({ latitude: 18.5204, longitude: 73.8567 });
+  const [recentList, setRecentList] = useState<any[]>([]);
   const [sellList, setSellList] = useState<any[]>([]);
 
   // Fetch coordinates on mount
@@ -247,41 +89,46 @@ const HerdScreen = ({ navigation, route }: any) => {
     );
   }, []);
 
+  const [refreshing, setRefreshing] = useState(false);
+
   // Fetch categories from backend
-  const { data: categoriesResponse } = useGetAllCategories();
+  const { data: categoriesResponse, refetch: refetchCategories } = useGetAllCategories();
   const backendCategories = categoriesResponse?.data || [];
 
   // Fetch listings from backend
-  const { data: listingsResponse, isLoading: isListingsLoading } = useGetListedAnimalsByLocation({
+  const { data: listingsResponse, isLoading: isListingsLoading, refetch: refetchListings } = useGetListedAnimalsByLocation({
     latitude: coords.latitude,
     longitude: coords.longitude,
     page: 1,
     limit: 50
   });
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await Promise.all([refetchCategories(), refetchListings()]);
+    setRefreshing(false);
+  };
+
   const backendListings = listingsResponse?.data?.listings || [];
   const mappedListings = backendListings.map(mapListingToProduct);
 
   // Dynamic Categories list
-  const displayedCategoriesList = backendCategories.length > 0
-    ? [
-        { name: 'All Cattle', image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=150' },
-        ...backendCategories.map(cat => ({
-          name: cat.name,
-          image: cat.imageUrl?.secure_url || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=150'
-        }))
-      ]
-    : categories;
+  const displayedCategoriesList = [
+    { name: 'All Cattle', image: 'https://images.unsplash.com/photo-1546445317-29f4545e6d51?auto=format&fit=crop&q=80&w=150' },
+    ...backendCategories.map(cat => ({
+      name: cat.name,
+      image: cat.imageUrl?.secure_url || 'https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?auto=format&fit=crop&q=80&w=150'
+    }))
+  ];
 
   // Dynamic Featured Listings
-  const finalFeaturedListings = mappedListings.length > 0
-    ? mappedListings.filter(item => item.isPremium)
-    : featuredListings;
+  const finalFeaturedListings = mappedListings.filter(item => item.isPremium);
 
   // Dynamic Recent Listings
-  const finalRecentList = mappedListings.length > 0
-    ? mappedListings
-    : recentList;
+  const finalRecentList = [
+    ...recentList.filter(localItem => !mappedListings.some(m => m.id === localItem.id)),
+    ...mappedListings
+  ];
 
   // Listen to new cattle additions
   React.useEffect(() => {
@@ -327,12 +174,13 @@ const HerdScreen = ({ navigation, route }: any) => {
 
   const displayedFeatured = finalFeaturedListings.filter(item => {
     const query = searchQuery.toLowerCase().trim();
-    if (!query) return true;
-    return (
+    const matchesQuery = !query || (
       item.name.toLowerCase().includes(query) ||
       (item.category && item.category.toLowerCase().includes(query)) ||
       (item.location && item.location.toLowerCase().includes(query))
     );
+    const matchesCategory = activeCategory === 'All Cattle' || item.category === activeCategory;
+    return matchesQuery && matchesCategory;
   });
 
   const displayedRecent = finalRecentList.filter(item => {
@@ -383,7 +231,13 @@ const HerdScreen = ({ navigation, route }: any) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false} 
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {/* Toggle Buy / Sell Tabs */}
         <View style={styles.marketTabsContainer}>
           <TouchableOpacity 
@@ -433,7 +287,12 @@ const HerdScreen = ({ navigation, route }: any) => {
           </View>
         </View>
 
-        {activeMarketTab === 'buy' ? (
+        {isListingsLoading && !refreshing ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#16A34A" />
+            <Text style={styles.loadingText}>Fetching cattle listings...</Text>
+          </View>
+        ) : activeMarketTab === 'buy' ? (
           <>
             {/* Featured Listings Section */}
             <View style={styles.sectionHeader}>
@@ -1079,6 +938,18 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     fontSize: 15,
     fontWeight: '900',
     fontFamily: FONT_SANS
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+  },
+  loadingText: {
+    fontSize: 14,
+    color: '#16A34A',
+    fontWeight: '700',
+    marginTop: 12,
+    fontFamily: FONT_SANS,
   }
 });
 
