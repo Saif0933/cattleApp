@@ -10,7 +10,6 @@ import LoginScreen from '../auth/LoginScreen';
 import OnboardingScreen from '../auth/OnboardingScreen';
 import OTPScreen from '../auth/OTPScreen';
 import SelectLocationScreen from '../auth/SelectLocationScreen';
-import SelectRoleScreen from '../auth/SelectRoleScreen';
 import SplashScreen from '../auth/SplashScreen';
 
 // Cattle Screens
@@ -34,6 +33,11 @@ import ReportsScreen from '../cattle/screen/ReportsScreen';
 import SettingsScreen from '../cattle/screen/SettingsScreen';
 import SubscriptionScreen from '../cattle/screen/SubscriptionScreen';
 import UpdateAddressScreen from '../cattle/screen/UpdateAddressScreen';
+import RegisterDoctorScreen from '../cattle/screen/RegisterDoctorScreen';
+import MarketplaceHomeScreen from '../marketplace/MarketplaceHomeScreen';
+import MarketplaceProductDetails from '../marketplace/MarketplaceProductDetails';
+import MarketplaceCategoriesScreen from '../marketplace/MarketplaceCategoriesScreen';
+import MarketplaceProfileScreen from '../marketplace/MarketplaceProfileScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -44,10 +48,10 @@ const AppStack = () => {
       {/* App Branding & Auth Flow */}
       <Stack.Screen name="Splash" component={SplashScreen} />
       <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-      <Stack.Screen name="SelectRole" component={SelectRoleScreen} />
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="OTP" component={OTPScreen} />
       <Stack.Screen name="SelectLocation" component={SelectLocationScreen} />
+      <Stack.Screen name="RegisterDoctor" component={RegisterDoctorScreen} />
 
       {/* Main App Redirections */}
       <Stack.Screen name="MainApp" component={BottomTabNavigator} />
@@ -72,6 +76,12 @@ const AppStack = () => {
       <Stack.Screen name="FarmProfile" component={FarmProfileScreen} />
       <Stack.Screen name="Settings" component={SettingsScreen} />
       <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
+      
+      {/* Marketplace Screens */}
+      <Stack.Screen name="MarketplaceHome" component={MarketplaceHomeScreen} />
+      <Stack.Screen name="MarketplaceProductDetails" component={MarketplaceProductDetails} />
+      <Stack.Screen name="MarketplaceCategories" component={MarketplaceCategoriesScreen} />
+      <Stack.Screen name="MarketplaceProfile" component={MarketplaceProfileScreen} />
 
     </Stack.Navigator>
   );

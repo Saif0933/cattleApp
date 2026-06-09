@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Dimensions,
-  ImageBackground,
-  KeyboardAvoidingView,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ActivityIndicator,
+    Alert,
+    Dimensions,
+    ImageBackground,
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    Text,
+    TextInput,
+    ToastAndroid,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useSendOtp } from '../api/hook/user/auth';
@@ -34,7 +35,17 @@ const LoginScreen = ({ navigation, route }: any) => {
     onSuccess: (response) => {
       if (response.success) {
         if (response.data?.otp) {
-          Alert.alert("Verification OTP (Dev Mode)", `Use OTP code: ${response.data.otp}`);
+          if (Platform.OS === 'android') {
+            ToastAndroid.showWithGravityAndOffset(
+              `Dev Mode OTP: ${response.data.otp}`,
+              ToastAndroid.LONG,
+              ToastAndroid.TOP,
+              0,
+              100
+            );
+          } else {
+            Alert.alert("Verification OTP (Dev Mode)", `Use OTP code: ${response.data.otp}`);
+          }
         }
         navigation.navigate('OTP', { phone: phone.trim(), role });
       } else {
@@ -68,7 +79,7 @@ const LoginScreen = ({ navigation, route }: any) => {
           <StatusBar barStyle={COLORS.isDark ? "light-content" : "dark-content"} backgroundColor="transparent" translucent />
           
           <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             style={{ flex: 1 }}
           >
             <ScrollView 

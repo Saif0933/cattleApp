@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ActivityIndicator,
   Alert,
   Dimensions,
   Image,
@@ -9,14 +10,14 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  ActivityIndicator
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useThemeColors } from '../../context/useTheme';
-import { useUser } from '../../context/UserContext';
 import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
+import { useGetDoctorsByLocation } from '../../api/hook/doctor';
+import { useUser } from '../../context/UserContext';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -37,6 +38,31 @@ const ProfileScreen = ({ navigation }: any) => {
   const userCattleCount = userCattle.length;
   const totalDailyMilk = userCattle.reduce((sum, item) => sum + (item.animal?.dailyMilkProdLtr || 0), 0);
 
+  // Fetch doctors dynamically by location (Pune coordinates as default)
+  const { data: doctorsResponse, isLoading: isDoctorsLoading } = useGetDoctorsByLocation({
+    latitude: 18.5204,
+    longitude: 73.8567,
+    limit: 50
+  });
+
+  const doctorsList = doctorsResponse?.data?.doctors || [];
+
+  const handleBooking = (docName: string, fee: number) => {
+    Alert.alert(
+      "Confirm Appointment",
+      `Would you like to request an appointment with ${docName} for ₹${fee}?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Confirm", 
+          onPress: () => {
+            Alert.alert("Appointment Confirmed", `Your appointment with ${docName} has been requested successfully!`);
+          }
+        }
+      ]
+    );
+  };
+
   const menuSections = [
     {
       title: 'FARM MANAGEMENT',
@@ -44,6 +70,12 @@ const ProfileScreen = ({ navigation }: any) => {
         { name: 'Farm Profile', icon: 'business', route: 'FarmProfile', color: '#16A34A' },
         { name: 'Milk Reports', icon: 'assessment', route: 'MilkProductionReport', color: '#8B5CF6' },
         { name: 'Order History', icon: 'receipt-long', route: 'OrderHistory', color: '#3B82F6' },
+      ]
+    },
+    {
+      title: 'VETERINARIAN SERVICES',
+      options: [
+        { name: 'Book a Doctor', icon: 'medical-services', route: 'DoctorBooking', color: '#06B6D4' },
       ]
     },
     {
@@ -84,12 +116,12 @@ const ProfileScreen = ({ navigation }: any) => {
             </View>
             <View style={styles.profileMeta}>
               <View style={styles.titleRow}>
-                <Text style={styles.farmName}>{user?.name || 'Rashi Farm'}</Text>
+                <Text style={styles.farmName}>{user?.name || 'Farmer'}</Text>
                 <View style={styles.proPill}>
                   <Text style={styles.proText}>{user?.role || 'PRO'}</Text>
                 </View>
               </View>
-              <Text style={styles.email}>{user?.email || 'rashi.farm@gmail.com'}</Text>
+              <Text style={styles.email}>{user?.email || 'No email associated'}</Text>
               <View style={styles.locationRow}>
                 <Icon name="place" size={14} color="rgba(255, 255, 255, 0.7)" style={{ marginRight: 4 }} />
                 <Text style={styles.locationText}>
@@ -104,14 +136,14 @@ const ProfileScreen = ({ navigation }: any) => {
             <View style={styles.statsRow}>
               <View style={styles.statCol}>
                 <Text style={styles.statNumber}>
-                  {isLoading ? '...' : (userCattleCount > 0 ? userCattleCount : 48)}
+                  {isLoading ? '...' : userCattleCount}
                 </Text>
                 <Text style={styles.statLabel}>Cattle</Text>
               </View>
               <View style={styles.statDividerVertical} />
               <View style={styles.statCol}>
                 <Text style={styles.statNumber}>
-                  {isLoading ? '...' : (totalDailyMilk > 0 ? `${totalDailyMilk} L` : '1.2k L')}
+                  {isLoading ? '...' : `${totalDailyMilk} L`}
                 </Text>
                 <Text style={styles.statLabel}>Milk/Day</Text>
               </View>
@@ -135,6 +167,7 @@ const ProfileScreen = ({ navigation }: any) => {
           </View>
           <Icon name="chevron-right" size={20} color="#F59E0B" />
         </View>
+
 
         {/* Menu Options Sections */}
         {menuSections.map((section, sIdx) => (
@@ -398,7 +431,119 @@ const getStyles = (COLORS: any) => StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
   },
-  logoutText: { fontSize: 15, fontWeight: '900', color: COLORS.crimson, marginLeft: 8, fontFamily: FONT_SANS }
+  logoutText: { fontSize: 15, fontWeight: '900', color: COLORS.crimson, marginLeft: 8, fontFamily: FONT_SANS },
+
+  doctorSection: {
+    marginBottom: 24,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  viewAllText: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: COLORS.primary,
+    fontFamily: FONT_SANS,
+  },
+  doctorScrollContent: {
+    gap: 12,
+    paddingRight: 20,
+  },
+  doctorCardMini: {
+    width: 140,
+    backgroundColor: COLORS.surface,
+    borderRadius: 20,
+    padding: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+  },
+  docMiniHeader: {
+    position: 'relative',
+    marginBottom: 8,
+  },
+  docMiniAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#E5E7EB',
+  },
+  verifiedMiniBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    backgroundColor: COLORS.medical,
+    borderRadius: 10,
+    width: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: COLORS.surface,
+  },
+  docMiniName: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: COLORS.darkGreen,
+    fontFamily: FONT_SANS,
+    textAlign: 'center',
+    width: '100%',
+  },
+  docMiniSpec: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: COLORS.secondary,
+    fontFamily: FONT_SANS,
+    textAlign: 'center',
+    width: '100%',
+    marginTop: 2,
+  },
+  docMiniFee: {
+    fontSize: 12,
+    fontWeight: '800',
+    color: COLORS.primary,
+    fontFamily: FONT_SANS,
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  bookMiniBtn: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  bookMiniBtnText: {
+    color: COLORS.white,
+    fontSize: 10,
+    fontWeight: '900',
+    fontFamily: FONT_SANS,
+  },
+  emptyDoctorCard: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderStyle: 'dashed',
+  },
+  emptyDoctorText: {
+    fontSize: 12,
+    color: COLORS.secondary,
+    fontFamily: FONT_SANS,
+    marginTop: 6,
+  },
 });
 
 export default ProfileScreen;

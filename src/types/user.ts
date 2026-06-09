@@ -23,6 +23,7 @@ export interface AuthUser {
   status: UserStatus;
   name: string | null;
   email: string | null;
+  avatarUrl?: any;
 }
 
 export interface ApiResponse<T> {

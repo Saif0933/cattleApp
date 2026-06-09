@@ -188,7 +188,7 @@ const DoctorProfile = ({ navigation }: any) => {
         <TouchableOpacity 
           style={styles.solidSwitchCapsule} 
           activeOpacity={0.8} 
-          onPress={() => navigation.navigate("SelectRole")}
+          onPress={() => navigation.navigate("Login", { role: 'cattle' })}
         >
           <View style={styles.solidSwitchContent}>
             <View style={styles.solidIconCircle}>

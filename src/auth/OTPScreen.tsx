@@ -12,14 +12,15 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSendOtp, useVerifyOtp } from '../api/hook/user/auth';
-import { useThemeColors } from '../context/useTheme';
-import { useUser } from '../context/UserContext';
 import apiClient from '../api/apiClient';
+import { useSendOtp, useVerifyOtp } from '../api/hook/user/auth';
+import { useUser } from '../context/UserContext';
+import { useThemeColors } from '../context/useTheme';
 
 const { width, height } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -51,9 +52,15 @@ const OTPScreen = ({ navigation, route }: any) => {
         setToken(response.data.token);
         setUser(response.data.user);
 
+        // Auto-detect role from backend
+        let finalRole = role;
+        if (response.data.user?.role === 'DOCTOR') {
+          finalRole = 'doctor';
+        }
+
         navigation.reset({
           index: 0,
-          routes: [{ name: 'SelectLocation', params: { role } }],
+          routes: [{ name: 'SelectLocation', params: { role: finalRole } }],
         });
       } else {
         Alert.alert("Verification Failed", response.message || "Invalid OTP code.");
@@ -72,9 +79,23 @@ const OTPScreen = ({ navigation, route }: any) => {
       if (response.success) {
         setTimer(30);
         if (response.data?.otp) {
-          Alert.alert("OTP Sent (Dev Mode)", `Your new verification code is: ${response.data.otp}`);
+          if (Platform.OS === 'android') {
+            ToastAndroid.showWithGravityAndOffset(
+              `Dev Mode OTP: ${response.data.otp}`,
+              ToastAndroid.LONG,
+              ToastAndroid.TOP,
+              0,
+              100
+            );
+          } else {
+            Alert.alert("OTP Sent (Dev Mode)", `Your new verification code is: ${response.data.otp}`);
+          }
         } else {
-          Alert.alert("OTP Sent", "A new verification code has been sent to your number.");
+          if (Platform.OS === 'android') {
+            ToastAndroid.show('Verification code resent.', ToastAndroid.SHORT);
+          } else {
+            Alert.alert("OTP Sent", "A new verification code has been sent to your number.");
+          }
         }
       } else {
         Alert.alert("Resend Failed", response.message || "Could not resend OTP code.");

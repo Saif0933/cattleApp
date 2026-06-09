@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -12,9 +12,9 @@ import {
 } from 'react-native';
 import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useThemeColors } from '../../context/useTheme';
 import { useGetListedAnimalsByLocation } from '../../api/hook/animal/listing';
 import { useUser } from '../../context/UserContext';
+import { useThemeColors } from '../../context/useTheme';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';

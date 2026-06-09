@@ -33,7 +33,7 @@ const OnboardingScreen = ({ navigation }: any) => {
     if (currentSlide < slides.length - 1) {
       setCurrentSlide(currentSlide + 1);
     } else {
-      navigation.replace('SelectRole');
+      navigation.replace('Login');
     }
   };
 
@@ -53,7 +53,7 @@ const OnboardingScreen = ({ navigation }: any) => {
         {/* Skip Header */}
         <View style={styles.topBar}>
           {currentSlide < 2 ? (
-            <TouchableOpacity onPress={() => navigation.replace('SelectRole')}>
+            <TouchableOpacity onPress={() => navigation.replace('Login')}>
               <Text style={styles.skipText}>Skip</Text>
             </TouchableOpacity>
           ) : (

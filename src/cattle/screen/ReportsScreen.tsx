@@ -54,6 +54,9 @@ const ReportsScreen = ({ navigation }: any) => {
   const userCattleCount = userCattle.length;
   const totalDailyMilk = userCattle.reduce((sum, item) => sum + (item.animal?.dailyMilkProdLtr || 0), 0);
   const pregnantCount = userCattle.filter(item => item.animal?.gender?.toLowerCase() === 'female').length;
+  const healthyCount = userCattle.filter(item => !(item.animal as any)?.healthStatus || (item.animal as any).healthStatus.toLowerCase() === 'healthy').length;
+  const sickCount = userCattleCount - healthyCount;
+  const healthIndex = userCattleCount > 0 ? Math.round((healthyCount / userCattleCount) * 100) : 100;
 
   // Tanstack Queries for Moderation
   const { data: pendingCountResponse } = useGetPendingReportsCount({
@@ -95,7 +98,7 @@ const ReportsScreen = ({ navigation }: any) => {
       icon: 'local-drink', 
       color: COLORS.emerald,
       status: 'Updated Today',
-      metric: totalDailyMilk > 0 ? `${totalDailyMilk} L` : '312 L'
+      metric: isListingsLoading ? '...' : `${totalDailyMilk} L`
     },
     { 
       name: 'Health Reports', 
@@ -103,8 +106,8 @@ const ReportsScreen = ({ navigation }: any) => {
       route: '', 
       icon: 'healing', 
       color: COLORS.medical,
-      status: 'All Healthy',
-      metric: '0 Alerts'
+      status: sickCount > 0 ? 'Action Needed' : 'All Healthy',
+      metric: isListingsLoading ? '...' : `${sickCount} Alerts`
     },
     { 
       name: 'Breeding Reports', 
@@ -112,7 +115,7 @@ const ReportsScreen = ({ navigation }: any) => {
       route: 'Breeding', 
       icon: 'favorite', 
       color: COLORS.crimson,
-      status: pregnantCount > 0 ? `${pregnantCount} Female` : '2 Pregnant',
+      status: isListingsLoading ? '...' : `${pregnantCount} Female`,
       metric: '3 Upcoming'
     },
     { 
@@ -179,11 +182,13 @@ const ReportsScreen = ({ navigation }: any) => {
             {/* Performance Summary Banner */}
             <View style={styles.summaryBanner}>
               <View style={styles.bannerBadge}>
-                <Text style={styles.bannerBadgeText}>MAY SUMMARY</Text>
+                <Text style={styles.bannerBadgeText}>
+                  {new Date().toLocaleString('en-IN', { month: 'long' }).toUpperCase()} SUMMARY
+                </Text>
               </View>
               <Text style={styles.bannerTitle}>Your herd is performing at peak efficiency</Text>
               <Text style={styles.bannerSubtitle}>
-                Milk production is up by 12.4% compared to the previous week, with zero active health warnings across all species.
+                Milk production stands at {isListingsLoading ? '...' : `${totalDailyMilk} L`}, with {isListingsLoading ? '...' : (sickCount > 0 ? `${sickCount} active health warning(s)` : 'zero active health warnings')} across all species.
               </Text>
               <View style={styles.bannerFooter}>
                 <Text style={styles.bannerFooterText}>Next scheduled sync: Tonight 10:00 PM</Text>
@@ -199,7 +204,7 @@ const ReportsScreen = ({ navigation }: any) => {
                 </View>
                 <View style={styles.gridInfo}>
                   <Text style={styles.gridValue}>
-                    {isListingsLoading ? '...' : (totalDailyMilk > 0 ? `${totalDailyMilk} L` : '312 L')}
+                    {isListingsLoading ? '...' : `${totalDailyMilk} L`}
                   </Text>
                   <Text style={styles.gridLabel}>Daily Milk Yield</Text>
                   <View style={styles.trendRow}>
@@ -214,11 +219,19 @@ const ReportsScreen = ({ navigation }: any) => {
                   <Icon name="favorite" size={22} color={COLORS.medical} />
                 </View>
                 <View style={styles.gridInfo}>
-                  <Text style={styles.gridValue}>98.4%</Text>
+                  <Text style={styles.gridValue}>
+                    {isListingsLoading ? '...' : `${healthIndex}%`}
+                  </Text>
                   <Text style={styles.gridLabel}>Herd Health Index</Text>
                   <View style={styles.trendRow}>
-                    <Icon name="check-circle" size={14} color={COLORS.medical} />
-                    <Text style={[styles.trendText, { color: COLORS.medical }]}>Excellent</Text>
+                    <Icon 
+                      name={sickCount > 0 ? "warning" : "check-circle"} 
+                      size={14} 
+                      color={sickCount > 0 ? COLORS.crimson : COLORS.medical} 
+                    />
+                    <Text style={[styles.trendText, { color: sickCount > 0 ? COLORS.crimson : COLORS.medical }]}>
+                      {sickCount > 0 ? `${sickCount} Alerts` : 'Excellent'}
+                    </Text>
                   </View>
                 </View>
               </View>

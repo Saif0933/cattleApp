@@ -1,8 +1,8 @@
 import {
-    useMutation,
-    UseMutationOptions,
-    useQuery,
-    UseQueryOptions
+  useMutation,
+  UseMutationOptions,
+  useQuery,
+  UseQueryOptions
 } from "@tanstack/react-query";
 import type { DoctorProfile, GetDoctorsByLocationResponse, RegisterDoctorRequest, UpdateDoctorRequest } from "../../../types/doctor.types";
 import type { ApiResponse } from "../../../types/user";
@@ -54,8 +54,18 @@ export const useRegisterDoctor = (
       return response.data;
     },
     ...options,
-    onError: (error) => showError(error),
-    onSuccess: () => successMesssage("Doctor registered successfully"),
+    onError: (error: any, variables: any, context: any, mutation: any) => {
+      showError(error);
+      if (options?.onError) {
+        options.onError(error, variables, context, mutation);
+      }
+    },
+    onSuccess: (data: any, variables: any, context: any, mutation: any) => {
+      successMesssage("Doctor registered successfully");
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, context, mutation);
+      }
+    },
   });
 };
 
@@ -128,8 +138,18 @@ export const useUpdateDoctor = (
       return response.data;
     },
     ...options,
-    onError: (error) => showError(error),
-    onSuccess: () => successMesssage("Doctor profile updated successfully"),
+    onError: (error: any, variables: any, context: any, mutation: any) => {
+      showError(error);
+      if (options?.onError) {
+        options.onError(error, variables, context, mutation);
+      }
+    },
+    onSuccess: (data: any, variables: any, context: any, mutation: any) => {
+      successMesssage("Doctor profile updated successfully");
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, context, mutation);
+      }
+    },
   });
 };
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Alert,
   Dimensions,
   Platform,
   ScrollView,
@@ -13,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useThemeColors } from '../../context/useTheme';
+import { useUser } from '../../context/UserContext';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
@@ -21,11 +23,15 @@ const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium'
 const FarmProfileScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
+  const { user, setUser, address: userAddress, updateAddress } = useUser();
 
-  const [farmName, setFarmName] = useState('Rashid Farm');
-  const [ownerName, setOwnerName] = useState('Rashid Sharma');
-  const [phone, setPhone] = useState('+91 98765 43210');
-  const [address, setAddress] = useState('Village Rampur, Kota, Rajasthan - 324001');
+  const [farmName, setFarmName] = useState(user?.name || 'Rashid Farm');
+  const [ownerName, setOwnerName] = useState(userAddress?.fullName || 'Rashid Sharma');
+  const [phone, setPhone] = useState(user?.phone || userAddress?.phone || '+91 98765 43210');
+  const [street, setStreet] = useState(userAddress?.street || 'Village Rampur');
+  const [city, setCity] = useState(userAddress?.city || 'Kota');
+  const [stateVal, setStateVal] = useState(userAddress?.state || 'Rajasthan');
+  const [zip, setZip] = useState(userAddress?.zip || '324001');
   const [land, setLand] = useState('15 Acres');
 
   return (
@@ -74,15 +80,44 @@ const FarmProfileScreen = ({ navigation }: any) => {
             />
           </View>
 
-          <Text style={styles.label}>Address</Text>
-          <View style={[styles.inputWrapper, styles.textAreaWrapper]}>
+          <Text style={styles.label}>Street Address</Text>
+          <View style={styles.inputWrapper}>
             <TextInput 
-              style={[styles.input, styles.textArea]}
-              value={address}
-              onChangeText={setAddress}
+              style={styles.input}
+              value={street}
+              onChangeText={setStreet}
               placeholderTextColor={COLORS.secondary + '60'}
-              multiline
-              numberOfLines={3}
+            />
+          </View>
+
+          <Text style={styles.label}>City</Text>
+          <View style={styles.inputWrapper}>
+            <TextInput 
+              style={styles.input}
+              value={city}
+              onChangeText={setCity}
+              placeholderTextColor={COLORS.secondary + '60'}
+            />
+          </View>
+
+          <Text style={styles.label}>State</Text>
+          <View style={styles.inputWrapper}>
+            <TextInput 
+              style={styles.input}
+              value={stateVal}
+              onChangeText={setStateVal}
+              placeholderTextColor={COLORS.secondary + '60'}
+            />
+          </View>
+
+          <Text style={styles.label}>Zip Code</Text>
+          <View style={styles.inputWrapper}>
+            <TextInput 
+              style={styles.input}
+              value={zip}
+              onChangeText={setZip}
+              placeholderTextColor={COLORS.secondary + '60'}
+              keyboardType="number-pad"
             />
           </View>
 
@@ -98,10 +133,37 @@ const FarmProfileScreen = ({ navigation }: any) => {
         </View>
       </ScrollView>
 
-      {/* Edit Profile button */}
+      {/* Save Changes button */}
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.editBtn} onPress={() => navigation.goBack()} activeOpacity={0.85}>
-          <Text style={styles.editBtnText}>Edit Profile</Text>
+        <TouchableOpacity 
+          style={styles.editBtn} 
+          onPress={() => {
+            if (!farmName.trim() || !ownerName.trim() || !phone.trim() || !street.trim() || !city.trim() || !stateVal.trim() || !zip.trim()) {
+              Alert.alert('Error', 'Please fill in all fields.');
+              return;
+            }
+            if (user) {
+              setUser({
+                ...user,
+                name: farmName,
+                phone: phone,
+              });
+            }
+            updateAddress({
+              fullName: ownerName,
+              phone: phone,
+              street: street,
+              city: city,
+              state: stateVal,
+              zip: zip,
+            });
+            Alert.alert('Success', 'Profile updated successfully!', [
+              { text: 'OK', onPress: () => navigation.goBack() }
+            ]);
+          }} 
+          activeOpacity={0.85}
+        >
+          <Text style={styles.editBtnText}>Save Changes</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

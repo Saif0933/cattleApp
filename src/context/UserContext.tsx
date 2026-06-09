@@ -16,6 +16,7 @@ type AuthUser = {
   status: string;
   name: string | null;
   email: string | null;
+  avatarUrl?: any;
 };
 
 type UserContextType = {

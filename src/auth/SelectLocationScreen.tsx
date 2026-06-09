@@ -1,22 +1,22 @@
 
 import React, { useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Dimensions,
-    FlatList,
-    ImageBackground,
-    Linking,
-    Modal,
-    PermissionsAndroid,
-    Platform,
-    SafeAreaView,
-    StatusBar,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  Linking,
+  Modal,
+  PermissionsAndroid,
+  Platform,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import Geolocation from 'react-native-geolocation-service';
@@ -116,27 +116,22 @@ const SelectLocationScreen = ({
   // ============================================
 
   const requestLocationPermission = async () => {
+    if (Platform.OS === 'ios') {
+      return true;
+    }
     try {
-      const granted =
-        await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS
-            .ACCESS_FINE_LOCATION,
-          {
-            title: 'Location Permission',
-            message:
-              'CattleCare needs access to your location.',
-            buttonPositive: 'Allow',
-            buttonNegative: 'Cancel',
-          },
-        );
-
-      return (
-        granted ===
-        PermissionsAndroid.RESULTS.GRANTED
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Location Permission',
+          message: 'CattleCare needs access to your location.',
+          buttonPositive: 'Allow',
+          buttonNegative: 'Cancel',
+        },
       );
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (error) {
       console.log(error);
-
       return false;
     }
   };
@@ -146,96 +141,56 @@ const SelectLocationScreen = ({
   // ============================================
 
   const handleAutoLocation = async () => {
+    let positionResolved = false;
+
+    const proceedWithFallback = () => {
+      if (!positionResolved) {
+        positionResolved = true;
+        setLoading(false);
+        handleProceed();
+      }
+    };
+
+    // Fallback timer: if GPS lock takes more than 1.5 seconds, navigate to app using defaults.
+    const fallbackTimer = setTimeout(() => {
+      proceedWithFallback();
+    }, 1500);
+
     try {
       setLoading(true);
 
-      const hasPermission =
-        await requestLocationPermission();
-
-      // ========================================
-      // PERMISSION DENIED
-      // ========================================
-
+      const hasPermission = await requestLocationPermission();
       if (!hasPermission) {
-        setLoading(false);
-
-        Alert.alert(
-          'Permission Required',
-          'Location permission is required to continue.',
-        );
-
+        clearTimeout(fallbackTimer);
+        proceedWithFallback();
         return;
       }
 
-      // ========================================
-      // GET CURRENT LOCATION
-      // ========================================
-
       Geolocation.getCurrentPosition(
         position => {
-          console.log(
-            'Current Location:',
-            position,
-          );
-
-          // GPS ON
-          handleProceed();
-        },
-
-        error => {
-          console.log(
-            'Location Error:',
-            error,
-          );
-
-          setLoading(false);
-
-          // GPS OFF
-          if (
-            error.code === 2 ||
-            error.code === 3
-          ) {
-            Alert.alert(
-              'Location Disabled',
-              'Please turn on your device location.',
-              [
-                {
-                  text: 'Cancel',
-                  style: 'cancel',
-                },
-                {
-                  text: 'Open Settings',
-                  onPress: () => {
-                    Linking.openSettings();
-                  },
-                },
-              ],
-            );
-          } else {
-            Alert.alert(
-              'Location Error',
-              'Unable to fetch location.',
-            );
+          clearTimeout(fallbackTimer);
+          if (!positionResolved) {
+            positionResolved = true;
+            console.log('Current Location:', position);
+            setLoading(false);
+            handleProceed();
           }
         },
-
+        error => {
+          console.log('Location Error:', error);
+          clearTimeout(fallbackTimer);
+          proceedWithFallback();
+        },
         {
-          enableHighAccuracy: true,
-          timeout: 15000,
+          enableHighAccuracy: false,
+          timeout: 1500,
           maximumAge: 10000,
-          forceRequestLocation: true,
-          showLocationDialog: true,
         },
       );
     } catch (error) {
       console.log(error);
-
-      setLoading(false);
-
-      Alert.alert(
-        'Error',
-        'Something went wrong.',
-      );
+      clearTimeout(fallbackTimer);
+      proceedWithFallback();
     }
   };
 
@@ -243,23 +198,10 @@ const SelectLocationScreen = ({
   // MANUAL LOCATION
   // ============================================
 
-  const handleSelectState = (
-    stateName: string,
-  ) => {
+  const handleSelectState = (stateName: string) => {
     setModalVisible(false);
-
     setSearchQuery('');
-
-    Alert.alert(
-      'Location Updated',
-      `Selected: ${stateName}`,
-      [
-        {
-          text: 'Proceed',
-          onPress: handleProceed,
-        },
-      ],
-    );
+    handleProceed();
   };
 
   return (
@@ -394,6 +336,7 @@ const SelectLocationScreen = ({
         visible={modalVisible}
         transparent
         animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalBackdrop}>
           <View style={styles.modalCard}>
@@ -465,6 +408,8 @@ const getStyles = (COLORS: any) =>
   StyleSheet.create({
     backgroundImage: {
       flex: 1,
+      width: '100%',
+      height: '100%',
     },
 
     backgroundImageStyle: {
