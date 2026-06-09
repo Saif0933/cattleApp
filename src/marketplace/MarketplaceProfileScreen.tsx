@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Alert,
   Image,
   Platform,
   SafeAreaView,
@@ -13,6 +14,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useUser } from '../context/UserContext';
 import { useThemeColors } from '../context/useTheme';
+import { useGetCart } from '../api/hook/marketplace/cart';
+import apiClient from '../api/apiClient';
 
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';
@@ -20,7 +23,9 @@ const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium'
 const MarketplaceProfileScreen = ({ navigation }: any) => {
   const COLORS = useThemeColors();
   const styles = getStyles(COLORS);
-  const { user } = useUser();
+  const { user, setUser, setToken } = useUser();
+  const { data: cartResponse } = useGetCart();
+  const cartItemsCount = cartResponse?.data?.cartItems?.length || 0;
 
   const menuItems = [
     { id: '1', title: 'My Orders', icon: 'package-variant-closed', route: 'OrderHistory', color: COLORS.medical || '#0D9488' },
@@ -64,18 +69,18 @@ const MarketplaceProfileScreen = ({ navigation }: any) => {
           
           <View style={styles.statsRow}>
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>12</Text>
-              <Text style={styles.statLabel}>Orders</Text>
+              <Text style={styles.statNumber}>{cartItemsCount}</Text>
+              <Text style={styles.statLabel}>Cart Items</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>3</Text>
-              <Text style={styles.statLabel}>Saved</Text>
+              <Text style={styles.statNumber}>{user?.role || 'User'}</Text>
+              <Text style={styles.statLabel}>Role</Text>
             </View>
             <View style={styles.statDivider} />
             <View style={styles.statBox}>
-              <Text style={styles.statNumber}>Silver</Text>
-              <Text style={styles.statLabel}>Tier</Text>
+              <Text style={styles.statNumber}>{user?.status || 'Active'}</Text>
+              <Text style={styles.statLabel}>Status</Text>
             </View>
           </View>
         </View>
@@ -102,7 +107,27 @@ const MarketplaceProfileScreen = ({ navigation }: any) => {
         </View>
 
         {/* Logout */}
-        <TouchableOpacity style={styles.logoutBtn}>
+        <TouchableOpacity 
+          style={styles.logoutBtn}
+          onPress={() => {
+            Alert.alert("Logout", "Are you sure you want to logout?", [
+              { text: "Cancel", style: "cancel" },
+              { 
+                text: "Logout", 
+                style: "destructive", 
+                onPress: () => {
+                  setToken(null);
+                  setUser(null);
+                  delete apiClient.defaults.headers.common['Authorization'];
+                  navigation.reset({
+                    index: 0,
+                    routes: [{ name: 'Login' }],
+                  });
+                }
+              }
+            ]);
+          }}
+        >
           <Icon name="logout" size={20} color="#DC2626" />
           <Text style={styles.logoutText}>Logout from Marketplace</Text>
         </TouchableOpacity>
