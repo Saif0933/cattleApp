@@ -4,13 +4,13 @@ import {
   Dimensions,
   FlatList,
   Platform,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useGetCategories } from '../api/hook/marketplace/categories';
 import { useThemeColors } from '../context/useTheme';

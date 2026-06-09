@@ -3,7 +3,6 @@ import {
   Alert,
   Image,
   Platform,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -16,6 +15,7 @@ import { useUser } from '../context/UserContext';
 import { useThemeColors } from '../context/useTheme';
 import { useGetCart } from '../api/hook/marketplace/cart';
 import apiClient from '../api/apiClient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const FONT_SANS = Platform.OS === 'ios' ? 'Helvetica Neue' : 'sans-serif-medium';

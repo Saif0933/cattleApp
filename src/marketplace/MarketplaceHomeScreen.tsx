@@ -5,7 +5,6 @@ import {
   FlatList,
   Image,
   Platform,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -17,6 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useGetCategories } from '../api/hook/marketplace/categories';
 import { useGetProducts } from '../api/hook/marketplace/products';
 import { useThemeColors } from '../context/useTheme';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
