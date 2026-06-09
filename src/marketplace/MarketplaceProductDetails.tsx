@@ -31,7 +31,8 @@ const MarketplaceProductDetails = ({ navigation, route }: any) => {
   const product = productResponse?.data;
 
   const handleQuantityChange = (type: 'increase' | 'decrease') => {
-    if (type === 'increase' && quantity < (product?.stockQuantity || 10)) {
+    const defaultStock = product?.variants?.[0]?.stock || 10;
+    if (type === 'increase' && quantity < defaultStock) {
       setQuantity((q) => q + 1);
     } else if (type === 'decrease' && quantity > 1) {
       setQuantity((q) => q - 1);
@@ -47,6 +48,10 @@ const MarketplaceProductDetails = ({ navigation, route }: any) => {
   }
 
   const imageUrl = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1559839734-2b71f153ef7ef?auto=format&fit=crop&q=80&w=400';
+  const defaultVariant = product.variants?.[0];
+  const price = defaultVariant?.price || 0;
+  const oldPrice = defaultVariant?.compareAtPrice;
+  const stock = defaultVariant?.stock || 0;
 
   return (
     <View style={styles.container}>
@@ -71,7 +76,7 @@ const MarketplaceProductDetails = ({ navigation, route }: any) => {
         {/* Content Section */}
         <View style={styles.contentContainer}>
           <View style={styles.brandRow}>
-            <Text style={styles.brandText}>{product.brand?.name || 'AgriMarket Official'}</Text>
+            <Text style={styles.brandText}>{product.brand?.brandName || 'AgriMarket Official'}</Text>
             <View style={styles.ratingBadge}>
               <Icon name="star" size={14} color="#FBBF24" />
               <Text style={styles.ratingText}>4.8</Text>
@@ -81,12 +86,14 @@ const MarketplaceProductDetails = ({ navigation, route }: any) => {
           <Text style={styles.titleText}>{product.title}</Text>
           
           <View style={styles.priceRow}>
-            <Text style={styles.priceText}>₹{product.basePrice}</Text>
-            {product.discountPrice && (
-              <Text style={styles.oldPrice}>₹{product.discountPrice}</Text>
+            <Text style={styles.priceText}>₹{price}</Text>
+            {oldPrice && (
+              <Text style={styles.oldPrice}>₹{oldPrice}</Text>
             )}
-            <View style={styles.stockBadge}>
-              <Text style={styles.stockText}>In Stock</Text>
+            <View style={[styles.stockBadge, stock === 0 && { backgroundColor: 'rgba(220, 38, 38, 0.1)' }]}>
+              <Text style={[styles.stockText, stock === 0 && { color: '#DC2626' }]}>
+                {stock > 0 ? 'In Stock' : 'Out of Stock'}
+              </Text>
             </View>
           </View>
 
@@ -125,7 +132,7 @@ const MarketplaceProductDetails = ({ navigation, route }: any) => {
       <View style={styles.bottomBar}>
         <View style={styles.totalBox}>
           <Text style={styles.totalLabel}>Total Price</Text>
-          <Text style={styles.totalPrice}>₹{(product.basePrice * quantity).toFixed(2)}</Text>
+          <Text style={styles.totalPrice}>₹{(Number(price) * quantity).toFixed(2)}</Text>
         </View>
         <TouchableOpacity style={styles.addToCartLargeBtn} activeOpacity={0.8}>
           <Icon name="shopping-outline" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />

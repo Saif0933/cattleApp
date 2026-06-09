@@ -79,6 +79,12 @@ const ProfileScreen = ({ navigation }: any) => {
       ]
     },
     {
+      title: 'MARKETPLACE PARTNER',
+      options: [
+        { name: 'Register as Brand/Seller', icon: 'storefront', route: 'RegisterMarketplace', color: '#10B981' },
+      ]
+    },
+    {
       title: 'APP PREFERENCES',
       options: [
         { name: 'Cattle Subscription', icon: 'stars', route: 'Subscription', color: '#F59E0B' },

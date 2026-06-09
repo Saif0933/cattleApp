@@ -77,11 +77,11 @@ const MarketplaceHomeScreen = ({ navigation }: any) => {
         <Image source={{ uri: imageUrl }} style={styles.productImage} />
         <View style={styles.productInfo}>
           <Text style={styles.productTitle} numberOfLines={1}>{item.title}</Text>
-          <Text style={styles.productBrand} numberOfLines={1}>{item.brand?.name || 'Generic'}</Text>
+          <Text style={styles.productBrand} numberOfLines={1}>{item.brand?.brandName || 'Generic'}</Text>
           <View style={styles.priceRow}>
-            <Text style={styles.productPrice}>₹{item.basePrice}</Text>
-            {item.discountPrice && (
-              <Text style={styles.discountPrice}>₹{item.discountPrice}</Text>
+            <Text style={styles.productPrice}>₹{item.variants?.[0]?.price || 0}</Text>
+            {item.variants?.[0]?.compareAtPrice && (
+              <Text style={styles.discountPrice}>₹{item.variants[0].compareAtPrice}</Text>
             )}
           </View>
           <TouchableOpacity style={styles.addToCartBtn}>

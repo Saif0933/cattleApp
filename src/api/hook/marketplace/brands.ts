@@ -62,8 +62,18 @@ export const useRegisterBrand = (
       return response.data;
     },
     ...options,
-    onError: (error) => showError(error),
-    onSuccess: () => successMesssage("Brand registered successfully"),
+    onError: (error: any, variables: any, context: any, mutation: any) => {
+      showError(error);
+      if (options?.onError) {
+        options.onError(error, variables, context, mutation);
+      }
+    },
+    onSuccess: (data: any, variables: any, context: any, mutation: any) => {
+      successMesssage("Brand registered successfully");
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, context, mutation);
+      }
+    },
   });
 };
 
@@ -163,7 +173,17 @@ export const useUpdateBrand = (
       return response.data;
     },
     ...options,
-    onError: (error) => showError(error),
-    onSuccess: () => successMesssage("Brand profile updated successfully"),
+    onError: (error: any, variables: any, context: any, mutation: any) => {
+      showError(error);
+      if (options?.onError) {
+        options.onError(error, variables, context, mutation);
+      }
+    },
+    onSuccess: (data: any, variables: any, context: any, mutation: any) => {
+      successMesssage("Brand profile updated successfully");
+      if (options?.onSuccess) {
+        options.onSuccess(data, variables, context, mutation);
+      }
+    },
   });
 };

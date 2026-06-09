@@ -103,6 +103,11 @@ const SelectLocationScreen = ({
         index: 0,
         routes: [{ name: 'DoctorApp' }],
       });
+    } else if (role === 'brand') {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MarketplaceApp' }],
+      });
     } else {
       navigation.reset({
         index: 0,

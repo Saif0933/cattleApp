@@ -56,6 +56,8 @@ const OTPScreen = ({ navigation, route }: any) => {
         let finalRole = role;
         if (response.data.user?.role === 'DOCTOR') {
           finalRole = 'doctor';
+        } else if (response.data.user?.role === 'BRAND') {
+          finalRole = 'brand';
         }
 
         navigation.reset({

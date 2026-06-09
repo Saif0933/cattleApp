@@ -36,8 +36,10 @@ import UpdateAddressScreen from '../cattle/screen/UpdateAddressScreen';
 import RegisterDoctorScreen from '../cattle/screen/RegisterDoctorScreen';
 import MarketplaceHomeScreen from '../marketplace/MarketplaceHomeScreen';
 import MarketplaceProductDetails from '../marketplace/MarketplaceProductDetails';
-import MarketplaceCategoriesScreen from '../marketplace/MarketplaceCategoriesScreen';
 import MarketplaceProfileScreen from '../marketplace/MarketplaceProfileScreen';
+import RegisterMarketplaceScreen from '../marketplace/RegisterMarketplaceScreen';
+import MarketplaceBottomTab from '../marketplace/navigation/MarketplaceBottomTab';
+import MarketplaceCategoriesScreen from '../marketplace/MarketplaceCategoriesScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +84,8 @@ const AppStack = () => {
       <Stack.Screen name="MarketplaceProductDetails" component={MarketplaceProductDetails} />
       <Stack.Screen name="MarketplaceCategories" component={MarketplaceCategoriesScreen} />
       <Stack.Screen name="MarketplaceProfile" component={MarketplaceProfileScreen} />
+      <Stack.Screen name="RegisterMarketplace" component={RegisterMarketplaceScreen} />
+      <Stack.Screen name="MarketplaceApp" component={MarketplaceBottomTab} />
 
     </Stack.Navigator>
   );
