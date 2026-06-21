@@ -6,7 +6,6 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -20,6 +19,7 @@ import { useRegisterBrand } from '../api/hook/marketplace/brands';
 import { useThemeColors } from '../context/useTheme';
 import { useUser } from '../context/UserContext';
 import apiClient from '../api/apiClient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 const FONT_SERIF = Platform.OS === 'ios' ? 'Georgia' : 'serif';
