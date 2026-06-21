@@ -6,7 +6,6 @@ import {
   ImageBackground,
   KeyboardAvoidingView,
   Platform,
-  SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -15,9 +14,10 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useRegisterDoctor } from '../../api/hook/doctor';
 import apiClient from '../../api/apiClient';
+import { useRegisterDoctor } from '../../api/hook/doctor';
 import { useUser } from '../../context/UserContext';
 import { useThemeColors } from '../../context/useTheme';
 
