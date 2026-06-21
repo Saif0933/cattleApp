@@ -8,6 +8,7 @@ export const successMesssage = (message: string) => {
         Alert.alert("Success", message);
     }
 }
+// This function is used to display success messages
 
 export const showError = (error: unknown) => {
     let msg = "An unknown error occurred";
