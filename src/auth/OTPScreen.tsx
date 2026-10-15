@@ -53,6 +53,7 @@ const OTPScreen = ({ navigation, route }: any) => {
         setUser(response.data.user);
 
         // Auto-detect role from backend
+        
         let finalRole = role;
         if (response.data.user?.role === 'DOCTOR') {
           finalRole = 'doctor';
